@@ -40,13 +40,13 @@ describe('Field', () => {
     expect(cars).toHaveLength(2);
 
     const car1 = cars[0];
-    expect(car1.style.bottom).toBe('100px');
     expect(car1.style.left).toBe('50px');
+    expect(car1.style.bottom).toBe('100px');
     expect(car1.style.transform).toBe('rotate(0deg)');
 
     const car2 = cars[1];
-    expect(car2.style.bottom).toBe('200px');
-    expect(car2.style.left).toBe('150px');
+    expect(car2.style.left).toBe('200px');
+    expect(car2.style.bottom).toBe('150px');
     expect(car2.style.transform).toBe('rotate(180deg)');
   });
 });
