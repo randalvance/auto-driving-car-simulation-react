@@ -1,4 +1,4 @@
-import { type Car } from '@/types';
+import { type Car, type Command, type Direction } from '@/types';
 import { create } from 'zustand';
 
 export interface State {
@@ -6,12 +6,12 @@ export interface State {
   fieldWidth: number;
   fieldHeight: number;
   error?: string;
-  carCommands: Record<Car['name'], string>;
+  carCommands: Record<Car['name'], Command[]>;
   step: number;
 }
 
 export interface Actions {
-  addCar: (car: Car, command: string) => void;
+  addCar: (car: Car, commands: Command[]) => void;
   setFieldBounds: (width: number, height: number) => void;
   nextStep: () => void;
 }
@@ -28,7 +28,7 @@ export const useStore = create<State & Actions>((set) => ({
   ...initialState,
 
   // Actions
-  addCar: (car: Car, command: string) => {
+  addCar: (car: Car, commands: Command[]) => {
     set((state) => {
       // Check whether the car being added has a duplicate name and if so, set error message
       const duplicateCar = state.cars.find((c) => c.name === car.name);
@@ -55,7 +55,7 @@ export const useStore = create<State & Actions>((set) => ({
         cars: [...state.cars, car],
         carCommands: {
           ...state.carCommands,
-          [car.name]: command,
+          [car.name]: commands,
         },
       };
     });
@@ -67,19 +67,43 @@ export const useStore = create<State & Actions>((set) => ({
     }));
   },
   nextStep: () => {
-    set((state) => ({
-      cars: state.cars.map((car) =>
-        calculateCarPosition(car, {
-          width: state.fieldWidth,
-          height: state.fieldHeight,
+    set((state) => {
+      const { step, fieldWidth, fieldHeight, carCommands } = state;
+      return {
+        cars: state.cars.map((car) => {
+          const commandForCar = carCommands[car.name];
+          const commandAtStep = commandForCar[step];
+
+          if (commandAtStep == null) {
+            return car;
+          }
+
+          return getCarAtNewPosition(car, commandAtStep, {
+            width: fieldWidth,
+            height: fieldHeight,
+          });
         }),
-      ),
-      step: state.step + 1,
-    }));
+        step: state.step + 1,
+      };
+    });
   },
 }));
 
-const calculateCarPosition = (
+const getCarAtNewPosition = (
+  car: Car,
+  command: Command,
+  bounds: { width: number; height: number },
+): Car => {
+  if (command === 'F') {
+    return moveForward(car, bounds);
+  }
+  if (command === 'R') {
+    return turnRight(car);
+  }
+  return car;
+};
+
+const moveForward = (
   car: Car,
   bounds: { width: number; height: number },
 ): Car => {
@@ -96,4 +120,14 @@ const calculateCarPosition = (
     return { ...car, x: Math.max(car.x - 1, 0) };
   }
   return car;
+};
+
+const turnRight = (car: Car): Car => {
+  const directionMap: Record<Direction, Direction> = {
+    N: 'E',
+    E: 'S',
+    S: 'W',
+    W: 'N',
+  };
+  return { ...car, facing: directionMap[car.facing] };
 };

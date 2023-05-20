@@ -1,5 +1,5 @@
 import { initialState, useStore } from './store';
-import { type Car, type Direction } from '@/types';
+import { type Car, type Command, type Direction } from '@/types';
 
 describe('store', () => {
   beforeEach(() => {
@@ -32,7 +32,7 @@ describe('store', () => {
       x: 1,
       y: 5,
     };
-    const expectedCommand = 'FFFRFFRRLFF';
+    const expectedCommand: Command[] = ['F', 'R', 'R', 'L', 'L', 'F', 'R'];
 
     state.addCar(expectedCar, expectedCommand);
 
@@ -46,17 +46,17 @@ describe('store', () => {
 
   it('should not add a car and show an error if the car being added has the same name as an existing car', () => {
     const expectedCar: Car = { name: 'car1', facing: 'N', x: 1, y: 5 };
-    const expectedCommand = 'FRRLLFRLLFF';
+    const expectedCommand: Command[] = ['F', 'R', 'R', 'L', 'L', 'F', 'R'];
     useStore.setState({
       ...initialState,
       cars: [expectedCar],
       carCommands: {
-        [expectedCar.name]: 'FRRLLFRLLFF',
+        [expectedCar.name]: expectedCommand,
       },
     });
 
     const state = useStore.getState();
-    state.addCar({ name: 'car1', facing: 'S', x: 4, y: 1 }, 'FFFRFFRRLFF');
+    state.addCar({ name: 'car1', facing: 'S', x: 4, y: 1 }, ['F', 'R']);
 
     const newState = useStore.getState();
     // Check that there's only 1 car, and it's the first car added, not the second one with duplicate name
@@ -80,7 +80,7 @@ describe('store', () => {
         useStore.setState({ fieldWidth: 10, fieldHeight: 10 });
         const state = useStore.getState();
 
-        state.addCar({ name: 'car1', facing: 'N', x: 11, y: 5 }, 'FFFRFFRRLFF');
+        state.addCar({ name: 'car1', facing: 'N', x: 11, y: 5 }, ['F', 'R']);
 
         const newState = useStore.getState();
         expect(newState.cars).toHaveLength(0);
@@ -144,7 +144,10 @@ describe('store', () => {
             ...carPosition,
             facing: carPosition.facing as Direction,
           };
-          useStore.setState({ cars: [car], carCommands: { [car.name]: 'F' } });
+          useStore.setState({
+            cars: [car],
+            carCommands: { [car.name]: ['F'] },
+          });
           const state = useStore.getState();
 
           state.nextStep();
@@ -195,7 +198,7 @@ describe('store', () => {
               fieldHeight: 10,
               cars: [car],
               carCommands: {
-                [car.name]: turn === 'Right' ? 'R' : 'L',
+                [car.name]: turn === 'Right' ? ['R'] : ['L'],
               },
             });
             const state = useStore.getState();
