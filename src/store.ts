@@ -38,6 +38,10 @@ export const useStore = create<State & Actions>((set) => ({
 
       return {
         cars: [...state.cars, car],
+        carCommands: {
+          ...state.carCommands,
+          [car.name]: command,
+        },
       };
     });
   },
