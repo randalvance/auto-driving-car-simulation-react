@@ -100,6 +100,9 @@ const getCarAtNewPosition = (
   if (command === 'R') {
     return turnRight(car);
   }
+  if (command === 'L') {
+    return turnLeft(car);
+  }
   return car;
 };
 
@@ -128,6 +131,16 @@ const turnRight = (car: Car): Car => {
     E: 'S',
     S: 'W',
     W: 'N',
+  };
+  return { ...car, facing: directionMap[car.facing] };
+};
+
+const turnLeft = (car: Car): Car => {
+  const directionMap: Record<Direction, Direction> = {
+    N: 'W',
+    W: 'S',
+    S: 'E',
+    E: 'N',
   };
   return { ...car, facing: directionMap[car.facing] };
 };
