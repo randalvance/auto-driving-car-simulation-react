@@ -18,16 +18,29 @@ export const Field: React.FC<Props> = ({ width, height, cars }) => {
       style={{ width: width * 50, height: height * 50 }}
     >
       {cars.map((car) => (
-        <div
-          key={car.name}
-          className={styles.car}
-          role="car"
-          style={{
-            bottom: car.y * 50,
-            left: car.x * 50,
-            transform: `rotate(${getRotationBasedOnDirection(car.facing)}deg)`,
-          }}
-        />
+        <React.Fragment key={`${car.name}-container`}>
+          <div
+            className={styles.car}
+            role="car"
+            style={{
+              bottom: car.y * 50,
+              left: car.x * 50,
+              transform: `rotate(${getRotationBasedOnDirection(
+                car.facing,
+              )}deg)`,
+            }}
+          />
+          <label
+            role="label"
+            className={styles.carLabel}
+            style={{
+              bottom: car.y * 50 + 50,
+              left: car.x * 50,
+            }}
+          >
+            {`${car.name} (${car.x}, ${car.y})`}
+          </label>
+        </React.Fragment>
       ))}
     </div>
   );

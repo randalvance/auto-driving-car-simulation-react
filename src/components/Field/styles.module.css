@@ -12,3 +12,10 @@
     transition: left 1s ease, bottom 1s ease;
     filter: drop-shadow(0 0 0.75rem crimson);
 }
+
+.carLabel {
+    position: absolute;
+    color: white;
+    transition: left 1s ease, bottom 1s ease;
+    filter: drop-shadow(0 0 0.75rem black);
+}
