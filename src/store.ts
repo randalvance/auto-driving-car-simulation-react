@@ -40,7 +40,12 @@ export const useStore = create<State & Actions>((set) => ({
       }
 
       // Check if the car being added is outside the bounds of the field
-      if (car.x < 0 || car.x > state.fieldWidth || car.y < 0 || car.y > state.fieldHeight) {
+      if (
+        car.x < 0 ||
+        car.x > state.fieldWidth ||
+        car.y < 0 ||
+        car.y > state.fieldHeight
+      ) {
         return {
           error: `Car is out of bounds`,
         };
@@ -84,7 +89,11 @@ export const useStore = create<State & Actions>((set) => ({
   },
 }));
 
-const getCarAtNewPosition = (car: Car, command: Command, bounds: { width: number; height: number }): Car => {
+const getCarAtNewPosition = (
+  car: Car,
+  command: Command,
+  bounds: { width: number; height: number },
+): Car => {
   if (command === 'F') {
     return moveForward(car, bounds);
   }
@@ -97,7 +106,10 @@ const getCarAtNewPosition = (car: Car, command: Command, bounds: { width: number
   return car;
 };
 
-const moveForward = (car: Car, bounds: { width: number; height: number }): Car => {
+const moveForward = (
+  car: Car,
+  bounds: { width: number; height: number },
+): Car => {
   if (car.facing === 'N') {
     return { ...car, y: Math.min(car.y + 1, bounds.height) };
   }

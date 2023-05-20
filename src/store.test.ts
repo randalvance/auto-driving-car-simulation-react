@@ -264,7 +264,11 @@ describe('store', () => {
         },
       });
       const state = useStore.getState();
-      const maxSteps = Math.max(...Object.keys(state.carCommands).map((k) => state.carCommands[k].length));
+      const maxSteps = Math.max(
+        ...Object.keys(state.carCommands).map(
+          (k) => state.carCommands[k].length,
+        ),
+      );
 
       // Act
       for (let i = 0; i < maxSteps; i++) {

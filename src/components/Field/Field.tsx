@@ -12,7 +12,11 @@ interface Props {
 
 export const Field: React.FC<Props> = ({ width, height, cars }) => {
   return (
-    <div className={styles.field} role="field" style={{ width: width * 50, height: height * 50 }}>
+    <div
+      className={styles.field}
+      role="field"
+      style={{ width: width * 50, height: height * 50 }}
+    >
       {cars.map((car) => (
         <div
           key={car.name}
