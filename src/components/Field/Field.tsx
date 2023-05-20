@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './styles.module.css';
 
 interface Car {
+  name: string;
   x: number;
   y: number;
 }
@@ -20,9 +21,9 @@ export const Field: React.FC<Props> = ({ width, height, cars }) => {
       role="field"
       style={{ width: width * 50, height: height * 50 }}
     >
-      {cars.map((car, index) => (
+      {cars.map((car) => (
         <div
-          key={index}
+          key={car.name}
           className={styles.car}
           role="car"
           style={{ bottom: car.y * 50, left: car.x * 50 }}

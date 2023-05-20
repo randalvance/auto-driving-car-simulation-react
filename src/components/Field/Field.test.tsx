@@ -25,9 +25,11 @@ describe('Field', () => {
     });
   });
 
-  describe('should render cars at correct position', () => {
+  describe('should render cars', () => {
     it('when there is one car', async () => {
-      render(<Field width={10} height={10} cars={[{ x: 1, y: 2 }]} />);
+      render(
+        <Field width={10} height={10} cars={[{ name: 'Car1', x: 1, y: 2 }]} />,
+      );
       const cars = screen.getAllByRole('car');
       expect(cars).toHaveLength(1);
       const car = cars[0];
