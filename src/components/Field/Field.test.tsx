@@ -25,20 +25,28 @@ describe('Field', () => {
     });
   });
 
-  describe('should render cars', () => {
-    it('when there is one car', async () => {
-      render(
-        <Field
-          width={10}
-          height={10}
-          cars={[{ name: 'Car1', x: 1, y: 2, facing: 'N' }]}
-        />,
-      );
-      const cars = screen.getAllByRole('car');
-      expect(cars).toHaveLength(1);
-      const car = cars[0];
-      expect(car.style.bottom).toBe('100px');
-      expect(car.style.left).toBe('50px');
-    });
+  it('should render cars at correct position and facing the right direction', async () => {
+    render(
+      <Field
+        width={10}
+        height={10}
+        cars={[
+          { name: 'Car1', x: 1, y: 2, facing: 'N' },
+          { name: 'Car2', x: 4, y: 3, facing: 'S' },
+        ]}
+      />,
+    );
+    const cars = screen.getAllByRole('car');
+    expect(cars).toHaveLength(2);
+
+    const car1 = cars[0];
+    expect(car1.style.bottom).toBe('100px');
+    expect(car1.style.left).toBe('50px');
+    expect(car1.style.transform).toBe('rotate(0deg)');
+
+    const car2 = cars[1];
+    expect(car2.style.bottom).toBe('200px');
+    expect(car2.style.left).toBe('150px');
+    expect(car2.style.transform).toBe('rotate(180deg)');
   });
 });
