@@ -2,13 +2,7 @@ import React from 'react';
 
 import styles from './styles.module.css';
 import { getRotationBasedOnDirection } from './helpers';
-
-interface Car {
-  name: string;
-  x: number;
-  y: number;
-  facing: 'N' | 'E' | 'W' | 'S';
-}
+import { type Car } from '@/types';
 
 interface Props {
   width: number;
