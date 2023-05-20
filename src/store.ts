@@ -86,5 +86,8 @@ const calculateCarPosition = (
   if (car.facing === 'N') {
     return { ...car, y: Math.min(car.y + 1, bounds.height) };
   }
+  if (car.facing === 'S') {
+    return { ...car, y: car.y - 1 };
+  }
   return car;
 };
