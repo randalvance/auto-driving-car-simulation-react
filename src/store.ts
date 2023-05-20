@@ -80,6 +80,7 @@ export const useStore = create<State & Actions>((set) => ({
   nextStep: () => {
     set((state) => {
       const { cars, step, fieldWidth, fieldHeight, carCommands } = state;
+      let movementPerformed = false;
 
       // All cars have collided, this is a no-op
       if (cars.length === state.completedCars.size) {
@@ -94,7 +95,7 @@ export const useStore = create<State & Actions>((set) => ({
         const car = cars[i];
         const commandsForCar = carCommands[car.name];
         const commandAtStep = commandsForCar[step];
-        if (state.completedCars.has(car.name) || commandAtStep === null) {
+        if (state.completedCars.has(car.name) || commandAtStep === undefined) {
           completedCars.add(car.name);
           carPositions.push({ oldPosition: car, newPosition: car });
           continue;
@@ -107,6 +108,7 @@ export const useStore = create<State & Actions>((set) => ({
             height: fieldHeight,
           }),
         });
+        movementPerformed = true;
       }
 
       const calculatedCollisions = calculateNewCollisions(
@@ -122,7 +124,7 @@ export const useStore = create<State & Actions>((set) => ({
 
       return {
         cars: carPositions.map((c) => c.newPosition),
-        step: newStep,
+        step: movementPerformed ? newStep : step,
         collisions: [...state.collisions, ...calculatedCollisions],
         completedCars: newCompletedCars,
         isGameOver: newCompletedCars.size === cars.length,
