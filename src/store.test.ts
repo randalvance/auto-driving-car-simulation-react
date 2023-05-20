@@ -23,7 +23,7 @@ describe('store', () => {
     expect(newState.fieldHeight).toBe(5);
   });
 
-  it('should add new car', () => {
+  it("should add new car and it's commands", () => {
     const state = useStore.getState();
     const expectedCar: Car = {
       name: 'car1',
@@ -31,25 +31,31 @@ describe('store', () => {
       x: 1,
       y: 5,
     };
+    const expectedCommand = 'FFFRFFRRLFF';
 
-    state.addCar(expectedCar);
+    state.addCar(expectedCar, expectedCommand);
 
     const newState = useStore.getState();
 
     expect(newState.cars).toHaveLength(1);
     const actualCar = newState.cars[0];
     expect(actualCar).toEqual(expectedCar);
+    expect(newState.carCommands[expectedCar.name]).toBe(expectedCommand);
   });
 
   it('should not add a car and show an error if the car being added has the same name as an existing car', () => {
     const expectedCar: Car = { name: 'car1', facing: 'N', x: 1, y: 5 };
+    const expectedCommand = 'FRRLLFRLLFF';
     useStore.setState({
       ...initialState,
       cars: [expectedCar],
+      carCommands: {
+        [expectedCar.name]: 'FRRLLFRLLFF',
+      },
     });
 
     const state = useStore.getState();
-    state.addCar({ name: 'car1', facing: 'S', x: 4, y: 1 });
+    state.addCar({ name: 'car1', facing: 'S', x: 4, y: 1 }, 'FFFRFFRRLFF');
 
     const newState = useStore.getState();
     // Check that there's only 1 car, and it's the first car added, not the second one with duplicate name
@@ -58,5 +64,7 @@ describe('store', () => {
     expect(actualCar).toEqual(expectedCar);
     // Check that there is an error message generated
     expect(newState.error).toBe('A car with the name car1 already exists');
+    // Check that the command for the first car is not overwritten
+    expect(newState.carCommands[expectedCar.name]).toBe(expectedCommand);
   });
 });
