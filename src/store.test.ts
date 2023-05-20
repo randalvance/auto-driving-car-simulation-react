@@ -40,4 +40,23 @@ describe('store', () => {
     const actualCar = newState.cars[0];
     expect(actualCar).toEqual(expectedCar);
   });
+
+  it('should not add a car and show an error if the car being added has the same name as an existing car', () => {
+    const expectedCar: Car = { name: 'car1', facing: 'N', x: 1, y: 5 };
+    useStore.setState({
+      ...initialState,
+      cars: [expectedCar],
+    });
+
+    const state = useStore.getState();
+    state.addCar({ name: 'car1', facing: 'S', x: 4, y: 1 });
+
+    const newState = useStore.getState();
+    // Check that there's only 1 car, and it's the first car added, not the second one with duplicate name
+    expect(newState.cars).toHaveLength(1);
+    const actualCar = newState.cars[0];
+    expect(actualCar).toEqual(expectedCar);
+    // Check that there is an error message generated
+    expect(newState.error).toBe('A car with the name car1 already exists');
+  });
 });
