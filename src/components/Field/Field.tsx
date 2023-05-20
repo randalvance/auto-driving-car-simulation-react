@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styles from './styles.module.css';
+import { getRotationBasedOnDirection } from './helpers';
 
 interface Car {
   name: string;
@@ -27,7 +28,11 @@ export const Field: React.FC<Props> = ({ width, height, cars }) => {
           key={car.name}
           className={styles.car}
           role="car"
-          style={{ bottom: car.y * 50, left: car.x * 50 }}
+          style={{
+            bottom: car.y * 50,
+            left: car.x * 50,
+            transform: `rotate(${getRotationBasedOnDirection(car.facing)}deg)`,
+          }}
         />
       ))}
     </div>
