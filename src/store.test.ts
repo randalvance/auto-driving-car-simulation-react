@@ -157,5 +157,64 @@ describe('store', () => {
         });
       });
     });
+
+    describe('should change car direction', () => {
+      describe('should turn', () => {
+        [
+          {
+            facing: 'N',
+            turn: 'Right',
+            expectedDirection: 'E',
+          },
+          {
+            facing: 'E',
+            turn: 'Right',
+            expectedDirection: 'S',
+          },
+          {
+            facing: 'S',
+            turn: 'Right',
+            expectedDirection: 'W',
+          },
+          {
+            facing: 'W',
+            turn: 'Right',
+            expectedDirection: 'N',
+          },
+        ].forEach(({ facing, turn, expectedDirection }) => {
+          it(`when facing ${facing} and turning ${turn}`, () => {
+            // Arrange
+            const car: Car = {
+              name: 'car1',
+              facing: facing as Direction,
+              x: 5,
+              y: 5,
+            };
+            useStore.setState({
+              fieldWidth: 10,
+              fieldHeight: 10,
+              cars: [car],
+              carCommands: {
+                [car.name]: turn === 'Right' ? 'R' : 'L',
+              },
+            });
+            const state = useStore.getState();
+
+            // Act
+            state.nextStep();
+
+            // Assert
+            const newState = useStore.getState();
+            expect(newState.cars).toHaveLength(1);
+            const actualCar = newState.cars[0];
+            // Car should be facing the expected direction
+            expect(actualCar.facing).toEqual(expectedDirection);
+            // Make sure car stayed in same position
+            expect(actualCar.x).toBe(5);
+            expect(actualCar.y).toBe(5);
+          });
+        });
+      });
+    });
   });
 });
