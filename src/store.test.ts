@@ -106,6 +106,16 @@ describe('store', () => {
           carPosition: { facing: 'S', x: 0, y: 5 },
           targetPosition: { x: 0, y: 4 },
         },
+        {
+          facing: 'East',
+          carPosition: { facing: 'E', x: 3, y: 0 },
+          targetPosition: { x: 4, y: 0 },
+        },
+        {
+          facing: 'West',
+          carPosition: { facing: 'W', x: 3, y: 0 },
+          targetPosition: { x: 2, y: 0 },
+        },
       ].forEach(({ facing, carPosition, targetPosition }) => {
         it(`when facing ${facing}`, () => {
           const car: Car = {
