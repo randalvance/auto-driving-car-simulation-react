@@ -36,6 +36,15 @@ const App: React.FC = () => {
       'F',
       'F',
     ]);
+    addCar({ name: 'car4', x: 1, y: 9, facing: 'E' }, [
+      'F',
+      'F',
+      'F',
+      'R',
+      'R',
+      'F',
+      'F',
+    ]);
     const store = useStore.getState();
     const interval = setInterval(() => {
       store.nextStep();
