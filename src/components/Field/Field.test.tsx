@@ -24,4 +24,15 @@ describe('Field', () => {
       });
     });
   });
+
+  describe('should render cars at correct position', () => {
+    it('when there is one car', async () => {
+      render(<Field width={10} height={10} cars={[{ x: 1, y: 2 }]} />);
+      const cars = screen.getAllByRole('car');
+      expect(cars).toHaveLength(1);
+      const car = cars[0];
+      expect(car.style.bottom).toBe('200px');
+      expect(car.style.left).toBe('100px');
+    });
+  });
 });
