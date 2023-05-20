@@ -116,6 +116,27 @@ describe('store', () => {
           carPosition: { facing: 'W', x: 3, y: 0 },
           targetPosition: { x: 2, y: 0 },
         },
+        // Out of bounds tests (field is 10x10)
+        {
+          facing: 'North',
+          carPosition: { facing: 'N', x: 3, y: 10 },
+          targetPosition: { x: 0, y: 10 },
+        },
+        {
+          facing: 'South',
+          carPosition: { facing: 'S', x: 0, y: 0 },
+          targetPosition: { x: 0, y: 0 },
+        },
+        {
+          facing: 'East',
+          carPosition: { facing: 'E', x: 10, y: 0 },
+          targetPosition: { x: 10, y: 0 },
+        },
+        {
+          facing: 'West',
+          carPosition: { facing: 'W', x: 0, y: 0 },
+          targetPosition: { x: 0, y: 0 },
+        },
       ].forEach(({ facing, carPosition, targetPosition }) => {
         it(`when facing ${facing}`, () => {
           const car: Car = {
