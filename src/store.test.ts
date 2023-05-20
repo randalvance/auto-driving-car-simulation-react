@@ -239,5 +239,52 @@ describe('store', () => {
         });
       });
     });
+
+    it('should move two cars at the same time', () => {
+      // Arrange
+      const car1: Car = {
+        name: 'car1',
+        facing: 'N',
+        x: 0,
+        y: 0,
+      };
+      const car2: Car = {
+        name: 'car2',
+        facing: 'S',
+        x: 10,
+        y: 10,
+      };
+      useStore.setState({
+        fieldWidth: 10,
+        fieldHeight: 10,
+        cars: [car1, car2],
+        carCommands: {
+          [car1.name]: ['F', 'F', 'R', 'F', 'F', 'L', 'F', 'F', 'F', 'F', 'L'],
+          [car2.name]: ['F', 'F', 'R', 'F', 'F', 'L', 'F', 'F'],
+        },
+      });
+      const state = useStore.getState();
+      const maxSteps = Math.max(...Object.keys(state.carCommands).map((k) => state.carCommands[k].length));
+
+      // Act
+      for (let i = 0; i < maxSteps; i++) {
+        state.nextStep();
+      }
+
+      // Assert
+      const newState = useStore.getState();
+      expect(newState.step).toBe(maxSteps);
+      expect(newState.cars).toHaveLength(2);
+      const actualCar1 = newState.cars[0];
+      const actualCar2 = newState.cars[1];
+      // Make sure car stayed in same position
+      expect(actualCar1.x).toBe(2);
+      expect(actualCar1.y).toBe(6);
+      expect(actualCar2.x).toBe(8);
+      expect(actualCar2.y).toBe(6);
+      // Car should be facing the expected direction
+      expect(actualCar1.facing).toEqual('W');
+      expect(actualCar2.facing).toEqual('S');
+    });
   });
 });
