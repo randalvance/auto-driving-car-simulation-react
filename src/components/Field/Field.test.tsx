@@ -33,11 +33,13 @@ describe('Field', () => {
         cars={[
           { name: 'Car1', x: 1, y: 2, facing: 'N' },
           { name: 'Car2', x: 4, y: 3, facing: 'S' },
+          { name: 'Car3', x: 5, y: 1, facing: 'W' },
+          { name: 'Car4', x: 0, y: 0, facing: 'E' },
         ]}
       />,
     );
     const cars = screen.getAllByRole('car');
-    expect(cars).toHaveLength(2);
+    expect(cars).toHaveLength(4);
 
     const car1 = cars[0];
     expect(car1.style.left).toBe('50px');
@@ -48,5 +50,15 @@ describe('Field', () => {
     expect(car2.style.left).toBe('200px');
     expect(car2.style.bottom).toBe('150px');
     expect(car2.style.transform).toBe('rotate(180deg)');
+
+    const car3 = cars[2];
+    expect(car3.style.left).toBe('250px');
+    expect(car3.style.bottom).toBe('50px');
+    expect(car3.style.transform).toBe('rotate(270deg)');
+
+    const car4 = cars[3];
+    expect(car4.style.left).toBe('0px');
+    expect(car4.style.bottom).toBe('0px');
+    expect(car4.style.transform).toBe('rotate(90deg)');
   });
 });
