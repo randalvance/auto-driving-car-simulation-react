@@ -16,7 +16,9 @@ describe('Field', () => {
       },
     ].forEach(({ width, height, expectedHtmlWidth, expectedHtmlHeight }) => {
       it(`when width=${width} and height=${height}`, async () => {
-        render(<Field width={width} height={height} cars={[]} />);
+        render(
+          <Field width={width} height={height} cars={[]} collidedCars={[]} />,
+        );
 
         const field = screen.getByRole('field');
         expect(field.style.height).toBe(`${expectedHtmlHeight}px`);
@@ -36,6 +38,7 @@ describe('Field', () => {
           { name: 'Car3', x: 5, y: 1, facing: 'W' },
           { name: 'Car4', x: 0, y: 0, facing: 'E' },
         ]}
+        collidedCars={[]}
       />,
     );
     const cars = screen.getAllByRole('car');
@@ -73,6 +76,7 @@ describe('Field', () => {
           { name: 'Car3', x: 5, y: 1, facing: 'W' },
           { name: 'Car4', x: 0, y: 0, facing: 'E' },
         ]}
+        collidedCars={[]}
       />,
     );
     const labels = screen.getAllByRole('label');
@@ -93,5 +97,30 @@ describe('Field', () => {
     const label4 = labels[3];
     expect(label4.style.left).toBe('0px');
     expect(label4.style.bottom).toBe('50px');
+  });
+
+  it('should render collisions as explosion', async () => {
+    render(
+      <Field
+        width={10}
+        height={10}
+        cars={[
+          { name: 'Car1', x: 0, y: 1, facing: 'N' },
+          { name: 'Car2', x: 0, y: 1, facing: 'S' },
+          { name: 'Car3', x: 1, y: 2, facing: 'S' },
+        ]}
+        collidedCars={['Car1', 'Car2']}
+      />,
+    );
+
+    const cars = screen.getAllByRole('car');
+    const car1 = cars[0];
+    expect(car1.className).toContain('explosion');
+
+    const car2 = cars[1];
+    expect(car2.className).toContain('explosion');
+
+    const car3 = cars[2];
+    expect(car3.className).not.toContain('explosion');
   });
 });
