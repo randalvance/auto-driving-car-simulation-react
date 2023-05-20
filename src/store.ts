@@ -14,6 +14,7 @@ export interface State {
   carCommands: Record<Car['name'], Command[]>;
   step: number;
   collisions: CollisionInfo[];
+  isGameOver: boolean;
 }
 
 export interface Actions {
@@ -29,6 +30,7 @@ export const initialState: State = {
   carCommands: {},
   step: 0,
   collisions: [],
+  isGameOver: false,
 };
 
 export const useStore = create<State & Actions>((set) => ({
