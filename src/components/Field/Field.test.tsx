@@ -16,7 +16,7 @@ describe('Field', () => {
       },
     ].forEach(({ width, height, expectedHtmlWidth, expectedHtmlHeight }) => {
       it(`when width=${width} and height=${height}`, async () => {
-        render(<Field width={width} height={height} />);
+        render(<Field width={width} height={height} cars={[]} />);
 
         const field = screen.getByRole('field');
         expect(field.style.height).toBe(`${expectedHtmlHeight}px`);
