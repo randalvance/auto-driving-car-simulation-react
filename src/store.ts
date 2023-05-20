@@ -66,5 +66,24 @@ export const useStore = create<State & Actions>((set) => ({
       fieldHeight: height,
     }));
   },
-  nextStep: () => {},
+  nextStep: () => {
+    set((state) => ({
+      cars: state.cars.map((car) =>
+        calculateCarPosition(car, {
+          width: state.fieldWidth,
+          height: state.fieldHeight,
+        }),
+      ),
+      step: state.step + 1,
+    }));
+  },
 }));
+
+const calculateCarPosition = (
+  car: Car,
+  bounds: { width: number; height: number },
+): Car => {
+  const y = Math.min(car.y + 1, bounds.height);
+
+  return { ...car, y };
+};
