@@ -61,4 +61,37 @@ describe('Field', () => {
     expect(car4.style.bottom).toBe('0px');
     expect(car4.style.transform).toBe('rotate(90deg)');
   });
+
+  it('should render labels', async () => {
+    render(
+      <Field
+        width={10}
+        height={10}
+        cars={[
+          { name: 'Car1', x: 1, y: 2, facing: 'N' },
+          { name: 'Car2', x: 4, y: 3, facing: 'S' },
+          { name: 'Car3', x: 5, y: 1, facing: 'W' },
+          { name: 'Car4', x: 0, y: 0, facing: 'E' },
+        ]}
+      />,
+    );
+    const labels = screen.getAllByRole('label');
+    expect(labels).toHaveLength(4);
+
+    const label1 = labels[0];
+    expect(label1.style.left).toBe('50px');
+    expect(label1.style.bottom).toBe('150px');
+
+    const label2 = labels[1];
+    expect(label2.style.left).toBe('200px');
+    expect(label2.style.bottom).toBe('200px');
+
+    const label3 = labels[2];
+    expect(label3.style.left).toBe('250px');
+    expect(label3.style.bottom).toBe('100px');
+
+    const label4 = labels[3];
+    expect(label4.style.left).toBe('0px');
+    expect(label4.style.bottom).toBe('50px');
+  });
 });
