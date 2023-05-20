@@ -436,5 +436,60 @@ describe('store', () => {
         new Set<string>(['car1', 'car2', 'car3']),
       );
     });
+
+    /*
+      Let's say car1 is at position (0, 0, 'E') and car2 is at position (1, 0, 'W'),
+      on the next step, car1 will move to (1, 0, 'E') and car2 will move to (0, 0, 'W')
+      which means the cars phase through each other.
+      Since this scenario was not described in the original requirement
+      I will just assume that the collision will happen on the original position of the latter car.
+      In this case, the collision will happen at (1, 0).
+    */
+    it('should set collision when two cars are right next to each other', () => {
+      // Arrange
+      useStore.setState({
+        fieldHeight: 10,
+        fieldWidth: 10,
+        cars: [
+          { name: 'car1', facing: 'E', x: 0, y: 0 },
+          { name: 'car2', facing: 'W', x: 1, y: 0 },
+        ],
+        carCommands: {
+          car1: ['F'],
+          car2: ['F'],
+        },
+      });
+      const state = useStore.getState();
+
+      // Act
+      state.nextStep();
+
+      // Assert
+      const newState = useStore.getState();
+      expect(newState.step).toBe(1);
+      expect(newState.completedCars).toEqual(new Set<string>(['car1', 'car2']));
+      const car1 = newState.cars[0];
+      expect(car1.x).toBe(1);
+      expect(car1.y).toBe(0);
+      expect(car1.facing).toBe('E');
+      const car2 = newState.cars[1];
+      expect(car2.x).toBe(1);
+      expect(car2.y).toBe(0);
+      expect(car2.facing).toBe('W');
+      expect(newState.collisions).toEqual([
+        {
+          carName: 'car1',
+          collidedWith: ['car2'],
+          x: 1,
+          y: 0,
+        },
+        {
+          carName: 'car2',
+          collidedWith: ['car1'],
+          x: 1,
+          y: 0,
+        },
+      ]);
+    });
   });
 });
