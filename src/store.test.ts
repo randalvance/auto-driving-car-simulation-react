@@ -1,5 +1,5 @@
 import { initialState, useStore } from './store';
-import { type Car } from '@/types';
+import { type Car, type Direction } from '@/types';
 
 describe('store', () => {
   beforeEach(() => {
@@ -101,12 +101,17 @@ describe('store', () => {
           carPosition: { facing: 'N', x: 0, y: 0 },
           targetPosition: { x: 0, y: 1 },
         },
+        {
+          facing: 'South',
+          carPosition: { facing: 'S', x: 0, y: 5 },
+          targetPosition: { x: 0, y: 4 },
+        },
       ].forEach(({ facing, carPosition, targetPosition }) => {
         it(`when facing ${facing}`, () => {
           const car: Car = {
             name: 'car1',
             ...carPosition,
-            facing: carPosition.facing as 'N' | 'E' | 'W' | 'S',
+            facing: carPosition.facing as Direction,
           };
           useStore.setState({ cars: [car], carCommands: { [car.name]: 'F' } });
           const state = useStore.getState();
