@@ -398,5 +398,43 @@ describe('store', () => {
       expect(newState.isGameOver).toBe(true);
       expect(newState.completedCars).toEqual(new Set<string>(['car1', 'car2']));
     });
+
+    it('should set gameOver and completedCars to true when all cars are complete', () => {
+      // Arrange
+      useStore.setState({
+        fieldHeight: 10,
+        fieldWidth: 10,
+        cars: [
+          { name: 'car1', facing: 'E', x: 0, y: 5 },
+          { name: 'car2', facing: 'W', x: 4, y: 5 },
+          { name: 'car3', facing: 'S', x: 5, y: 10 },
+        ],
+        carCommands: {
+          car1: ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
+          car2: ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
+          car3: ['F', 'F', 'F', 'F', 'F', 'F'],
+        },
+      });
+
+      const state = useStore.getState();
+      const maxSteps = Math.max(
+        ...Object.keys(state.carCommands).map(
+          (k) => state.carCommands[k].length,
+        ),
+      );
+
+      // Act
+      for (let i = 0; i < maxSteps; i++) {
+        state.nextStep();
+      }
+
+      // Assert
+      const newState = useStore.getState();
+      expect(newState.step).toBe(6);
+      expect(newState.isGameOver).toBe(true);
+      expect(newState.completedCars).toEqual(
+        new Set<string>(['car1', 'car2', 'car3']),
+      );
+    });
   });
 });
