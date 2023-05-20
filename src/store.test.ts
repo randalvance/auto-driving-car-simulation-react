@@ -93,18 +93,33 @@ describe('store', () => {
     beforeEach(() => {
       useStore.setState({ fieldWidth: 10, fieldHeight: 10, step: 0 });
     });
-    it('should move the car forward', () => {
-      const car: Car = { name: 'car1', facing: 'N', x: 0, y: 0 };
-      useStore.setState({ cars: [car], carCommands: { [car.name]: 'F' } });
-      const state = useStore.getState();
 
-      state.nextStep();
+    describe('should move car forward', () => {
+      [
+        {
+          facing: 'North',
+          carPosition: { facing: 'N', x: 0, y: 0 },
+          targetPosition: { x: 0, y: 1 },
+        },
+      ].forEach(({ facing, carPosition, targetPosition }) => {
+        it(`when facing ${facing}`, () => {
+          const car: Car = {
+            name: 'car1',
+            ...carPosition,
+            facing: carPosition.facing as 'N' | 'E' | 'W' | 'S',
+          };
+          useStore.setState({ cars: [car], carCommands: { [car.name]: 'F' } });
+          const state = useStore.getState();
 
-      const newState = useStore.getState();
-      expect(newState.cars).toHaveLength(1);
-      const actualCar = newState.cars[0];
-      expect(actualCar).toEqual({ ...car, y: 1 });
-      expect(newState.step).toBe(1);
+          state.nextStep();
+
+          const newState = useStore.getState();
+          expect(newState.cars).toHaveLength(1);
+          const actualCar = newState.cars[0];
+          expect(actualCar).toEqual({ ...car, ...targetPosition });
+          expect(newState.step).toBe(1);
+        });
+      });
     });
   });
 });
