@@ -10,7 +10,10 @@ const App: React.FC = () => {
         <Field
           width={10}
           height={10}
-          cars={[{ name: 'Car1', x: 2, y: 5, facing: 'N' }]}
+          cars={[
+            { name: 'Car1', x: 2, y: 5, facing: 'N' },
+            { name: 'Car2', x: 4, y: 3, facing: 'W' },
+          ]}
         />
       </div>
     </>
