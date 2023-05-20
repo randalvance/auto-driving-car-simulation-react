@@ -7,7 +7,7 @@ export const getRotationBasedOnDirection = (
     case 'E':
       return 90;
     case 'W':
-      return -90;
+      return 270;
     case 'S':
       return 180;
   }
