@@ -79,55 +79,111 @@ export const useStore = create<State & Actions>((set) => ({
   },
   nextStep: () => {
     set((state) => {
-      const { cars, step, fieldWidth, fieldHeight, carCommands } = state;
+      const {
+        cars,
+        step,
+        fieldWidth,
+        fieldHeight,
+        carCommands,
+        completedCars: currentCompletedCars,
+        collisions,
+      } = state;
       let movementPerformed = false;
 
-      // All cars have collided, this is a no-op
-      if (cars.length === state.completedCars.size) {
+      // All cars are completed, so don't do anything
+      if (cars.length === currentCompletedCars.size) {
         return state;
       }
 
       const newStep = state.step + 1;
-      const completedCars: Set<string> = new Set<string>();
-      const carPositions: Array<{ oldPosition: Car; newPosition: Car }> = [];
+      const completedCars: Set<string> = new Set<string>(currentCompletedCars);
+      const carPositions: Record<Car['name'], Car> = cars.reduce<
+        Record<Car['name'], Car>
+      >((acc, car) => {
+        acc[car.name] = car;
+        return acc;
+      }, {});
+      const newCollisions: CollisionInfo[] = [...collisions];
 
       for (let i = 0; i < cars.length; i++) {
         const car = cars[i];
         const commandsForCar = carCommands[car.name];
         const commandAtStep = commandsForCar[step];
-        if (state.completedCars.has(car.name) || commandAtStep === undefined) {
+
+        if (completedCars.has(car.name) || commandAtStep === undefined) {
           completedCars.add(car.name);
-          carPositions.push({ oldPosition: car, newPosition: car });
           continue;
         }
+        let carAtNewPosition = car;
 
-        carPositions.push({
-          oldPosition: car,
-          newPosition: getCarAtNewPosition(car, commandAtStep, {
+        // If a car is not yet complete, check for collisions on it's next move
+        if (!currentCompletedCars.has(car.name)) {
+          carAtNewPosition = getCarAtNewPosition(car, commandAtStep, {
             width: fieldWidth,
             height: fieldHeight,
-          }),
-        });
+          });
+
+          carPositions[car.name] = carAtNewPosition;
+
+          // Check for all cars that collided with carAtNewPosition
+          const collidedCars = Object.values(carPositions).filter(
+            (anotherCar) => {
+              return (
+                anotherCar.name !== carAtNewPosition.name &&
+                carAtNewPosition.x === anotherCar.x &&
+                carAtNewPosition.y === anotherCar.y
+              );
+            },
+          );
+
+          const addCollision = (
+            carWhichCollided: Car,
+            collidedCars: string[],
+          ): void => {
+            const currentCollision = newCollisions.find(
+              (c) => c.carName === carWhichCollided.name,
+            );
+            if (currentCollision == null) {
+              newCollisions.push({
+                carName: carWhichCollided.name,
+                collidedWith: collidedCars,
+                step: newStep,
+                x: carWhichCollided.x,
+                y: carWhichCollided.y,
+              });
+            } else {
+              currentCollision.collidedWith = [
+                ...currentCollision.collidedWith,
+                ...collidedCars,
+              ];
+            }
+            completedCars.add(carWhichCollided.name);
+          };
+
+          // If there are collisions, add them to the newCollisions object
+          if (collidedCars.length > 0) {
+            // Register collisions for the current car
+            addCollision(
+              carAtNewPosition,
+              collidedCars.map((c) => c.name),
+            );
+
+            // Also register for other cars that this current car have collided with
+            for (const anotherCar of collidedCars) {
+              addCollision(anotherCar, [carAtNewPosition.name]);
+            }
+          }
+        }
+
         movementPerformed = true;
       }
 
-      const calculatedCollisions = calculateNewCollisions(
-        completedCars,
-        carPositions,
-        newStep,
-      );
-
-      const newCompletedCars = new Set<string>([
-        ...completedCars,
-        ...calculatedCollisions.map((c) => c.carName),
-      ]);
-
       return {
-        cars: carPositions.map((c) => c.newPosition),
+        cars: Object.values(carPositions),
         step: movementPerformed ? newStep : step,
-        collisions: [...state.collisions, ...calculatedCollisions],
-        completedCars: newCompletedCars,
-        isGameOver: newCompletedCars.size === cars.length,
+        collisions: [...newCollisions],
+        completedCars,
+        isGameOver: completedCars.size === cars.length,
       };
     });
   },
@@ -187,35 +243,4 @@ const turnLeft = (car: Car): Car => {
     E: 'N',
   };
   return { ...car, facing: directionMap[car.facing] };
-};
-
-const calculateNewCollisions = (
-  completeCars: Set<string>,
-  carPositions: Array<{
-    oldPosition: Car;
-    newPosition: Car;
-  }>,
-  newStep: number,
-): CollisionInfo[] => {
-  return carPositions.reduce<CollisionInfo[]>((acc, car) => {
-    if (completeCars.has(car.newPosition.name)) return acc;
-    const collisionsForCar = carPositions.filter(
-      (c) =>
-        c.newPosition.name !== car.newPosition.name &&
-        c.newPosition.x === car.newPosition.x &&
-        c.newPosition.y === car.newPosition.y,
-    );
-
-    if (collisionsForCar.length > 0) {
-      acc.push({
-        carName: car.newPosition.name,
-        collidedWith: collisionsForCar.map((c) => c.newPosition.name),
-        x: car.newPosition.x,
-        y: car.newPosition.y,
-        step: newStep,
-      });
-    }
-
-    return acc;
-  }, []);
 };

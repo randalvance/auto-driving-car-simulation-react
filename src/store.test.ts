@@ -342,21 +342,30 @@ describe('store', () => {
       expect(actualCar3.facing).toBe('W');
       // Check Collisions
       expect(newState.collisions).toHaveLength(3);
-      expect(newState.collisions[0]).toEqual({
+      const collisionForCar1 = newState.collisions.find(
+        (c) => c.carName === actualCar1.name,
+      );
+      expect(collisionForCar1).toEqual({
         carName: actualCar1.name,
-        collidedWith: [actualCar2.name],
+        collidedWith: [actualCar2.name, actualCar3.name],
         x: 1,
         y: 3,
         step: 5,
       } satisfies CollisionInfo);
-      expect(newState.collisions[1]).toEqual({
+      const collisionForCar2 = newState.collisions.find(
+        (c) => c.carName === actualCar2.name,
+      );
+      expect(collisionForCar2).toEqual({
         carName: actualCar2.name,
-        collidedWith: [actualCar1.name],
+        collidedWith: [actualCar1.name, actualCar3.name],
         x: 1,
         y: 3,
         step: 5,
       } satisfies CollisionInfo);
-      expect(newState.collisions[2]).toEqual({
+      const collisionForCar3 = newState.collisions.find(
+        (c) => c.carName === actualCar3.name,
+      );
+      expect(collisionForCar3).toEqual({
         carName: actualCar3.name,
         collidedWith: [actualCar1.name, actualCar2.name],
         x: 1,
