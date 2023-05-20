@@ -1,6 +1,4 @@
-export const getRotationBasedOnDirection = (
-  direction: 'N' | 'E' | 'W' | 'S',
-): number => {
+export const getRotationBasedOnDirection = (direction: 'N' | 'E' | 'W' | 'S'): number => {
   switch (direction) {
     case 'N':
       return 0;
