@@ -67,4 +67,24 @@ describe('store', () => {
     // Check that the command for the first car is not overwritten
     expect(newState.carCommands[expectedCar.name]).toBe(expectedCommand);
   });
+
+  describe('should not add a car if the car is out of bounds', () => {
+    [
+      { x: 11, y: 5 },
+      { x: 5, y: 11 },
+      { x: 12, y: 12 },
+      { x: -10, y: -10 },
+    ].forEach(({ x, y }) => {
+      it(`when car position is at (${x}, ${y})`, () => {
+        useStore.setState({ fieldWidth: 10, fieldHeight: 10 });
+        const state = useStore.getState();
+
+        state.addCar({ name: 'car1', facing: 'N', x: 11, y: 5 }, 'FFFRFFRRLFF');
+
+        const newState = useStore.getState();
+        expect(newState.cars).toHaveLength(0);
+        expect(newState.error).toBe('Car is out of bounds');
+      });
+    });
+  });
 });
