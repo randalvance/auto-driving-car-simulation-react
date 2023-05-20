@@ -27,5 +27,10 @@ export const useStore = create<State & Actions>((set, get) => ({
       cars: [...state.cars, car],
     }));
   },
-  setFieldBounds: (width: number, height: number) => {},
+  setFieldBounds: (width: number, height: number) => {
+    set(() => ({
+      fieldWidth: width,
+      fieldHeight: height,
+    }));
+  },
 }));
