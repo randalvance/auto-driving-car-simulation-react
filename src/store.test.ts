@@ -365,14 +365,14 @@ describe('store', () => {
       } satisfies CollisionInfo);
     });
 
-    it('should set gameOver to true when all cars are crashed', () => {
+    it('should set gameOver and completedCars to true when all cars are crashed', () => {
       // Arrange
       useStore.setState({
         fieldHeight: 10,
         fieldWidth: 10,
         cars: [
           { name: 'car1', facing: 'E', x: 0, y: 5 },
-          { name: 'car2', facing: 'W', x: 3, y: 5 },
+          { name: 'car2', facing: 'W', x: 4, y: 5 },
         ],
         carCommands: {
           car1: ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
@@ -396,6 +396,7 @@ describe('store', () => {
       const newState = useStore.getState();
       expect(newState.step).toBe(2);
       expect(newState.isGameOver).toBe(true);
+      expect(newState.completedCars).toEqual(new Set<string>(['car1', 'car2']));
     });
   });
 });
