@@ -1,6 +1,6 @@
-export const getRotationBasedOnDirection = (
-  direction: 'N' | 'E' | 'W' | 'S',
-): number => {
+import { type Direction } from '@/types';
+
+export const getRotationBasedOnDirection = (direction: Direction): number => {
   switch (direction) {
     case 'N':
       return 0;
