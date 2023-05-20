@@ -6,13 +6,13 @@ import { Field } from './Field';
 describe('Field', () => {
   describe('should render field with correct height and width', () => {
     [
-      { width: 1, height: 2, expectedHtmlWidth: 100, expectedHtmlHeight: 200 },
-      { width: 3, height: 3, expectedHtmlWidth: 300, expectedHtmlHeight: 300 },
+      { width: 1, height: 2, expectedHtmlWidth: 50, expectedHtmlHeight: 100 },
+      { width: 3, height: 3, expectedHtmlWidth: 150, expectedHtmlHeight: 150 },
       {
         width: 10,
         height: 5,
-        expectedHtmlWidth: 1000,
-        expectedHtmlHeight: 500,
+        expectedHtmlWidth: 500,
+        expectedHtmlHeight: 250,
       },
     ].forEach(({ width, height, expectedHtmlWidth, expectedHtmlHeight }) => {
       it(`when width=${width} and height=${height}`, async () => {
@@ -31,8 +31,8 @@ describe('Field', () => {
       const cars = screen.getAllByRole('car');
       expect(cars).toHaveLength(1);
       const car = cars[0];
-      expect(car.style.bottom).toBe('200px');
-      expect(car.style.left).toBe('100px');
+      expect(car.style.bottom).toBe('100px');
+      expect(car.style.left).toBe('50px');
     });
   });
 });
