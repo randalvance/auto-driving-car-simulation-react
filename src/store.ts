@@ -7,11 +7,13 @@ export interface State {
   fieldHeight: number;
   error?: string;
   carCommands: Record<Car['name'], string>;
+  step: number;
 }
 
 export interface Actions {
   addCar: (car: Car, command: string) => void;
   setFieldBounds: (width: number, height: number) => void;
+  nextStep: () => void;
 }
 
 export const initialState: State = {
@@ -19,6 +21,7 @@ export const initialState: State = {
   fieldWidth: 0,
   fieldHeight: 0,
   carCommands: {},
+  step: 0,
 };
 
 export const useStore = create<State & Actions>((set) => ({
@@ -63,4 +66,5 @@ export const useStore = create<State & Actions>((set) => ({
       fieldHeight: height,
     }));
   },
+  nextStep: () => {},
 }));
