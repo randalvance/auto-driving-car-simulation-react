@@ -7,4 +7,12 @@ export interface State {
   fieldHeight: number;
 }
 
-export const useStore = create<State>((set, get) => ({}));
+const initialState: State = {
+  cars: [],
+  fieldWidth: 0,
+  fieldHeight: 0,
+};
+
+export const useStore = create<State>((set, get) => ({
+  ...initialState,
+}));
