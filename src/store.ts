@@ -89,5 +89,11 @@ const calculateCarPosition = (
   if (car.facing === 'S') {
     return { ...car, y: car.y - 1 };
   }
+  if (car.facing === 'E') {
+    return { ...car, x: car.x + 1 };
+  }
+  if (car.facing === 'W') {
+    return { ...car, x: car.x - 1 };
+  }
   return car;
 };
