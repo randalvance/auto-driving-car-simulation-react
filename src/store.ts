@@ -19,5 +19,9 @@ export const initialState: State = {
 
 export const useStore = create<State & Actions>((set, get) => ({
   ...initialState,
-  addCar: (car: Car) => {},
+  addCar: (car: Car) => {
+    set((state) => ({
+      cars: [...state.cars, car],
+    }));
+  },
 }));
