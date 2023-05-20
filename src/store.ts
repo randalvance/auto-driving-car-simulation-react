@@ -75,8 +75,13 @@ export const useStore = create<State & Actions>((set) => ({
   },
   nextStep: () => {
     set((state) => {
-      const { step, fieldWidth, fieldHeight, carCommands, collisions } = state;
+      const { cars, step, fieldWidth, fieldHeight, carCommands, collisions } =
+        state;
 
+      // All cars have collided, this is a no-op
+      if (cars.length === collisions.length) {
+        return state;
+      }
       const newStep = state.step + 1;
       const carsAtNewPositions = state.cars.map((car) => {
         const commandForCar = carCommands[car.name];
@@ -97,10 +102,16 @@ export const useStore = create<State & Actions>((set) => ({
         });
       });
 
+      const calculatedCollisions = calculateCollisions(
+        carsAtNewPositions,
+        collisions,
+        newStep,
+      );
+
       return {
         cars: carsAtNewPositions,
         step: newStep,
-        collisions: [...state.collisions],
+        collisions: [...state.collisions, ...calculatedCollisions],
       };
     });
   },
@@ -160,4 +171,34 @@ const turnLeft = (car: Car): Car => {
     E: 'N',
   };
   return { ...car, facing: directionMap[car.facing] };
+};
+
+const calculateCollisions = (
+  carsAtNewPositions: Car[],
+  collisions: CollisionInfo[],
+  newStep: number,
+): CollisionInfo[] => {
+  // Get cars that have not collided yet
+  const carsNotCollided = carsAtNewPositions.filter(
+    (car) => collisions.find((c) => c.carName === car.name) == null,
+  );
+
+  // Check for collisions
+  return carsNotCollided.reduce<CollisionInfo[]>((acc, car) => {
+    const collisionsForCar = carsAtNewPositions.filter(
+      (c) => c.name !== car.name && c.x === car.x && c.y === car.y,
+    );
+
+    if (collisionsForCar.length > 0) {
+      acc.push({
+        carName: car.name,
+        collidedWith: collisionsForCar.map((c) => c.name),
+        x: car.x,
+        y: car.y,
+        step: newStep,
+      });
+    }
+
+    return acc;
+  }, []);
 };
