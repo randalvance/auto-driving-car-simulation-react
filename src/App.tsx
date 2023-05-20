@@ -7,7 +7,11 @@ const App: React.FC = () => {
     <>
       <div>
         <h1>Auto-Driving Car Simulation</h1>
-        <Field width={10} height={10} cars={[{ name: 'Car1', x: 2, y: 5 }]} />
+        <Field
+          width={10}
+          height={10}
+          cars={[{ name: 'Car1', x: 2, y: 5, facing: 'N' }]}
+        />
       </div>
     </>
   );
