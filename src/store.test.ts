@@ -89,7 +89,7 @@ describe('store', () => {
     });
   });
 
-  describe('Simulation Tests: One Car', () => {
+  describe('Simulation Tests', () => {
     beforeEach(() => {
       useStore.setState({ fieldWidth: 10, fieldHeight: 10, step: 0 });
     });
