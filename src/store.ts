@@ -7,12 +7,17 @@ export interface State {
   fieldHeight: number;
 }
 
-const initialState: State = {
+export interface Actions {
+  addCar: (car: Car) => void;
+}
+
+export const initialState: State = {
   cars: [],
   fieldWidth: 0,
   fieldHeight: 0,
 };
 
-export const useStore = create<State>((set, get) => ({
+export const useStore = create<State & Actions>((set, get) => ({
   ...initialState,
+  addCar: (car: Car) => {},
 }));
