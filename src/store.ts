@@ -9,6 +9,7 @@ export interface State {
 
 export interface Actions {
   addCar: (car: Car) => void;
+  setFieldBounds: (width: number, height: number) => void;
 }
 
 export const initialState: State = {
@@ -19,9 +20,12 @@ export const initialState: State = {
 
 export const useStore = create<State & Actions>((set, get) => ({
   ...initialState,
+
+  // Actions
   addCar: (car: Car) => {
     set((state) => ({
       cars: [...state.cars, car],
     }));
   },
+  setFieldBounds: (width: number, height: number) => {},
 }));

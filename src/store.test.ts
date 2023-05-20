@@ -13,6 +13,16 @@ describe('store', () => {
     expect(state.fieldHeight).toBe(0);
   });
 
+  it('should set field width and height', () => {
+    const state = useStore.getState();
+
+    state.setFieldBounds(3, 5);
+
+    const newState = useStore.getState();
+    expect(newState.fieldWidth).toBe(3);
+    expect(newState.fieldHeight).toBe(5);
+  });
+
   it('should add new car', () => {
     const state = useStore.getState();
     const expectedCar: Car = {
