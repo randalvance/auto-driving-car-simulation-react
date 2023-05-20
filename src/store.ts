@@ -87,13 +87,13 @@ const calculateCarPosition = (
     return { ...car, y: Math.min(car.y + 1, bounds.height) };
   }
   if (car.facing === 'S') {
-    return { ...car, y: car.y - 1 };
+    return { ...car, y: Math.max(car.y - 1, 0) };
   }
   if (car.facing === 'E') {
-    return { ...car, x: car.x + 1 };
+    return { ...car, x: Math.min(car.x + 1, bounds.width) };
   }
   if (car.facing === 'W') {
-    return { ...car, x: car.x - 1 };
+    return { ...car, x: Math.max(car.x - 1, 0) };
   }
   return car;
 };

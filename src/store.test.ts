@@ -119,7 +119,7 @@ describe('store', () => {
         // Out of bounds tests (field is 10x10)
         {
           facing: 'North',
-          carPosition: { facing: 'N', x: 3, y: 10 },
+          carPosition: { facing: 'N', x: 0, y: 10 },
           targetPosition: { x: 0, y: 10 },
         },
         {
