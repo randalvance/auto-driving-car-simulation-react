@@ -24,6 +24,7 @@ describe('store', () => {
   });
 
   it("should add new car and it's commands", () => {
+    useStore.setState({ fieldWidth: 10, fieldHeight: 10 });
     const state = useStore.getState();
     const expectedCar: Car = {
       name: 'car1',
