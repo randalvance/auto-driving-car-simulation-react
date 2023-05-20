@@ -184,6 +184,26 @@ describe('store', () => {
             turn: 'Right',
             expectedDirection: 'N',
           },
+          {
+            facing: 'N',
+            turn: 'Left',
+            expectedDirection: 'W',
+          },
+          {
+            facing: 'E',
+            turn: 'Left',
+            expectedDirection: 'N',
+          },
+          {
+            facing: 'S',
+            turn: 'Left',
+            expectedDirection: 'E',
+          },
+          {
+            facing: 'W',
+            turn: 'Left',
+            expectedDirection: 'S',
+          },
         ].forEach(({ facing, turn, expectedDirection }) => {
           it(`when facing ${facing} and turning ${turn}`, () => {
             // Arrange
