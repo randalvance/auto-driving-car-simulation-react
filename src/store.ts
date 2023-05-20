@@ -1,4 +1,9 @@
-import { type Car, type Command, type Direction } from '@/types';
+import {
+  type Car,
+  type CollisionInfo,
+  type Command,
+  type Direction,
+} from '@/types';
 import { create } from 'zustand';
 
 export interface State {
@@ -8,6 +13,7 @@ export interface State {
   error?: string;
   carCommands: Record<Car['name'], Command[]>;
   step: number;
+  collisions: CollisionInfo[];
 }
 
 export interface Actions {
@@ -22,6 +28,7 @@ export const initialState: State = {
   fieldHeight: 0,
   carCommands: {},
   step: 0,
+  collisions: [],
 };
 
 export const useStore = create<State & Actions>((set) => ({
@@ -68,22 +75,32 @@ export const useStore = create<State & Actions>((set) => ({
   },
   nextStep: () => {
     set((state) => {
-      const { step, fieldWidth, fieldHeight, carCommands } = state;
+      const { step, fieldWidth, fieldHeight, carCommands, collisions } = state;
+
+      const newStep = state.step + 1;
+      const carsAtNewPositions = state.cars.map((car) => {
+        const commandForCar = carCommands[car.name];
+        const commandAtStep = commandForCar[step];
+
+        if (commandAtStep == null) {
+          return car;
+        }
+
+        // If car has collided, do not move it
+        if (collisions.find((c) => c.carName === car.name) != null) {
+          return car;
+        }
+
+        return getCarAtNewPosition(car, commandAtStep, {
+          width: fieldWidth,
+          height: fieldHeight,
+        });
+      });
+
       return {
-        cars: state.cars.map((car) => {
-          const commandForCar = carCommands[car.name];
-          const commandAtStep = commandForCar[step];
-
-          if (commandAtStep == null) {
-            return car;
-          }
-
-          return getCarAtNewPosition(car, commandAtStep, {
-            width: fieldWidth,
-            height: fieldHeight,
-          });
-        }),
-        step: state.step + 1,
+        cars: carsAtNewPositions,
+        step: newStep,
+        collisions: [...state.collisions],
       };
     });
   },

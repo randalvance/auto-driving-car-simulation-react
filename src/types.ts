@@ -7,3 +7,11 @@ export interface Car {
 export type Direction = 'N' | 'E' | 'W' | 'S';
 
 export type Command = 'F' | 'L' | 'R';
+
+export interface CollisionInfo {
+  carName: Car['name'];
+  collidedWith: Array<Car['name']>;
+  x: number;
+  y: number;
+  step: number;
+}

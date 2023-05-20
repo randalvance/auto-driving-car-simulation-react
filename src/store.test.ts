@@ -1,5 +1,10 @@
 import { initialState, useStore } from './store';
-import { type Car, type Command, type Direction } from '@/types';
+import {
+  type Car,
+  type CollisionInfo,
+  type Command,
+  type Direction,
+} from '@/types';
 
 describe('store', () => {
   beforeEach(() => {
@@ -289,6 +294,75 @@ describe('store', () => {
       // Car should be facing the expected direction
       expect(actualCar1.facing).toEqual('W');
       expect(actualCar2.facing).toEqual('S');
+    });
+
+    it('should test collision of multiple cars', () => {
+      // Arrange
+      useStore.setState({
+        cars: [
+          { name: 'car1', facing: 'N', x: 0, y: 0 },
+          { name: 'car2', facing: 'N', x: 2, y: 0 },
+          { name: 'car3', facing: 'W', x: 9, y: 3 },
+        ],
+        carCommands: {
+          car1: ['F', 'F', 'F', 'R', 'F', 'F', 'F', 'F', 'F', 'F'],
+          car2: ['F', 'F', 'F', 'L', 'F', 'F', 'F', 'F', 'F', 'F'],
+          car3: ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
+        },
+      });
+      const state = useStore.getState();
+      const maxSteps = Math.max(
+        ...Object.keys(state.carCommands).map(
+          (k) => state.carCommands[k].length,
+        ),
+      );
+
+      // Act
+      for (let i = 0; i < maxSteps; i++) {
+        state.nextStep();
+      }
+
+      // Assert
+      const newState = useStore.getState();
+      // The last car collided at step 8
+      expect(newState.step).toBe(8);
+      expect(newState.cars).toHaveLength(3);
+      const actualCar1 = newState.cars[0];
+      const actualCar2 = newState.cars[1];
+      const actualCar3 = newState.cars[2];
+      // All cars collided in the same position
+      expect(actualCar1.x).toBe(1);
+      expect(actualCar1.y).toBe(3);
+      expect(actualCar1.facing).toBe('E');
+      expect(actualCar2.x).toBe(1);
+      expect(actualCar2.y).toBe(3);
+      expect(actualCar2.facing).toBe('W');
+      expect(actualCar3.x).toBe(1);
+      expect(actualCar3.y).toBe(3);
+      expect(actualCar3.facing).toBe('W');
+      // Check Collisions
+      expect(newState.collisions).toHaveLength(3);
+      expect(newState.collisions[0]).toEqual({
+        carName: actualCar1.name,
+        collidedWith: [actualCar2.name],
+        x: 1,
+        y: 3,
+        step: 5,
+      } satisfies CollisionInfo);
+      expect(newState.collisions[1]).toEqual({
+        carName: actualCar2.name,
+        collidedWith: [actualCar1.name],
+        x: 1,
+        y: 3,
+        step: 5,
+      } satisfies CollisionInfo);
+      expect(newState.collisions[2]).toEqual({
+        carName: actualCar3.name,
+        collidedWith: [actualCar1.name, actualCar2.name],
+        x: 1,
+        y: 3,
+        step: 8,
+      } satisfies CollisionInfo);
     });
   });
 });
