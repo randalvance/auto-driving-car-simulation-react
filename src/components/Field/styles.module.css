@@ -1,3 +1,11 @@
 .field {
+    position: relative;
     background: #ccc;
+}
+
+.car {
+    position: absolute;
+    background: #ff0000;
+    width: 100px;
+    height: 100px;
 }
