@@ -480,15 +480,17 @@ describe('store', () => {
         {
           carName: 'car1',
           collidedWith: ['car2'],
+          step: 1,
           x: 1,
           y: 0,
-        },
+        } satisfies CollisionInfo,
         {
           carName: 'car2',
           collidedWith: ['car1'],
+          step: 1,
           x: 1,
           y: 0,
-        },
+        } satisfies CollisionInfo,
       ]);
     });
   });
