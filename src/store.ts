@@ -210,16 +210,20 @@ export const useStore = create<State & Actions>((set) => ({
   },
   dispatchCommand: (command: string) => {
     set((state) => {
-      if (state.stage === 'setFieldSize') {
-        return processCommandSetFieldSize(command, state);
-      }
-
-      if (state.stage === 'selectOption') {
-        return processCommandSelectOption(command, state);
-      }
-
-      if (state.stage === 'addCars-name') {
-        return processCommandAddCarName(command, state);
+      const commandProcessors: Record<
+        Stage,
+        typeof processCommandSetFieldSize
+      > = {
+        setFieldSize: processCommandSetFieldSize,
+        selectOption: processCommandSelectOption,
+        'addCars-name': processCommandAddCarName,
+        'addCars-position': processCommandAddCarPosition,
+        'addCars-command': (_, state) => state,
+        runSimulation: (_, state) => state,
+      };
+      const commandProcessor = commandProcessors[state.stage];
+      if (commandProcessor !== undefined) {
+        return commandProcessor(command, state);
       }
 
       return state;
@@ -361,11 +365,46 @@ const processCommandAddCarName = (
     stage: 'addCars-position',
     consoleMessages: [
       ...state.consoleMessages,
-      'Please enter initial position of car car1 in x y Direction format:',
+      `Please enter initial position of car ${command} in x y Direction format:`,
     ],
     carToBeAdded: {
       ...state.carToBeAdded,
       name: command,
+    },
+  };
+};
+
+const processCommandAddCarPosition = (
+  command: string,
+  state: State,
+): Partial<State> => {
+  if (command.trim().match(/^(\d+) (\d+) ([NSEW])$/) == null) {
+    return {
+      consoleMessages: [
+        ...state.consoleMessages,
+        'Invalid format. Valid format is x y Direction.',
+        `Please enter initial position of car ${
+          state.carToBeAdded.name ?? ''
+        } in x y Direction format:`,
+      ],
+    };
+  }
+
+  const [x, y, facing] = command.split(' ');
+  return {
+    stage: 'addCars-command',
+    consoleMessages: [
+      ...state.consoleMessages,
+      'Please enter the commands for car car1:',
+    ],
+    carToBeAdded: {
+      ...state.carToBeAdded,
+      name: command,
+      initialPosition: {
+        x: parseInt(x, 10),
+        y: parseInt(y, 10),
+        facing: facing as Direction,
+      },
     },
   };
 };
