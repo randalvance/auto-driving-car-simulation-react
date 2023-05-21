@@ -807,6 +807,9 @@ describe('store', () => {
             fieldWidth: 1,
             fieldHeight: 1,
             cars: [existingCar],
+            carCommands: {
+              car1: ['F'],
+            },
             carToBeAdded: {
               name: 'car1',
               initialPosition: {
@@ -830,6 +833,8 @@ describe('store', () => {
             ...state.consoleMessages,
             'F',
             'Car with the same name already exists',
+            'Your current list of cars are:',
+            '- car1, (0, 0) N, F',
             'Please choose from the following options:',
             '[1] Add a car to field',
             '[2] Run simulation',
@@ -849,6 +854,9 @@ describe('store', () => {
             fieldWidth: 10,
             fieldHeight: 10,
             cars: [existingCar],
+            carCommands: {
+              car1: ['F'],
+            },
             carToBeAdded: {
               name: 'car2',
               initialPosition: {
@@ -872,6 +880,8 @@ describe('store', () => {
             ...state.consoleMessages,
             'F',
             'Car at the same initial position already exists',
+            'Your current list of cars are:',
+            '- car1, (1, 1) N, F',
             'Please choose from the following options:',
             '[1] Add a car to field',
             '[2] Run simulation',

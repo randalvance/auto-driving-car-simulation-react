@@ -278,13 +278,7 @@ const processCommandSetFieldSize = (
     fieldWidth: width,
     fieldHeight: height,
     stage: 'selectOption',
-    consoleMessages: [
-      ...state.consoleMessages,
-      command,
-      'Please choose from the following options:',
-      '[1] Add a car to field',
-      '[2] Run simulation',
-    ],
+    consoleMessages: getOptionsMessage(state, command),
   };
 };
 
@@ -294,14 +288,7 @@ const processCommandSelectOption = (
 ): Partial<State> => {
   if (command.match(/^([1-2])$/) == null) {
     return {
-      consoleMessages: [
-        ...state.consoleMessages,
-        command,
-        'Invalid option.',
-        'Please choose from the following options:',
-        '[1] Add a car to field',
-        '[2] Run simulation',
-      ],
+      consoleMessages: getOptionsMessage(state, command, ['Invalid option.']),
     };
   }
   const option = parseInt(command, 10);
@@ -413,14 +400,7 @@ const processCommandAddCarCommand = (
   if (validationError != null) {
     return {
       stage: 'selectOption',
-      consoleMessages: [
-        ...state.consoleMessages,
-        command,
-        validationError,
-        'Please choose from the following options:',
-        '[1] Add a car to field',
-        '[2] Run simulation',
-      ],
+      consoleMessages: getOptionsMessage(state, command, [validationError]),
     };
   }
 
@@ -436,31 +416,27 @@ const processCommandAddCarCommand = (
     carToBeAdded: {
       commands,
     },
-    consoleMessages: [
-      ...state.consoleMessages,
+    carCommands: newCarCommands,
+    consoleMessages: getOptionsMessage(
+      {
+        ...state,
+        cars: newCarList,
+        carCommands: newCarCommands,
+      },
       command,
-      'Your current list of cars are:',
-      ...newCarList.map((car) => {
-        const commandForCar = newCarCommands[car.name];
-        return `- ${car.name}, (${car.x}, ${car.y}) ${
-          car.facing
-        }, ${commandForCar.join('')}`;
-      }),
-      'Please choose from the following options:',
-      '[1] Add a car to field',
-      '[2] Run simulation',
-    ],
+    ),
   };
 };
 
 const validateAddingOfCar = (state: State, car: Car): string | null => {
-  // Check whether the car being added has a duplicate name and if so, set error message
-  const duplicateCar = state.cars.find((c) => c.name === car.name);
-
-  if (duplicateCar != null) {
-    return 'Car with the same name already exists';
+  for (const c of state.cars) {
+    if (c.name === car.name) {
+      return 'Car with the same name already exists';
+    }
+    if (c.x === car.x && c.y === car.y) {
+      return 'Car at the same initial position already exists';
+    }
   }
-
   // Check if the car being added is outside the bounds of the field
   if (
     car.x < 0 ||
@@ -471,4 +447,30 @@ const validateAddingOfCar = (state: State, car: Car): string | null => {
     return 'Car is out of bounds';
   }
   return null;
+};
+
+const getOptionsMessage = (
+  state: State,
+  command: string,
+  extraMessages: string[] = [],
+): string[] => {
+  return [
+    ...state.consoleMessages,
+    command,
+    ...extraMessages,
+    ...(state.cars.length > 0
+      ? [
+          'Your current list of cars are:',
+          ...state.cars.map((car) => {
+            const commandForCar = state.carCommands[car.name];
+            return `- ${car.name}, (${car.x}, ${car.y}) ${
+              car.facing
+            }, ${commandForCar?.join('')}`;
+          }),
+        ]
+      : []),
+    'Please choose from the following options:',
+    '[1] Add a car to field',
+    '[2] Run simulation',
+  ];
 };
