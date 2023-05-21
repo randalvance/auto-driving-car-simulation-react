@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Field } from '@/components/Field';
 import { useStore } from '@/store';
 import styles from './style.module.css';
 import { Console } from '@/components/Console';
 
 export const Simulation: React.FC = () => {
+  const [stage, nextStep] = useStore((s) => [s.stage, s.nextStep]);
+  useEffect(() => {
+    if (stage !== 'runSimulation') return;
+    const interval = setInterval(() => {
+      nextStep();
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [stage]);
   const [cars, fieldHeight, fieldWidth, collisions, consoleMessages] = useStore(
     (state) => [
       state.cars,
