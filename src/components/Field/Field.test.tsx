@@ -115,12 +115,12 @@ describe('Field', () => {
 
     const cars = screen.getAllByRole('car');
     const car1 = cars[0];
-    expect(car1.className).toContain('explosion');
+    expect(car1.className).toContain('exploded');
 
     const car2 = cars[1];
-    expect(car2.className).toContain('explosion');
+    expect(car2.className).toContain('exploded');
 
     const car3 = cars[2];
-    expect(car3.className).not.toContain('explosion');
+    expect(car3.className).not.toContain('exploded');
   });
 });
