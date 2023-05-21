@@ -202,7 +202,20 @@ export const useStore = create<State & Actions>((set) => ({
       ...initialState,
     });
   },
-  dispatchCommand: (command: string) => {},
+  dispatchCommand: (command: string) => {
+    set((state) => {
+      if (state.stage === 'setFieldSize') {
+        const [width, height] = command.split(' ').map((n) => parseInt(n, 10));
+
+        return {
+          fieldWidth: width,
+          fieldHeight: height,
+          stage: 'addCars',
+        };
+      }
+      return state;
+    });
+  },
 }));
 
 const getCarAtNewPosition = (
