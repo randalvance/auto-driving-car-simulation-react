@@ -16,4 +16,9 @@ export interface CollisionInfo {
   step: number;
 }
 
-export type Stage = 'setFieldSize' | 'addCars' | 'runSimulation';
+export type Stage =
+  | 'setFieldSize'
+  | 'addCars-name'
+  | 'addCars-position'
+  | 'addCars-command'
+  | 'runSimulation';
