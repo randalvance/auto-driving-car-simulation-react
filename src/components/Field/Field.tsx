@@ -4,7 +4,6 @@ import styles from './styles.module.css';
 import { getRotationBasedOnDirection } from './helpers';
 import { type Car } from '@/types';
 import { Grid } from './Grid';
-import * as classNames from 'classnames';
 
 interface Props {
   width: number;
@@ -35,9 +34,9 @@ export const Field: React.FC<Props> = ({
       {cars.map((car) => (
         <React.Fragment key={`${car.name}-container`}>
           <div
-            className={classNames(styles.car, {
-              [styles.exploded]: hasCarCollided(car),
-            })}
+            className={`${styles.car} ${
+              hasCarCollided(car) ? styles.explosion : ''
+            }}`}
             role="car"
             style={{
               bottom: car.y * 50,

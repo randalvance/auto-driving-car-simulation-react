@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import { Field } from './Field';
+
+vi.mock('classNames', () => ({}));
 
 describe('Field', () => {
   describe('should render field with correct height and width', () => {
