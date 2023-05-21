@@ -452,6 +452,21 @@ const processCommandAddCarCommand = (
     commands,
   );
   const newState = get();
+
+  if (newState.error != null) {
+    return {
+      stage: 'selectOption',
+      consoleMessages: [
+        ...state.consoleMessages,
+        command,
+        newState.error,
+        'Please choose from the following options:',
+        '[1] Add a car to field',
+        '[2] Run simulation',
+      ],
+    };
+  }
+
   return {
     stage: 'selectOption',
     cars: [...newState.cars],

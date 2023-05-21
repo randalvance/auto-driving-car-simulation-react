@@ -736,6 +736,11 @@ describe('store', () => {
       });
 
       describe('should set the command of the car to be added', () => {
+        beforeEach(() => {
+          useStore.setState({
+            error: undefined,
+          });
+        });
         it('when input is valid', () => {
           // Arrange
           useStore.setState({
@@ -852,7 +857,7 @@ describe('store', () => {
             expect(newState.consoleMessages).toEqual([
               ...state.consoleMessages,
               'F',
-              'Car is out of bounds.',
+              'Car is out of bounds',
               'Please choose from the following options:',
               '[1] Add a car to field',
               '[2] Run simulation',
