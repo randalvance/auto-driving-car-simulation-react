@@ -236,13 +236,13 @@ const moveForward = (
   bounds: { width: number; height: number },
 ): Car => {
   if (car.facing === 'N') {
-    return { ...car, y: Math.min(car.y + 1, bounds.height) };
+    return { ...car, y: Math.min(car.y + 1, bounds.height - 1) };
   }
   if (car.facing === 'S') {
     return { ...car, y: Math.max(car.y - 1, 0) };
   }
   if (car.facing === 'E') {
-    return { ...car, x: Math.min(car.x + 1, bounds.width) };
+    return { ...car, x: Math.min(car.x + 1, bounds.width - 1) };
   }
   if (car.facing === 'W') {
     return { ...car, x: Math.max(car.x - 1, 0) };
