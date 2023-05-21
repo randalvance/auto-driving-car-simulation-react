@@ -591,5 +591,26 @@ describe('store', () => {
         'Please enter the name of the car:',
       ]);
     });
+
+    it('should process command for selection option 2', () => {
+      // Arrange
+      useStore.setState({
+        fieldHeight: 10,
+        fieldWidth: 10,
+        stage: 'selectOption',
+      });
+      const state = useStore.getState();
+
+      // Act
+      state.dispatchCommand('2');
+
+      // Assert
+      const newState = useStore.getState();
+      expect(newState.stage).toBe('runSimulation' satisfies Stage);
+      expect(newState.consoleMessages).toEqual([
+        ...state.consoleMessages,
+        'Running simulation...',
+      ]);
+    });
   });
 });
