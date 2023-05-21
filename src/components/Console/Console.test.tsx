@@ -32,4 +32,10 @@ describe('Console', () => {
     await userEvent.type(input, '{enter}');
     expect(dispatchCommandSpy).toHaveBeenCalledWith('20 20');
   });
+
+  it('should hide input when disabled', async () => {
+    render(<Console messages={[]} disabled />);
+    const input = await screen.queryByRole<HTMLInputElement>('input');
+    expect(input).toBeFalsy();
+  });
 });
