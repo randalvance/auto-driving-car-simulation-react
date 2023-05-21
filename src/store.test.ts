@@ -527,8 +527,8 @@ describe('store', () => {
     expect(newState.fieldWidth).toBe(0);
   });
 
-  describe('Setting Field Size', () => {
-    it('should set the field width and height', () => {
+  describe('Dispatching Commands', () => {
+    it('should process command for setting field size', () => {
       // Arrange
       const state = useStore.getState();
 
@@ -540,6 +540,12 @@ describe('store', () => {
       expect(newState.fieldWidth).toBe(5);
       expect(newState.fieldHeight).toBe(10);
       expect(newState.stage).toBe('addCars' satisfies Stage);
+      expect(newState.consoleMessages).toEqual([
+        ...state.consoleMessages,
+        'Please choose from the following options:',
+        '[1] Add a car to field',
+        '[2] Run simulation',
+      ]);
     });
   });
 });
