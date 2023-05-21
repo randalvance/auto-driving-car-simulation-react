@@ -732,6 +732,8 @@ describe('store', () => {
           // Arrange
           useStore.setState({
             stage: 'addCars-command',
+            fieldWidth: 10,
+            fieldHeight: 10,
             carToBeAdded: {
               name: 'car1',
               initialPosition: {
@@ -749,8 +751,7 @@ describe('store', () => {
           // Assert
           const newState = useStore.getState();
           expect(newState.stage).toBe('selectOption' satisfies Stage);
-          expect(newState.carToBeAdded.commands).toBeTruthy();
-          expect(newState.carToBeAdded.commands).toBe([
+          expect(newState.carToBeAdded.commands).toEqual([
             'F',
             'R',
             'F',
@@ -763,7 +764,7 @@ describe('store', () => {
             'F',
           ]);
           expect(newState.cars.length).toBe(1);
-          expect(newState.cars[0]).toBe({
+          expect(newState.cars[0]).toEqual({
             name: 'car1',
             facing: 'N',
             x: 1,

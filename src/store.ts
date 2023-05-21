@@ -51,7 +51,7 @@ export const initialState: State = {
   carToBeAdded: {},
 };
 
-export const useStore = create<State & Actions>((set) => ({
+export const useStore = create<State & Actions>((set, get) => ({
   ...initialState,
 
   // Actions
@@ -218,7 +218,40 @@ export const useStore = create<State & Actions>((set) => ({
         selectOption: processCommandSelectOption,
         'addCars-name': processCommandAddCarName,
         'addCars-position': processCommandAddCarPosition,
-        'addCars-command': (_, state) => state,
+        'addCars-command': (command, state) => {
+          const commands = command.split('') as Command[];
+
+          get().addCar(
+            {
+              name: state.carToBeAdded.name ?? '',
+              x: state.carToBeAdded.initialPosition?.x ?? 0,
+              y: state.carToBeAdded.initialPosition?.y ?? 0,
+              facing: state.carToBeAdded.initialPosition?.facing ?? 'N',
+            },
+            commands,
+          );
+          const newState = get();
+          return {
+            stage: 'selectOption',
+            cars: [...newState.cars],
+            carToBeAdded: {
+              commands,
+            },
+            consoleMessages: [
+              ...state.consoleMessages,
+              'Your current list of cars are:',
+              ...newState.cars.map((car) => {
+                const commandForCar = newState.carCommands[car.name];
+                return `- ${car.name}, (${car.x}, ${car.y}) ${
+                  car.facing
+                }, ${commandForCar.join('')}`;
+              }),
+              'Please choose from the following options:',
+              '[1] Add a car to field',
+              '[2] Run simulation',
+            ],
+          };
+        },
         runSimulation: (_, state) => state,
       };
       const commandProcessor = commandProcessors[state.stage];
