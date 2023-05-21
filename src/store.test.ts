@@ -576,7 +576,7 @@ describe('store', () => {
       useStore.setState({
         fieldHeight: 10,
         fieldWidth: 10,
-        stage: 'addCars-name',
+        stage: 'selectOption',
       });
       const state = useStore.getState();
 
@@ -585,7 +585,7 @@ describe('store', () => {
 
       // Assert
       const newState = useStore.getState();
-      expect(newState.stage).toBe('addCars-position' satisfies Stage);
+      expect(newState.stage).toBe('addCars-name' satisfies Stage);
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
         'Please enter the name of the car:',
