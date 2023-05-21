@@ -322,6 +322,10 @@ describe('store', () => {
           car1: ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
           car2: ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
         },
+        originalCarPositions: {
+          car1: { x: 0, y: 5, facing: 'E' },
+          car2: { x: 4, y: 5, facing: 'W' },
+        },
       });
 
       const state = useStore.getState();
