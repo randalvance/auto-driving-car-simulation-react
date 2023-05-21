@@ -18,6 +18,7 @@ export interface CollisionInfo {
 
 export type Stage =
   | 'setFieldSize'
+  | 'selectOption'
   | 'addCars-name'
   | 'addCars-position'
   | 'addCars-command'

@@ -539,7 +539,7 @@ describe('store', () => {
       const newState = useStore.getState();
       expect(newState.fieldWidth).toBe(5);
       expect(newState.fieldHeight).toBe(10);
-      expect(newState.stage).toBe('addCars-name' satisfies Stage);
+      expect(newState.stage).toBe('selectOption' satisfies Stage);
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
         'Please choose from the following options:',
@@ -585,7 +585,7 @@ describe('store', () => {
 
       // Assert
       const newState = useStore.getState();
-      expect(newState.stage).toBe('addCars-name' satisfies Stage);
+      expect(newState.stage).toBe('addCars-position' satisfies Stage);
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
         'Please enter the name of the car:',

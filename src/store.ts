@@ -224,7 +224,7 @@ export const useStore = create<State & Actions>((set) => ({
         return {
           fieldWidth: width,
           fieldHeight: height,
-          stage: 'addCars',
+          stage: 'addCars-name',
           consoleMessages: [
             ...state.consoleMessages,
             'Please choose from the following options:',
@@ -233,6 +233,7 @@ export const useStore = create<State & Actions>((set) => ({
           ],
         };
       }
+
       return state;
     });
   },
