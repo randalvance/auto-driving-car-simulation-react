@@ -211,6 +211,12 @@ export const useStore = create<State & Actions>((set) => ({
           fieldWidth: width,
           fieldHeight: height,
           stage: 'addCars',
+          consoleMessages: [
+            ...state.consoleMessages,
+            'Please choose from the following options:',
+            '[1] Add a car to field',
+            '[2] Run simulation',
+          ],
         };
       }
       return state;
