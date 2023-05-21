@@ -726,6 +726,59 @@ describe('store', () => {
           });
         });
       });
+
+      describe('should set the command of the car to be added', () => {
+        it('when input is valid', () => {
+          // Arrange
+          useStore.setState({
+            stage: 'addCars-command',
+            carToBeAdded: {
+              name: 'car1',
+              initialPosition: {
+                x: 1,
+                y: 2,
+                facing: 'N',
+              },
+            },
+          });
+          const state = useStore.getState();
+
+          // Act
+          state.dispatchCommand('FRFLFFFRLF');
+
+          // Assert
+          const newState = useStore.getState();
+          expect(newState.stage).toBe('selectOption' satisfies Stage);
+          expect(newState.carToBeAdded.commands).toBeTruthy();
+          expect(newState.carToBeAdded.commands).toBe([
+            'F',
+            'R',
+            'F',
+            'L',
+            'F',
+            'F',
+            'F',
+            'R',
+            'L',
+            'F',
+          ]);
+          expect(newState.cars.length).toBe(1);
+          expect(newState.cars[0]).toBe({
+            name: 'car1',
+            facing: 'N',
+            x: 1,
+            y: 2,
+          } satisfies Car);
+          expect(newState.consoleMessages).toEqual([
+            ...state.consoleMessages,
+            'Your current list of cars are:',
+            '- car1, (1, 2) N, FRFLFFFRLF',
+            'Please choose from the following options:',
+            '[1] Add a car to field',
+            '[2] Run simulation',
+          ]);
+        });
+      });
     });
   });
 });
