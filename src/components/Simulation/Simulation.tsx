@@ -5,7 +5,11 @@ import styles from './style.module.css';
 import { Console } from '@/components/Console';
 
 export const Simulation: React.FC = () => {
-  const [stage, nextStep] = useStore((s) => [s.stage, s.nextStep]);
+  const [stage, nextStep, isDone] = useStore((s) => [
+    s.stage,
+    s.nextStep,
+    s.isDone,
+  ]);
   useEffect(() => {
     if (stage !== 'runSimulation') return;
     const interval = setInterval(() => {
@@ -26,7 +30,10 @@ export const Simulation: React.FC = () => {
   );
   return (
     <div className={styles.container}>
-      <Console messages={consoleMessages} />
+      <Console
+        messages={consoleMessages}
+        disabled={stage === 'runSimulation' || isDone}
+      />
       <div className={styles.fieldContainer}>
         <Field
           height={fieldHeight}
