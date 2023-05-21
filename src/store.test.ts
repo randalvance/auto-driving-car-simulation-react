@@ -6,6 +6,8 @@ import {
   type Stage,
 } from '@/types';
 import {
+  MESSAGE_FIELD_SIZE_PROMPT,
+  MESSAGE_INTRO,
   MESSAGE_LIST_OF_CAR,
   MESSAGES_END_OPTIONS,
   MESSAGES_SELECT_OPTION,
@@ -911,6 +913,32 @@ describe('store', () => {
             ...MESSAGES_SELECT_OPTION,
           ]);
         });
+      });
+    });
+
+    describe('should process command when done', () => {
+      it('when option 1 for reset is selected', () => {
+        // Arrange
+        useStore.setState({
+          stage: 'done',
+        });
+        const state = useStore.getState();
+
+        // Act
+        state.dispatchCommand('1');
+
+        // Assert
+        const newState = useStore.getState();
+        expect(newState.stage).toBe('setFieldSize' satisfies Stage);
+        expect(newState.fieldWidth).toBe(0);
+        expect(newState.fieldHeight).toBe(0);
+        expect(newState.cars.length).toBe(0);
+        expect(newState.completedCars.size).toBe(0);
+        expect(newState.collisions.length).toBe(0);
+        expect(newState.consoleMessages).toEqual([
+          MESSAGE_INTRO,
+          MESSAGE_FIELD_SIZE_PROMPT,
+        ]);
       });
     });
   });
