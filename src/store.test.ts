@@ -65,8 +65,8 @@ describe('store', () => {
       // Out of bounds tests (field is 10x10)
       {
         facing: 'North',
-        carPosition: { facing: 'N', x: 0, y: 10 },
-        targetPosition: { x: 0, y: 10 },
+        carPosition: { facing: 'N', x: 0, y: 9 },
+        targetPosition: { x: 0, y: 9 },
       },
       {
         facing: 'South',
@@ -75,8 +75,8 @@ describe('store', () => {
       },
       {
         facing: 'East',
-        carPosition: { facing: 'E', x: 10, y: 0 },
-        targetPosition: { x: 10, y: 0 },
+        carPosition: { facing: 'E', x: 9, y: 0 },
+        targetPosition: { x: 9, y: 0 },
       },
       {
         facing: 'West',
@@ -92,6 +92,8 @@ describe('store', () => {
         };
         useStore.setState({
           cars: [car],
+          fieldWidth: 10,
+          fieldHeight: 10,
           carCommands: { [car.name]: ['F'] },
         });
         const state = useStore.getState();
