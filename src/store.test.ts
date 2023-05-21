@@ -351,8 +351,8 @@ describe('store', () => {
         '- car1, (0, 5) E, FFFFFFFFFF',
         '- car2, (4, 5) W, FFFFFFFFFF',
         'After simulation, the result is:',
-        '- car2, collides with car1 at (2, 5) at step 2',
         '- car1, collides with car2 at (2, 5) at step 2',
+        '- car2, collides with car1 at (2, 5) at step 2',
         ...MESSAGES_END_OPTIONS,
       ]);
     });
@@ -371,6 +371,11 @@ describe('store', () => {
           car1: ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
           car2: ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'],
           car3: ['F', 'F', 'F', 'F', 'F', 'F'],
+        },
+        originalCarPositions: {
+          car1: { x: 0, y: 5, facing: 'E' },
+          car2: { x: 4, y: 5, facing: 'W' },
+          car3: { x: 5, y: 10, facing: 'S' },
         },
       });
 
@@ -393,6 +398,18 @@ describe('store', () => {
       expect(newState.completedCars).toEqual(
         new Set<string>(['car1', 'car2', 'car3']),
       );
+      expect(newState.consoleMessages).toEqual([
+        ...state.consoleMessages,
+        'Your current list of cars are:',
+        '- car1, (0, 5) E, FFFFFFFFFF',
+        '- car2, (4, 5) W, FFFFFFFFFF',
+        '- car3, (5, 10) S, FFFFFF',
+        'After simulation, the result is:',
+        '- car1, collides with car2 at (2, 5) at step 2',
+        '- car2, collides with car1 at (2, 5) at step 2',
+        '- car3, (5, 4) S',
+        ...MESSAGES_END_OPTIONS,
+      ]);
     });
 
     /*
