@@ -47,6 +47,7 @@ export const initialState: State = {
   ],
   stage: 'setFieldSize',
   carToBeAdded: {},
+  error: undefined,
 };
 
 export const useStore = create<State & Actions>((set, get) => ({
@@ -413,7 +414,6 @@ const processCommandAddCarPosition = (
     ],
     carToBeAdded: {
       ...state.carToBeAdded,
-      name: command,
       initialPosition: {
         x: parseInt(x, 10),
         y: parseInt(y, 10),

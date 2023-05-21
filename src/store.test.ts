@@ -686,6 +686,7 @@ describe('store', () => {
           // Assert
           const newState = useStore.getState();
           expect(newState.stage).toBe('addCars-command' satisfies Stage);
+          expect(newState.carToBeAdded.name).toBe('car1');
           expect(newState.carToBeAdded.initialPosition).toBeTruthy();
           expect(newState.carToBeAdded.initialPosition!.x).toBe(1);
           expect(newState.carToBeAdded.initialPosition!.y).toBe(2);
@@ -737,11 +738,6 @@ describe('store', () => {
       });
 
       describe('should set the command of the car to be added', () => {
-        beforeEach(() => {
-          useStore.setState({
-            error: undefined,
-          });
-        });
         it('when input is valid', () => {
           // Arrange
           useStore.setState({
