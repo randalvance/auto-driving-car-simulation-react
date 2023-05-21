@@ -205,7 +205,21 @@ export const useStore = create<State & Actions>((set) => ({
   dispatchCommand: (command: string) => {
     set((state) => {
       if (state.stage === 'setFieldSize') {
-        const [width, height] = command.split(' ').map((n) => parseInt(n, 10));
+        const tokens = command.split(' ');
+        if (
+          tokens.length < 2 ||
+          tokens.length > 2 ||
+          !tokens.every((t) => t.match(/^(\d+)$/))
+        ) {
+          return {
+            consoleMessages: [
+              ...state.consoleMessages,
+              'Invalid format. Valid format is x y.',
+              'Please enter the enter the width and height of the simulation field in x and y format:',
+            ],
+          };
+        }
+        const [width, height] = tokens.map((x) => parseInt(x, 10));
 
         return {
           fieldWidth: width,
