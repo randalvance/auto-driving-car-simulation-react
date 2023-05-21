@@ -835,6 +835,48 @@ describe('store', () => {
             '[2] Run simulation',
           ]);
         });
+
+        it('when car being added has initial position that already exists', () => {
+          // Arrange
+          const existingCar: Car = {
+            name: 'car1',
+            facing: 'N',
+            x: 1,
+            y: 1,
+          };
+          useStore.setState({
+            stage: 'addCars-command',
+            fieldWidth: 10,
+            fieldHeight: 10,
+            cars: [existingCar],
+            carToBeAdded: {
+              name: 'car2',
+              initialPosition: {
+                x: 1,
+                y: 1,
+                facing: 'N',
+              },
+            },
+          });
+          const state = useStore.getState();
+
+          // Act
+          state.dispatchCommand('F');
+
+          // Assert
+          const newState = useStore.getState();
+          expect(newState.stage).toBe('selectOption' satisfies Stage);
+          expect(newState.cars.length).toBe(1);
+          expect(newState.cars[0]).toEqual(existingCar);
+          expect(newState.consoleMessages).toEqual([
+            ...state.consoleMessages,
+            'F',
+            'Car at the same initial position already exists',
+            'Please choose from the following options:',
+            '[1] Add a car to field',
+            '[2] Run simulation',
+          ]);
+        });
       });
     });
   });
