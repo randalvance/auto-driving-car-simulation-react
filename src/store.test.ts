@@ -542,6 +542,7 @@ describe('store', () => {
       expect(newState.stage).toBe('selectOption' satisfies Stage);
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
+        '5 10',
         'Please choose from the following options:',
         '[1] Add a car to field',
         '[2] Run simulation',
@@ -564,6 +565,7 @@ describe('store', () => {
           expect(newState.stage).toBe('setFieldSize' satisfies Stage);
           expect(newState.consoleMessages).toEqual([
             ...state.consoleMessages,
+            input,
             'Invalid format. Valid format is x y.',
             'Please enter the enter the width and height of the simulation field in x and y format:',
           ]);
@@ -588,6 +590,7 @@ describe('store', () => {
       expect(newState.stage).toBe('addCars-name' satisfies Stage);
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
+        '1',
         'Please enter the name of the car:',
       ]);
     });
@@ -609,6 +612,7 @@ describe('store', () => {
       expect(newState.stage).toBe('runSimulation' satisfies Stage);
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
+        '2',
         'Running simulation...',
       ]);
     });
@@ -632,6 +636,7 @@ describe('store', () => {
         expect(newState.stage).toBe('selectOption' satisfies Stage);
         expect(newState.consoleMessages).toEqual([
           ...state.consoleMessages,
+          input,
           'Invalid option.',
           'Please choose from the following options:',
           '[1] Add a car to field',
@@ -658,6 +663,7 @@ describe('store', () => {
         expect(newState.cars.length).toBe(0);
         expect(newState.consoleMessages).toEqual([
           ...state.consoleMessages,
+          'car1',
           'Please enter initial position of car car1 in x y Direction format:',
         ]);
       });
@@ -772,6 +778,7 @@ describe('store', () => {
           } satisfies Car);
           expect(newState.consoleMessages).toEqual([
             ...state.consoleMessages,
+            'FRFLFFFRLF',
             'Your current list of cars are:',
             '- car1, (1, 2) N, FRFLFFFRLF',
             'Please choose from the following options:',
