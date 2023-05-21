@@ -456,6 +456,16 @@ const processCommandAddCarCommand = (
 };
 
 const processCommandReset = (command: string, state: State): Partial<State> => {
+  if (command.match(/^([1-2])$/) == null) {
+    return {
+      consoleMessages: [
+        ...state.consoleMessages,
+        command,
+        'Invalid input',
+        ...MESSAGES_END_OPTIONS,
+      ],
+    };
+  }
   const option = parseInt(command, 10);
   if (option === 1) {
     return {
