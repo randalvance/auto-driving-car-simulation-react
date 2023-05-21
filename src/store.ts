@@ -6,7 +6,7 @@ import {
   type Stage,
 } from '@/types';
 import { create } from 'zustand';
-import { SELECT_OPTION_MESSAGES } from '@/constants';
+import { LIST_OF_CAR_MESSAGE, SELECT_OPTION_MESSAGES } from '@/constants';
 
 export interface State {
   cars: Car[];
@@ -461,7 +461,7 @@ const getOptionsMessage = (
     ...extraMessages,
     ...(state.cars.length > 0
       ? [
-          'Your current list of cars are:',
+          LIST_OF_CAR_MESSAGE,
           ...state.cars.map((car) => {
             const commandForCar = state.carCommands[car.name];
             return `- ${car.name}, (${car.x}, ${car.y}) ${

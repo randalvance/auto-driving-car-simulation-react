@@ -5,7 +5,7 @@ import {
   type Direction,
   type Stage,
 } from '@/types';
-import { SELECT_OPTION_MESSAGES } from '@/constants';
+import { LIST_OF_CAR_MESSAGE, SELECT_OPTION_MESSAGES } from '@/constants';
 
 describe('store', () => {
   beforeEach(() => {
@@ -709,7 +709,7 @@ describe('store', () => {
           expect(newState.consoleMessages).toEqual([
             ...state.consoleMessages,
             'FRFLFFFRLF',
-            'Your current list of cars are:',
+            LIST_OF_CAR_MESSAGE,
             '- car1, (1, 2) N, FRFLFFFRLF',
             ...SELECT_OPTION_MESSAGES,
           ]);
@@ -826,7 +826,7 @@ describe('store', () => {
             ...state.consoleMessages,
             'F',
             'Car with the same name already exists',
-            'Your current list of cars are:',
+            LIST_OF_CAR_MESSAGE,
             '- car1, (0, 0) N, F',
             ...SELECT_OPTION_MESSAGES,
           ]);
@@ -871,7 +871,7 @@ describe('store', () => {
             ...state.consoleMessages,
             'F',
             'Car at the same initial position already exists',
-            'Your current list of cars are:',
+            LIST_OF_CAR_MESSAGE,
             '- car1, (1, 1) N, F',
             ...SELECT_OPTION_MESSAGES,
           ]);
