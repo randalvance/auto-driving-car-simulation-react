@@ -24,6 +24,7 @@ export interface Actions {
   setFieldBounds: (width: number, height: number) => void;
   nextStep: () => void;
   reset: () => void;
+  dispatchCommand: (command: string) => void;
 }
 
 export const initialState: State = {
@@ -198,6 +199,7 @@ export const useStore = create<State & Actions>((set) => ({
       ...initialState,
     });
   },
+  dispatchCommand: (command: string) => {},
 }));
 
 const getCarAtNewPosition = (
