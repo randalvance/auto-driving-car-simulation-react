@@ -755,84 +755,86 @@ describe('store', () => {
                 'Please enter the commands for car car1:',
               ]);
             });
-
-            it(`when car is out of bounds`, () => {
-              // Arrange
-              useStore.setState({
-                stage: 'addCars-command',
-                fieldWidth: 1,
-                fieldHeight: 1,
-                carToBeAdded: {
-                  name: 'car1',
-                  initialPosition: {
-                    x: 0,
-                    y: 1,
-                    facing: 'N',
-                  },
-                },
-              });
-              const state = useStore.getState();
-
-              // Act
-              state.dispatchCommand('F');
-
-              // Assert
-              const newState = useStore.getState();
-              expect(newState.stage).toBe('selectOption' satisfies Stage);
-              expect(newState.cars.length).toBe(0);
-              expect(newState.consoleMessages).toEqual([
-                ...state.consoleMessages,
-                'F',
-                'Car is out of bounds',
-                'Please choose from the following options:',
-                '[1] Add a car to field',
-                '[2] Run simulation',
-              ]);
-            });
-
-            it(`when car being added has name that already exists`, () => {
-              // Arrange
-              const existingCar: Car = {
-                name: 'car1',
-                facing: 'N',
-                x: 0,
-                y: 0,
-              };
-              useStore.setState({
-                stage: 'addCars-command',
-                fieldWidth: 1,
-                fieldHeight: 1,
-                cars: [existingCar],
-                carToBeAdded: {
-                  name: 'car1',
-                  initialPosition: {
-                    x: 0,
-                    y: 1,
-                    facing: 'N',
-                  },
-                },
-              });
-              const state = useStore.getState();
-
-              // Act
-              state.dispatchCommand('F');
-
-              // Assert
-              const newState = useStore.getState();
-              expect(newState.stage).toBe('selectOption' satisfies Stage);
-              expect(newState.cars.length).toBe(1);
-              expect(newState.cars[0]).toEqual(existingCar);
-              expect(newState.consoleMessages).toEqual([
-                ...state.consoleMessages,
-                'F',
-                'Car with the same name already exists',
-                'Please choose from the following options:',
-                '[1] Add a car to field',
-                '[2] Run simulation',
-              ]);
-            });
           },
         );
+      });
+
+      describe('Adding of car validation', () => {
+        it(`when car is out of bounds`, () => {
+          // Arrange
+          useStore.setState({
+            stage: 'addCars-command',
+            fieldWidth: 1,
+            fieldHeight: 1,
+            carToBeAdded: {
+              name: 'car1',
+              initialPosition: {
+                x: 0,
+                y: 1,
+                facing: 'N',
+              },
+            },
+          });
+          const state = useStore.getState();
+
+          // Act
+          state.dispatchCommand('F');
+
+          // Assert
+          const newState = useStore.getState();
+          expect(newState.stage).toBe('selectOption' satisfies Stage);
+          expect(newState.cars.length).toBe(0);
+          expect(newState.consoleMessages).toEqual([
+            ...state.consoleMessages,
+            'F',
+            'Car is out of bounds',
+            'Please choose from the following options:',
+            '[1] Add a car to field',
+            '[2] Run simulation',
+          ]);
+        });
+
+        it(`when car being added has name that already exists`, () => {
+          // Arrange
+          const existingCar: Car = {
+            name: 'car1',
+            facing: 'N',
+            x: 0,
+            y: 0,
+          };
+          useStore.setState({
+            stage: 'addCars-command',
+            fieldWidth: 1,
+            fieldHeight: 1,
+            cars: [existingCar],
+            carToBeAdded: {
+              name: 'car1',
+              initialPosition: {
+                x: 0,
+                y: 1,
+                facing: 'N',
+              },
+            },
+          });
+          const state = useStore.getState();
+
+          // Act
+          state.dispatchCommand('F');
+
+          // Assert
+          const newState = useStore.getState();
+          expect(newState.stage).toBe('selectOption' satisfies Stage);
+          expect(newState.cars.length).toBe(1);
+          expect(newState.cars[0]).toEqual(existingCar);
+          expect(newState.consoleMessages).toEqual([
+            ...state.consoleMessages,
+            'F',
+            'Car with the same name already exists',
+            'Please choose from the following options:',
+            '[1] Add a car to field',
+            '[2] Run simulation',
+          ]);
+        });
       });
     });
   });
