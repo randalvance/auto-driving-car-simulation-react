@@ -333,5 +333,12 @@ const processCommandSelectOption = (
     };
   }
 
+  if (option === 2) {
+    return {
+      stage: 'runSimulation',
+      consoleMessages: [...state.consoleMessages, 'Running simulation...'],
+    };
+  }
+
   return state;
 };
