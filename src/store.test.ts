@@ -5,7 +5,7 @@ import {
   type Direction,
   type Stage,
 } from '@/types';
-import { LIST_OF_CAR_MESSAGE, SELECT_OPTION_MESSAGES } from '@/constants';
+import { MESSAGE_LIST_OF_CAR, MESSAGES_SELECT_OPTION } from '@/constants';
 
 describe('store', () => {
   beforeEach(() => {
@@ -474,7 +474,7 @@ describe('store', () => {
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
         '5 10',
-        ...SELECT_OPTION_MESSAGES,
+        ...MESSAGES_SELECT_OPTION,
       ]);
     });
 
@@ -569,7 +569,7 @@ describe('store', () => {
           ...state.consoleMessages,
           input,
           'Invalid option.',
-          ...SELECT_OPTION_MESSAGES,
+          ...MESSAGES_SELECT_OPTION,
         ]);
       },
     );
@@ -709,9 +709,9 @@ describe('store', () => {
           expect(newState.consoleMessages).toEqual([
             ...state.consoleMessages,
             'FRFLFFFRLF',
-            LIST_OF_CAR_MESSAGE,
+            MESSAGE_LIST_OF_CAR,
             '- car1, (1, 2) N, FRFLFFFRLF',
-            ...SELECT_OPTION_MESSAGES,
+            ...MESSAGES_SELECT_OPTION,
           ]);
         });
 
@@ -783,7 +783,7 @@ describe('store', () => {
             ...state.consoleMessages,
             'F',
             'Car is out of bounds',
-            ...SELECT_OPTION_MESSAGES,
+            ...MESSAGES_SELECT_OPTION,
           ]);
         });
 
@@ -826,9 +826,9 @@ describe('store', () => {
             ...state.consoleMessages,
             'F',
             'Car with the same name already exists',
-            LIST_OF_CAR_MESSAGE,
+            MESSAGE_LIST_OF_CAR,
             '- car1, (0, 0) N, F',
-            ...SELECT_OPTION_MESSAGES,
+            ...MESSAGES_SELECT_OPTION,
           ]);
         });
 
@@ -871,9 +871,9 @@ describe('store', () => {
             ...state.consoleMessages,
             'F',
             'Car at the same initial position already exists',
-            LIST_OF_CAR_MESSAGE,
+            MESSAGE_LIST_OF_CAR,
             '- car1, (1, 1) N, F',
-            ...SELECT_OPTION_MESSAGES,
+            ...MESSAGES_SELECT_OPTION,
           ]);
         });
       });
