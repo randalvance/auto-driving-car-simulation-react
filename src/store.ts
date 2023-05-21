@@ -3,6 +3,7 @@ import {
   type CollisionInfo,
   type Command,
   type Direction,
+  type Stage,
 } from '@/types';
 import { create } from 'zustand';
 
@@ -17,6 +18,7 @@ export interface State {
   completedCars: Set<string>;
   isGameOver: boolean;
   consoleMessages: string[];
+  stage: Stage;
 }
 
 export interface Actions {
@@ -40,6 +42,7 @@ export const initialState: State = {
     'Welcome to Auto Driving Car Simulation!',
     'Please enter the enter the width and height of the simulation field in x and y format:',
   ],
+  stage: 'setFieldSize',
 };
 
 export const useStore = create<State & Actions>((set) => ({

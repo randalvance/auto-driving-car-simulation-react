@@ -4,6 +4,7 @@ import {
   type CollisionInfo,
   type Command,
   type Direction,
+  type Stage,
 } from '@/types';
 
 describe('store', () => {
@@ -524,5 +525,21 @@ describe('store', () => {
     expect(newState.cars.length).toBe(0);
     expect(newState.fieldHeight).toBe(0);
     expect(newState.fieldWidth).toBe(0);
+  });
+
+  describe('Setting Field Size', () => {
+    it('should set the field width and height', () => {
+      // Arrange
+      const state = useStore.getState();
+
+      // Act
+      state.dispatchCommand('5 10');
+
+      // Assert
+      const newState = useStore.getState();
+      expect(newState.fieldWidth).toBe(5);
+      expect(newState.fieldHeight).toBe(10);
+      expect(newState.stage).toBe('addCars' satisfies Stage);
+    });
   });
 });
