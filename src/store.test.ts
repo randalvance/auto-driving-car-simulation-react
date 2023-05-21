@@ -824,6 +824,40 @@ describe('store', () => {
               ]);
             });
           });
+
+          it(`when car is out of bounds`, () => {
+            // Arrange
+            useStore.setState({
+              stage: 'addCars-command',
+              fieldWidth: 1,
+              fieldHeight: 1,
+              carToBeAdded: {
+                name: 'car1',
+                initialPosition: {
+                  x: 1,
+                  y: 2,
+                  facing: 'N',
+                },
+              },
+            });
+            const state = useStore.getState();
+
+            // Act
+            state.dispatchCommand('F');
+
+            // Assert
+            const newState = useStore.getState();
+            expect(newState.stage).toBe('selectOption' satisfies Stage);
+            expect(newState.cars.length).toBe(0);
+            expect(newState.consoleMessages).toEqual([
+              ...state.consoleMessages,
+              'F',
+              'Car is out of bounds.',
+              'Please choose from the following options:',
+              '[1] Add a car to field',
+              '[2] Run simulation',
+            ]);
+          });
         });
       });
     });
