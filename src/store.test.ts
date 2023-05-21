@@ -344,8 +344,8 @@ describe('store', () => {
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
         'Your current list of cars are:',
-        '- car1, (0, 5) E, FRFLFFFRLF',
-        '- car2, (4, 5) W, FRFLFFFRLF',
+        '- car1, (0, 5) E, FFFFFFFFFF',
+        '- car2, (4, 5) W, FFFFFFFFFF',
         'After simulation, the result is:',
         '- car1, collides with car2 at (2, 5) at step 2',
         '- car2, collides with car1 at (2, 5) at step 2',
