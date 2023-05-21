@@ -692,6 +692,7 @@ describe('store', () => {
           expect(newState.cars.length).toBe(0);
           expect(newState.consoleMessages).toEqual([
             ...state.consoleMessages,
+            '1 2 N',
             'Please enter the commands for car car1:',
           ]);
         });
@@ -725,6 +726,7 @@ describe('store', () => {
               expect(newState.cars.length).toBe(0);
               expect(newState.consoleMessages).toEqual([
                 ...state.consoleMessages,
+                input,
                 'Invalid format. Valid format is x y Direction.',
                 'Please enter initial position of car car1 in x y Direction format:',
               ]);

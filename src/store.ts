@@ -51,45 +51,6 @@ export const initialState: State = {
   carToBeAdded: {},
 };
 
-const processCommandAddCarCommand = (
-  command: string,
-  state: State,
-  get: () => State & Actions,
-): Partial<State> => {
-  const commands = command.split('') as Command[];
-
-  get().addCar(
-    {
-      name: state.carToBeAdded.name ?? '',
-      x: state.carToBeAdded.initialPosition?.x ?? 0,
-      y: state.carToBeAdded.initialPosition?.y ?? 0,
-      facing: state.carToBeAdded.initialPosition?.facing ?? 'N',
-    },
-    commands,
-  );
-  const newState = get();
-  return {
-    stage: 'selectOption',
-    cars: [...newState.cars],
-    carToBeAdded: {
-      commands,
-    },
-    consoleMessages: [
-      ...state.consoleMessages,
-      'Your current list of cars are:',
-      ...newState.cars.map((car) => {
-        const commandForCar = newState.carCommands[car.name];
-        return `- ${car.name}, (${car.x}, ${car.y}) ${
-          car.facing
-        }, ${commandForCar.join('')}`;
-      }),
-      'Please choose from the following options:',
-      '[1] Add a car to field',
-      '[2] Run simulation',
-    ],
-  };
-};
-
 export const useStore = create<State & Actions>((set, get) => ({
   ...initialState,
 
@@ -340,6 +301,7 @@ const processCommandSetFieldSize = (
     return {
       consoleMessages: [
         ...state.consoleMessages,
+        command,
         'Invalid format. Valid format is x y.',
         'Please enter the enter the width and height of the simulation field in x and y format:',
       ],
@@ -353,6 +315,7 @@ const processCommandSetFieldSize = (
     stage: 'selectOption',
     consoleMessages: [
       ...state.consoleMessages,
+      command,
       'Please choose from the following options:',
       '[1] Add a car to field',
       '[2] Run simulation',
@@ -369,6 +332,7 @@ const processCommandSelectOption = (
     return {
       consoleMessages: [
         ...state.consoleMessages,
+        command,
         'Invalid option.',
         'Please choose from the following options:',
         '[1] Add a car to field',
@@ -383,6 +347,7 @@ const processCommandSelectOption = (
       stage: 'addCars-name',
       consoleMessages: [
         ...state.consoleMessages,
+        command,
         'Please enter the name of the car:',
       ],
     };
@@ -391,7 +356,11 @@ const processCommandSelectOption = (
   if (option === 2) {
     return {
       stage: 'runSimulation',
-      consoleMessages: [...state.consoleMessages, 'Running simulation...'],
+      consoleMessages: [
+        ...state.consoleMessages,
+        command,
+        'Running simulation...',
+      ],
     };
   }
 
@@ -407,6 +376,7 @@ const processCommandAddCarName = (
     stage: 'addCars-position',
     consoleMessages: [
       ...state.consoleMessages,
+      command,
       `Please enter initial position of car ${command} in x y Direction format:`,
     ],
     carToBeAdded: {
@@ -425,6 +395,7 @@ const processCommandAddCarPosition = (
     return {
       consoleMessages: [
         ...state.consoleMessages,
+        command,
         'Invalid format. Valid format is x y Direction.',
         `Please enter initial position of car ${
           state.carToBeAdded.name ?? ''
@@ -438,6 +409,7 @@ const processCommandAddCarPosition = (
     stage: 'addCars-command',
     consoleMessages: [
       ...state.consoleMessages,
+      command,
       'Please enter the commands for car car1:',
     ],
     carToBeAdded: {
@@ -449,5 +421,45 @@ const processCommandAddCarPosition = (
         facing: facing as Direction,
       },
     },
+  };
+};
+
+const processCommandAddCarCommand = (
+  command: string,
+  state: State,
+  get: () => State & Actions,
+): Partial<State> => {
+  const commands = command.split('') as Command[];
+
+  get().addCar(
+    {
+      name: state.carToBeAdded.name ?? '',
+      x: state.carToBeAdded.initialPosition?.x ?? 0,
+      y: state.carToBeAdded.initialPosition?.y ?? 0,
+      facing: state.carToBeAdded.initialPosition?.facing ?? 'N',
+    },
+    commands,
+  );
+  const newState = get();
+  return {
+    stage: 'selectOption',
+    cars: [...newState.cars],
+    carToBeAdded: {
+      commands,
+    },
+    consoleMessages: [
+      ...state.consoleMessages,
+      command,
+      'Your current list of cars are:',
+      ...newState.cars.map((car) => {
+        const commandForCar = newState.carCommands[car.name];
+        return `- ${car.name}, (${car.x}, ${car.y}) ${
+          car.facing
+        }, ${commandForCar.join('')}`;
+      }),
+      'Please choose from the following options:',
+      '[1] Add a car to field',
+      '[2] Run simulation',
+    ],
   };
 };
