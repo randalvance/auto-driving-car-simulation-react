@@ -34,6 +34,7 @@ export interface State {
     initialPosition?: { x: number; y: number; facing: Direction };
     commands?: Command[];
   };
+  isDone: boolean;
 }
 
 export interface Actions {
@@ -56,6 +57,7 @@ export const initialState: State = {
   carToBeAdded: {},
   error: undefined,
   originalCarPositions: {},
+  isDone: false,
 };
 
 export const useStore = create<State & Actions>((set) => ({

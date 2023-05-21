@@ -16,3 +16,5 @@ export const MESSAGES_END_OPTIONS = [
 ];
 
 export const MESSAGE_LIST_OF_CAR = 'Your current list of cars are:';
+
+export const MESSAGE_GOODBYE = 'Thank you for running the simulation. Goodbye!';

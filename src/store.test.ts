@@ -7,6 +7,7 @@ import {
 } from '@/types';
 import {
   MESSAGE_FIELD_SIZE_PROMPT,
+  MESSAGE_GOODBYE,
   MESSAGE_INTRO,
   MESSAGE_LIST_OF_CAR,
   MESSAGES_END_OPTIONS,
@@ -938,6 +939,26 @@ describe('store', () => {
         expect(newState.consoleMessages).toEqual([
           MESSAGE_INTRO,
           MESSAGE_FIELD_SIZE_PROMPT,
+        ]);
+      });
+
+      it('when option 2 for end is selected', () => {
+        // Arrange
+        useStore.setState({
+          stage: 'done',
+          isDone: false,
+        });
+        const state = useStore.getState();
+
+        // Act
+        state.dispatchCommand('2');
+
+        // Assert
+        const newState = useStore.getState();
+        expect(newState.isDone).toBe(true);
+        expect(newState.consoleMessages).toEqual([
+          ...state.consoleMessages,
+          MESSAGE_GOODBYE,
         ]);
       });
     });
