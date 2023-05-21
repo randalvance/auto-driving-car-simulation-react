@@ -11,3 +11,16 @@
 .message::before {
     content: '> ';
 }
+
+.input {
+    background: none;
+    border: none;
+    color: white;
+}
+.input::before {
+    content: '> ';
+}
+
+.input:focus {
+    outline: none;
+}
