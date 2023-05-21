@@ -503,4 +503,26 @@ describe('store', () => {
       ]);
     });
   });
+
+  it('should reset simulation state', () => {
+    // Arrange
+    useStore.setState({
+      consoleMessages: ['Message 1', 'Message 2'],
+    });
+    const store = useStore.getState();
+
+    // Act
+    store.reset();
+
+    // Assert
+    const newState = useStore.getState();
+    expect(newState.consoleMessages).toEqual([
+      'Welcome to Auto Driving Car Simulation!',
+      'Please enter the enter the width and height of the simulation field in x and y format:',
+    ]);
+    expect(newState.isGameOver).toBe(false);
+    expect(newState.cars.length).toBe(0);
+    expect(newState.fieldHeight).toBe(0);
+    expect(newState.fieldWidth).toBe(0);
+  });
 });

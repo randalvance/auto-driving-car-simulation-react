@@ -23,6 +23,7 @@ export interface Actions {
   addCar: (car: Car, commands: Command[]) => void;
   setFieldBounds: (width: number, height: number) => void;
   nextStep: () => void;
+  reset: () => void;
 }
 
 export const initialState: State = {
@@ -189,6 +190,7 @@ export const useStore = create<State & Actions>((set) => ({
       };
     });
   },
+  reset: () => {},
 }));
 
 const getCarAtNewPosition = (
