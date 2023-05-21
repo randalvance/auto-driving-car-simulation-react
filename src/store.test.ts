@@ -5,7 +5,11 @@ import {
   type Direction,
   type Stage,
 } from '@/types';
-import { MESSAGE_LIST_OF_CAR, MESSAGES_SELECT_OPTION } from '@/constants';
+import {
+  MESSAGE_LIST_OF_CAR,
+  MESSAGES_END_OPTIONS,
+  MESSAGES_SELECT_OPTION,
+} from '@/constants';
 
 describe('store', () => {
   beforeEach(() => {
@@ -337,6 +341,16 @@ describe('store', () => {
       expect(newState.step).toBe(2);
       expect(newState.stage).toBe('done');
       expect(newState.completedCars).toEqual(new Set<string>(['car1', 'car2']));
+      expect(newState.consoleMessages).toEqual([
+        ...state.consoleMessages,
+        'Your current list of cars are:',
+        '- car1, (0, 5) E, FRFLFFFRLF',
+        '- car2, (4, 5) W, FRFLFFFRLF',
+        'After simulation, the result is:',
+        '- car1, collides with car2 at (2, 5) at step 2',
+        '- car2, collides with car1 at (2, 5) at step 2',
+        ...MESSAGES_END_OPTIONS,
+      ]);
     });
 
     it('should set stage to done and completedCars when all cars are complete', () => {
