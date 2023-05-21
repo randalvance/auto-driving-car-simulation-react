@@ -79,14 +79,14 @@ describe('store', () => {
     [
       { x: 11, y: 5 },
       { x: 5, y: 11 },
-      { x: 12, y: 12 },
+      { x: 10, y: 10 },
       { x: -10, y: -10 },
     ].forEach(({ x, y }) => {
       it(`when car position is at (${x}, ${y})`, () => {
         useStore.setState({ fieldWidth: 10, fieldHeight: 10 });
         const state = useStore.getState();
 
-        state.addCar({ name: 'car1', facing: 'N', x: 11, y: 5 }, ['F', 'R']);
+        state.addCar({ name: 'car1', facing: 'N', x, y }, ['F', 'R']);
 
         const newState = useStore.getState();
         expect(newState.cars).toHaveLength(0);
@@ -840,8 +840,8 @@ describe('store', () => {
               carToBeAdded: {
                 name: 'car1',
                 initialPosition: {
-                  x: 1,
-                  y: 2,
+                  x: 0,
+                  y: 1,
                   facing: 'N',
                 },
               },

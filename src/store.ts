@@ -67,9 +67,9 @@ export const useStore = create<State & Actions>((set, get) => ({
       // Check if the car being added is outside the bounds of the field
       if (
         car.x < 0 ||
-        car.x > state.fieldWidth ||
+        car.x > state.fieldWidth - 1 ||
         car.y < 0 ||
-        car.y > state.fieldHeight
+        car.y > state.fieldHeight - 1
       ) {
         return {
           error: `Car is out of bounds`,
