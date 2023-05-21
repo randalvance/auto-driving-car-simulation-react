@@ -17,6 +17,8 @@ export const Console: React.FC<Props> = ({ messages }) => {
 
   useEffect(() => {
     inputRef.current?.focus();
+    // In tests, scrollTo is not supported
+    if (typeof containerRef.current?.scrollTo !== 'function') return;
     containerRef.current?.scrollTo(0, containerRef.current.scrollHeight);
   }, [messages]);
   return (
