@@ -547,5 +547,28 @@ describe('store', () => {
         '[2] Run simulation',
       ]);
     });
+
+    describe('should not process command for setting field if inputs are incorrect', () => {
+      ['5 50x', '55555', 'sdfsfsdf', 'a5 5', '5 10 5'].forEach((input) => {
+        it(`when input is ${input}`, () => {
+          // Arrange
+          const state = useStore.getState();
+
+          // Act
+          state.dispatchCommand(input);
+
+          // Assert
+          const newState = useStore.getState();
+          expect(newState.fieldWidth).toBe(0);
+          expect(newState.fieldHeight).toBe(0);
+          expect(newState.stage).toBe('setFieldSize' satisfies Stage);
+          expect(newState.consoleMessages).toEqual([
+            ...state.consoleMessages,
+            'Invalid format. Valid format is x y.',
+            'Please enter the enter the width and height of the simulation field in x and y format:',
+          ]);
+        });
+      });
+    });
   });
 });
