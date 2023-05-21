@@ -8,6 +8,7 @@ import {
 import { create } from 'zustand';
 import {
   MESSAGE_FIELD_SIZE_PROMPT,
+  MESSAGE_GOODBYE,
   MESSAGE_INTRO,
   MESSAGE_LIST_OF_CAR,
   MESSAGES_END_OPTIONS,
@@ -455,9 +456,19 @@ const processCommandAddCarCommand = (
 };
 
 const processCommandReset = (command: string, state: State): Partial<State> => {
-  return {
-    ...initialState,
-  };
+  const option = parseInt(command, 10);
+  if (option === 1) {
+    return {
+      ...initialState,
+    };
+  }
+  if (option === 2) {
+    return {
+      isDone: true,
+      consoleMessages: [...state.consoleMessages, MESSAGE_GOODBYE],
+    };
+  }
+  return state;
 };
 
 const validateAddingOfCar = (state: State, car: Car): string | null => {
