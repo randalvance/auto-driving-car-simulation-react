@@ -375,7 +375,7 @@ describe('store', () => {
       } satisfies CollisionInfo);
     });
 
-    it('should set gameOver and completedCars to true when all cars are crashed', () => {
+    it('should set stage to done and completedCars when all cars are crashed', () => {
       // Arrange
       useStore.setState({
         fieldHeight: 10,
@@ -405,11 +405,11 @@ describe('store', () => {
       // Assert
       const newState = useStore.getState();
       expect(newState.step).toBe(2);
-      expect(newState.isGameOver).toBe(true);
+      expect(newState.stage).toBe('done');
       expect(newState.completedCars).toEqual(new Set<string>(['car1', 'car2']));
     });
 
-    it('should set gameOver and completedCars to true when all cars are complete', () => {
+    it('should set stage to done and completedCars when all cars are complete', () => {
       // Arrange
       useStore.setState({
         fieldHeight: 10,
@@ -441,7 +441,7 @@ describe('store', () => {
       // Assert
       const newState = useStore.getState();
       expect(newState.step).toBe(6);
-      expect(newState.isGameOver).toBe(true);
+      expect(newState.stage).toBe('done');
       expect(newState.completedCars).toEqual(
         new Set<string>(['car1', 'car2', 'car3']),
       );
@@ -508,6 +508,7 @@ describe('store', () => {
   it('should reset simulation state', () => {
     // Arrange
     useStore.setState({
+      stage: 'done',
       consoleMessages: ['Message 1', 'Message 2'],
     });
     const store = useStore.getState();
@@ -521,7 +522,7 @@ describe('store', () => {
       'Welcome to Auto Driving Car Simulation!',
       'Please enter the enter the width and height of the simulation field in x and y format:',
     ]);
-    expect(newState.isGameOver).toBe(false);
+    expect(newState.stage).toBe('setFieldSize');
     expect(newState.cars.length).toBe(0);
     expect(newState.fieldHeight).toBe(0);
     expect(newState.fieldWidth).toBe(0);

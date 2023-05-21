@@ -22,4 +22,5 @@ export type Stage =
   | 'addCars-name'
   | 'addCars-position'
   | 'addCars-command'
-  | 'runSimulation';
+  | 'runSimulation'
+  | 'done';

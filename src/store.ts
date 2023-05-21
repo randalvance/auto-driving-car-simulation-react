@@ -16,7 +16,6 @@ export interface State {
   step: number;
   collisions: CollisionInfo[];
   completedCars: Set<string>;
-  isGameOver: boolean;
   consoleMessages: string[];
   stage: Stage;
   carToBeAdded: {
@@ -42,7 +41,6 @@ export const initialState: State = {
   step: 0,
   collisions: [],
   completedCars: new Set<string>(),
-  isGameOver: false,
   consoleMessages: [
     'Welcome to Auto Driving Car Simulation!',
     'Please enter the enter the width and height of the simulation field in x and y format:',
@@ -199,7 +197,7 @@ export const useStore = create<State & Actions>((set, get) => ({
         step: movementPerformed ? newStep : step,
         collisions: [...newCollisions],
         completedCars,
-        isGameOver: completedCars.size === cars.length,
+        stage: completedCars.size === cars.length ? 'done' : state.stage,
       };
     });
   },
@@ -220,6 +218,7 @@ export const useStore = create<State & Actions>((set, get) => ({
         'addCars-position': processCommandAddCarPosition,
         'addCars-command': processCommandAddCarCommand,
         runSimulation: (_, state, __: () => State & Actions) => state,
+        done: (_, state, __: () => State & Actions) => state,
       };
       const commandProcessor = commandProcessors[state.stage];
       if (commandProcessor !== undefined) {
