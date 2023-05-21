@@ -21,8 +21,8 @@ export interface State {
   stage: Stage;
   carToBeAdded: {
     name?: Car['name'];
-    initialPosition?: { x: number; y: number };
-    position?: Command[];
+    initialPosition?: { x: number; y: number; facing: Direction };
+    commands?: Command[];
   };
 }
 

@@ -661,6 +661,35 @@ describe('store', () => {
           'Please enter initial position of car car1 in x y Direction format:',
         ]);
       });
+
+      describe('should set the initial position of the car to be added', () => {
+        it('when input is valid', () => {
+          // Arrange
+          useStore.setState({
+            stage: 'addCars-position',
+            carToBeAdded: {
+              name: 'car1',
+            },
+          });
+          const state = useStore.getState();
+
+          // Act
+          state.dispatchCommand('1 2 N');
+
+          // Assert
+          const newState = useStore.getState();
+          expect(newState.stage).toBe('addCars-command' satisfies Stage);
+          expect(newState.carToBeAdded.initialPosition).toBeTruthy();
+          expect(newState.carToBeAdded.initialPosition!.x).toBe(1);
+          expect(newState.carToBeAdded.initialPosition!.y).toBe(2);
+          expect(newState.carToBeAdded.initialPosition!.facing).toBe('N');
+          expect(newState.cars.length).toBe(0);
+          expect(newState.consoleMessages).toEqual([
+            ...state.consoleMessages,
+            'Please enter the commands for car car1:',
+          ]);
+        });
+      });
     });
   });
 });
