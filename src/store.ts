@@ -218,6 +218,10 @@ export const useStore = create<State & Actions>((set) => ({
         return processCommandSelectOption(command, state);
       }
 
+      if (state.stage === 'addCars-name') {
+        return processCommandAddCarName(command, state);
+      }
+
       return state;
     });
   },
@@ -347,4 +351,21 @@ const processCommandSelectOption = (
   }
 
   return state;
+};
+
+const processCommandAddCarName = (
+  command: string,
+  state: State,
+): Partial<State> => {
+  return {
+    stage: 'addCars-position',
+    consoleMessages: [
+      ...state.consoleMessages,
+      'Please enter initial position of car car1 in x y Direction format:',
+    ],
+    carToBeAdded: {
+      ...state.carToBeAdded,
+      name: command,
+    },
+  };
 };
