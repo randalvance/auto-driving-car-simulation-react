@@ -51,6 +51,45 @@ export const initialState: State = {
   carToBeAdded: {},
 };
 
+const processCommandAddCarCommand = (
+  command: string,
+  state: State,
+  get: () => State & Actions,
+): Partial<State> => {
+  const commands = command.split('') as Command[];
+
+  get().addCar(
+    {
+      name: state.carToBeAdded.name ?? '',
+      x: state.carToBeAdded.initialPosition?.x ?? 0,
+      y: state.carToBeAdded.initialPosition?.y ?? 0,
+      facing: state.carToBeAdded.initialPosition?.facing ?? 'N',
+    },
+    commands,
+  );
+  const newState = get();
+  return {
+    stage: 'selectOption',
+    cars: [...newState.cars],
+    carToBeAdded: {
+      commands,
+    },
+    consoleMessages: [
+      ...state.consoleMessages,
+      'Your current list of cars are:',
+      ...newState.cars.map((car) => {
+        const commandForCar = newState.carCommands[car.name];
+        return `- ${car.name}, (${car.x}, ${car.y}) ${
+          car.facing
+        }, ${commandForCar.join('')}`;
+      }),
+      'Please choose from the following options:',
+      '[1] Add a car to field',
+      '[2] Run simulation',
+    ],
+  };
+};
+
 export const useStore = create<State & Actions>((set, get) => ({
   ...initialState,
 
@@ -212,51 +251,18 @@ export const useStore = create<State & Actions>((set, get) => ({
     set((state) => {
       const commandProcessors: Record<
         Stage,
-        typeof processCommandSetFieldSize
+        typeof processCommandAddCarCommand
       > = {
         setFieldSize: processCommandSetFieldSize,
         selectOption: processCommandSelectOption,
         'addCars-name': processCommandAddCarName,
         'addCars-position': processCommandAddCarPosition,
-        'addCars-command': (command, state) => {
-          const commands = command.split('') as Command[];
-
-          get().addCar(
-            {
-              name: state.carToBeAdded.name ?? '',
-              x: state.carToBeAdded.initialPosition?.x ?? 0,
-              y: state.carToBeAdded.initialPosition?.y ?? 0,
-              facing: state.carToBeAdded.initialPosition?.facing ?? 'N',
-            },
-            commands,
-          );
-          const newState = get();
-          return {
-            stage: 'selectOption',
-            cars: [...newState.cars],
-            carToBeAdded: {
-              commands,
-            },
-            consoleMessages: [
-              ...state.consoleMessages,
-              'Your current list of cars are:',
-              ...newState.cars.map((car) => {
-                const commandForCar = newState.carCommands[car.name];
-                return `- ${car.name}, (${car.x}, ${car.y}) ${
-                  car.facing
-                }, ${commandForCar.join('')}`;
-              }),
-              'Please choose from the following options:',
-              '[1] Add a car to field',
-              '[2] Run simulation',
-            ],
-          };
-        },
-        runSimulation: (_, state) => state,
+        'addCars-command': processCommandAddCarCommand,
+        runSimulation: (_, state, __: () => State & Actions) => state,
       };
       const commandProcessor = commandProcessors[state.stage];
       if (commandProcessor !== undefined) {
-        return commandProcessor(command, state);
+        return commandProcessor(command, state, get);
       }
 
       return state;
@@ -323,6 +329,7 @@ const turnLeft = (car: Car): Car => {
 const processCommandSetFieldSize = (
   command: string,
   state: State,
+  _: () => State & Actions,
 ): Partial<State> => {
   const tokens = command.split(' ');
   if (
@@ -356,6 +363,7 @@ const processCommandSetFieldSize = (
 const processCommandSelectOption = (
   command: string,
   state: State,
+  _: () => State & Actions,
 ): Partial<State> => {
   if (command.match(/^([1-2])$/) == null) {
     return {
@@ -393,6 +401,7 @@ const processCommandSelectOption = (
 const processCommandAddCarName = (
   command: string,
   state: State,
+  _: () => State & Actions,
 ): Partial<State> => {
   return {
     stage: 'addCars-position',
@@ -410,6 +419,7 @@ const processCommandAddCarName = (
 const processCommandAddCarPosition = (
   command: string,
   state: State,
+  _: () => State & Actions,
 ): Partial<State> => {
   if (command.trim().match(/^(\d+) (\d+) ([NSEW])$/) == null) {
     return {
