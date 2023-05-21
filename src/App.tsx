@@ -4,9 +4,8 @@ import { Simulation } from '@/components/Simulation';
 import { useStore } from '@/store';
 
 const App: React.FC = () => {
-  const { setFieldBounds, addCar } = useStore((s) => s);
+  const { addCar } = useStore((s) => s);
   useEffect(() => {
-    setFieldBounds(20, 20);
     addCar({ name: 'car1', x: 0, y: 0, facing: 'N' }, [
       'F',
       'F',
