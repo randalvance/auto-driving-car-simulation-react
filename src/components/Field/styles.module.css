@@ -9,6 +9,7 @@
     height: 50px;
     background: url("public/images/car.png") no-repeat;
     background-size: contain;
+    background-position-x: 10px;
     transition: left 1s ease, bottom 1s ease;
     filter: drop-shadow(0 0 0.75rem crimson);
 }
@@ -23,4 +24,23 @@
     color: white;
     transition: left 1s ease, bottom 1s ease;
     filter: drop-shadow(0 0 0.75rem black);
+}
+
+.grid {
+    position: relative;
+    top: 0;
+    height: 0;
+}
+
+.gridCell {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    border: 1px solid #666;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

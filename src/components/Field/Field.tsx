@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import styles from './styles.module.css';
 import { getRotationBasedOnDirection } from './helpers';
 import { type Car } from '@/types';
+import { Grid } from './Grid';
 import * as classNames from 'classnames';
 
 interface Props {
@@ -30,6 +31,7 @@ export const Field: React.FC<Props> = ({
       role="field"
       style={{ width: width * 50, height: height * 50 }}
     >
+      <Grid height={height} width={width} />
       {cars.map((car) => (
         <React.Fragment key={`${car.name}-container`}>
           <div
