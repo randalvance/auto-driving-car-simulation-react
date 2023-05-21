@@ -6,7 +6,11 @@ import {
   type Stage,
 } from '@/types';
 import { create } from 'zustand';
-import { MESSAGE_LIST_OF_CAR, MESSAGES_SELECT_OPTION } from '@/constants';
+import {
+  MESSAGE_LIST_OF_CAR,
+  MESSAGES_END_OPTIONS,
+  MESSAGES_SELECT_OPTION,
+} from '@/constants';
 
 export interface State {
   cars: Car[];
@@ -19,6 +23,10 @@ export interface State {
   completedCars: Set<string>;
   consoleMessages: string[];
   stage: Stage;
+  originalCarPositions: Record<
+    Car['name'],
+    { x: number; y: number; facing: Direction }
+  >;
   carToBeAdded: {
     name?: Car['name'];
     initialPosition?: { x: number; y: number; facing: Direction };
@@ -48,6 +56,7 @@ export const initialState: State = {
   stage: 'setFieldSize',
   carToBeAdded: {},
   error: undefined,
+  originalCarPositions: {},
 };
 
 export const useStore = create<State & Actions>((set) => ({
@@ -160,12 +169,17 @@ export const useStore = create<State & Actions>((set) => ({
         movementPerformed = true;
       }
 
+      const isDone = completedCars.size === cars.length;
+
       return {
         cars: Object.values(carPositions),
         step: movementPerformed ? newStep : step,
         collisions: [...newCollisions],
         completedCars,
-        stage: completedCars.size === cars.length ? 'done' : state.stage,
+        stage: isDone ? 'done' : state.stage,
+        consoleMessages: isDone
+          ? getReportMessages({ ...state, collisions: [...newCollisions] })
+          : state.consoleMessages,
       };
     });
   },
@@ -308,6 +322,16 @@ const processCommandSelectOption = (
   if (option === 2) {
     return {
       stage: 'runSimulation',
+      originalCarPositions: state.cars.reduce<
+        Record<Car['name'], { x: number; y: number; facing: Direction }>
+      >((acc, car) => {
+        acc[car.name] = {
+          x: car.x,
+          y: car.y,
+          facing: car.facing,
+        };
+        return acc;
+      }, {}),
       consoleMessages: [
         ...state.consoleMessages,
         command,
@@ -450,6 +474,19 @@ const validateAddingOfCar = (state: State, car: Car): string | null => {
   return null;
 };
 
+const getCurrentListOfCarMessages = (state: State): string[] => {
+  return [
+    MESSAGE_LIST_OF_CAR,
+    ...state.cars.map((car) => {
+      const commandForCar = state.carCommands[car.name];
+      const originalPosition = state.originalCarPositions[car.name] ?? car;
+      return `- ${car.name}, (${originalPosition.x}, ${originalPosition.y}) ${
+        originalPosition.facing
+      }, ${commandForCar?.join('')}`;
+    }),
+  ];
+};
+
 const getOptionsMessage = (
   state: State,
   command: string,
@@ -459,17 +496,28 @@ const getOptionsMessage = (
     ...state.consoleMessages,
     command,
     ...extraMessages,
-    ...(state.cars.length > 0
-      ? [
-          MESSAGE_LIST_OF_CAR,
-          ...state.cars.map((car) => {
-            const commandForCar = state.carCommands[car.name];
-            return `- ${car.name}, (${car.x}, ${car.y}) ${
-              car.facing
-            }, ${commandForCar?.join('')}`;
-          }),
-        ]
-      : []),
+    ...(state.cars.length > 0 ? getCurrentListOfCarMessages(state) : []),
     ...MESSAGES_SELECT_OPTION,
+  ];
+};
+
+const getCollisionMessages = (state: State): string[] => {
+  return [
+    'After simulation, the result is:',
+    ...(state.collisions.map(
+      (c) =>
+        `- ${c.carName}, collides with ${c.collidedWith.join()} at (${c.x}, ${
+          c.y
+        }) at step ${c.step}`,
+    ) ?? []),
+  ];
+};
+
+const getReportMessages = (state: State): string[] => {
+  return [
+    ...state.consoleMessages,
+    ...getCurrentListOfCarMessages(state),
+    ...getCollisionMessages(state),
+    ...MESSAGES_END_OPTIONS,
   ];
 };
