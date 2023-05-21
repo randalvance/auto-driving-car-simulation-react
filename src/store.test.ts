@@ -612,5 +612,32 @@ describe('store', () => {
         'Running simulation...',
       ]);
     });
+
+    describe('should process command for selection option, negative cases', () => {
+      ['1a', 'a2', 'asdfsdfs', '1 2', '3'].forEach((input) => {
+        it(`when input is ${input}`, () => {});
+        // Arrange
+        useStore.setState({
+          fieldHeight: 10,
+          fieldWidth: 10,
+          stage: 'selectOption',
+        });
+        const state = useStore.getState();
+
+        // Act
+        state.dispatchCommand(input);
+
+        // Assert
+        const newState = useStore.getState();
+        expect(newState.stage).toBe('selectOption' satisfies Stage);
+        expect(newState.consoleMessages).toEqual([
+          ...state.consoleMessages,
+          'Invalid option.',
+          'Please choose from the following options:',
+          '[1] Add a car to field',
+          '[2] Run simulation',
+        ]);
+      });
+    });
   });
 });
