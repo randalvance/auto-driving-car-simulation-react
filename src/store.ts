@@ -431,6 +431,17 @@ const processCommandAddCarCommand = (
 ): Partial<State> => {
   const commands = command.split('') as Command[];
 
+  if (!commands.every((c) => c.match(/^[LRF]$/) != null)) {
+    return {
+      consoleMessages: [
+        ...state.consoleMessages,
+        command,
+        'Invalid format. Valid format is a string of commands (F, L, R).',
+        `Please enter the commands for car ${state.carToBeAdded.name ?? ''}:`,
+      ],
+    };
+  }
+
   get().addCar(
     {
       name: state.carToBeAdded.name ?? '',
