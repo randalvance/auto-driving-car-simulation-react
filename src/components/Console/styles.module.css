@@ -7,3 +7,7 @@
     font-family: Consolas, monospace;
     padding: 0 10px;
 }
+
+.message::before {
+    content: '> ';
+}

@@ -5,10 +5,14 @@ interface Props {
   messages: string[];
 }
 
-export const Console: React.FC<Props> = () => {
+export const Console: React.FC<Props> = ({ messages }) => {
   return (
     <div className={styles.container}>
-      <h1>Console</h1>
+      {messages.map((message, index) => (
+        <div role="message" key={index} className={styles.message}>
+          {message}
+        </div>
+      ))}
     </div>
   );
 };

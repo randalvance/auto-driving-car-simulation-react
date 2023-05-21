@@ -13,7 +13,7 @@ export const Simulation: React.FC = () => {
   ]);
   return (
     <div className={styles.container}>
-      <Console />
+      <Console messages={['Message 1', 'Message 2']} />
       <div className={styles.fieldContainer}>
         <Field
           height={fieldHeight}
