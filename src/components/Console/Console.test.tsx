@@ -9,4 +9,11 @@ describe('Console', () => {
     const messages = screen.getAllByRole('message');
     expect(messages).toHaveLength(2);
   });
+
+  it('should render an input', async () => {
+    render(<Console messages={[]} />);
+
+    const input = screen.getByRole('input');
+    expect(input).toBeInTheDocument();
+  });
 });
