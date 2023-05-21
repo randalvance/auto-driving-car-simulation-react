@@ -5,6 +5,7 @@ import {
   type Direction,
   type Stage,
 } from '@/types';
+import { SELECT_OPTION_MESSAGES } from '@/constants';
 
 describe('store', () => {
   beforeEach(() => {
@@ -473,9 +474,7 @@ describe('store', () => {
       expect(newState.consoleMessages).toEqual([
         ...state.consoleMessages,
         '5 10',
-        'Please choose from the following options:',
-        '[1] Add a car to field',
-        '[2] Run simulation',
+        ...SELECT_OPTION_MESSAGES,
       ]);
     });
 
@@ -570,9 +569,7 @@ describe('store', () => {
           ...state.consoleMessages,
           input,
           'Invalid option.',
-          'Please choose from the following options:',
-          '[1] Add a car to field',
-          '[2] Run simulation',
+          ...SELECT_OPTION_MESSAGES,
         ]);
       },
     );
@@ -714,9 +711,7 @@ describe('store', () => {
             'FRFLFFFRLF',
             'Your current list of cars are:',
             '- car1, (1, 2) N, FRFLFFFRLF',
-            'Please choose from the following options:',
-            '[1] Add a car to field',
-            '[2] Run simulation',
+            ...SELECT_OPTION_MESSAGES,
           ]);
         });
 
@@ -788,9 +783,7 @@ describe('store', () => {
             ...state.consoleMessages,
             'F',
             'Car is out of bounds',
-            'Please choose from the following options:',
-            '[1] Add a car to field',
-            '[2] Run simulation',
+            ...SELECT_OPTION_MESSAGES,
           ]);
         });
 
@@ -835,9 +828,7 @@ describe('store', () => {
             'Car with the same name already exists',
             'Your current list of cars are:',
             '- car1, (0, 0) N, F',
-            'Please choose from the following options:',
-            '[1] Add a car to field',
-            '[2] Run simulation',
+            ...SELECT_OPTION_MESSAGES,
           ]);
         });
 
@@ -882,9 +873,7 @@ describe('store', () => {
             'Car at the same initial position already exists',
             'Your current list of cars are:',
             '- car1, (1, 1) N, F',
-            'Please choose from the following options:',
-            '[1] Add a car to field',
-            '[2] Run simulation',
+            ...SELECT_OPTION_MESSAGES,
           ]);
         });
       });

@@ -6,6 +6,7 @@ import {
   type Stage,
 } from '@/types';
 import { create } from 'zustand';
+import { SELECT_OPTION_MESSAGES } from '@/constants';
 
 export interface State {
   cars: Car[];
@@ -469,8 +470,6 @@ const getOptionsMessage = (
           }),
         ]
       : []),
-    'Please choose from the following options:',
-    '[1] Add a car to field',
-    '[2] Run simulation',
+    ...SELECT_OPTION_MESSAGES,
   ];
 };
