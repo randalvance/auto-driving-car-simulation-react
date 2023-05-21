@@ -571,7 +571,7 @@ describe('store', () => {
       });
     });
 
-    it('should process command for adding cars', () => {
+    it('should process command for selection option 1', () => {
       // Arrange
       useStore.setState({
         fieldHeight: 10,
