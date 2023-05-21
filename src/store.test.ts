@@ -347,8 +347,8 @@ describe('store', () => {
         '- car1, (0, 5) E, FFFFFFFFFF',
         '- car2, (4, 5) W, FFFFFFFFFF',
         'After simulation, the result is:',
-        '- car1, collides with car2 at (2, 5) at step 2',
         '- car2, collides with car1 at (2, 5) at step 2',
+        '- car1, collides with car2 at (2, 5) at step 2',
         ...MESSAGES_END_OPTIONS,
       ]);
     });
