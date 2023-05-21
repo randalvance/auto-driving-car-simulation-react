@@ -33,148 +33,144 @@ describe('store', () => {
       useStore.setState({ fieldWidth: 10, fieldHeight: 10, step: 0 });
     });
 
-    describe('should move car forward', () => {
-      [
-        {
-          facing: 'North',
-          carPosition: { facing: 'N', x: 0, y: 0 },
-          targetPosition: { x: 0, y: 1 },
-        },
-        {
-          facing: 'South',
-          carPosition: { facing: 'S', x: 0, y: 5 },
-          targetPosition: { x: 0, y: 4 },
-        },
-        {
-          facing: 'East',
-          carPosition: { facing: 'E', x: 3, y: 0 },
-          targetPosition: { x: 4, y: 0 },
-        },
-        {
-          facing: 'West',
-          carPosition: { facing: 'W', x: 3, y: 0 },
-          targetPosition: { x: 2, y: 0 },
-        },
-        // Out of bounds tests (field is 10x10)
-        {
-          facing: 'North',
-          carPosition: { facing: 'N', x: 0, y: 10 },
-          targetPosition: { x: 0, y: 10 },
-        },
-        {
-          facing: 'South',
-          carPosition: { facing: 'S', x: 0, y: 0 },
-          targetPosition: { x: 0, y: 0 },
-        },
-        {
-          facing: 'East',
-          carPosition: { facing: 'E', x: 10, y: 0 },
-          targetPosition: { x: 10, y: 0 },
-        },
-        {
-          facing: 'West',
-          carPosition: { facing: 'W', x: 0, y: 0 },
-          targetPosition: { x: 0, y: 0 },
-        },
-      ].forEach(({ facing, carPosition, targetPosition }) => {
-        it(`when facing ${facing}`, () => {
-          const car: Car = {
-            name: 'car1',
-            ...carPosition,
-            facing: carPosition.facing as Direction,
-          };
-          useStore.setState({
-            cars: [car],
-            carCommands: { [car.name]: ['F'] },
-          });
-          const state = useStore.getState();
-
-          state.nextStep();
-
-          const newState = useStore.getState();
-          expect(newState.cars).toHaveLength(1);
-          const actualCar = newState.cars[0];
-          expect(actualCar).toEqual({ ...car, ...targetPosition });
-          expect(newState.step).toBe(1);
+    describe.each([
+      {
+        facing: 'North',
+        carPosition: { facing: 'N', x: 0, y: 0 },
+        targetPosition: { x: 0, y: 1 },
+      },
+      {
+        facing: 'South',
+        carPosition: { facing: 'S', x: 0, y: 5 },
+        targetPosition: { x: 0, y: 4 },
+      },
+      {
+        facing: 'East',
+        carPosition: { facing: 'E', x: 3, y: 0 },
+        targetPosition: { x: 4, y: 0 },
+      },
+      {
+        facing: 'West',
+        carPosition: { facing: 'W', x: 3, y: 0 },
+        targetPosition: { x: 2, y: 0 },
+      },
+      // Out of bounds tests (field is 10x10)
+      {
+        facing: 'North',
+        carPosition: { facing: 'N', x: 0, y: 10 },
+        targetPosition: { x: 0, y: 10 },
+      },
+      {
+        facing: 'South',
+        carPosition: { facing: 'S', x: 0, y: 0 },
+        targetPosition: { x: 0, y: 0 },
+      },
+      {
+        facing: 'East',
+        carPosition: { facing: 'E', x: 10, y: 0 },
+        targetPosition: { x: 10, y: 0 },
+      },
+      {
+        facing: 'West',
+        carPosition: { facing: 'W', x: 0, y: 0 },
+        targetPosition: { x: 0, y: 0 },
+      },
+    ])('should move car forward', ({ facing, carPosition, targetPosition }) => {
+      it(`when facing ${facing}`, () => {
+        const car: Car = {
+          name: 'car1',
+          ...carPosition,
+          facing: carPosition.facing as Direction,
+        };
+        useStore.setState({
+          cars: [car],
+          carCommands: { [car.name]: ['F'] },
         });
+        const state = useStore.getState();
+
+        state.nextStep();
+
+        const newState = useStore.getState();
+        expect(newState.cars).toHaveLength(1);
+        const actualCar = newState.cars[0];
+        expect(actualCar).toEqual({ ...car, ...targetPosition });
+        expect(newState.step).toBe(1);
       });
     });
 
     describe('should change car direction', () => {
-      describe('should turn', () => {
-        [
-          {
-            facing: 'N',
-            turn: 'Right',
-            expectedDirection: 'E',
-          },
-          {
-            facing: 'E',
-            turn: 'Right',
-            expectedDirection: 'S',
-          },
-          {
-            facing: 'S',
-            turn: 'Right',
-            expectedDirection: 'W',
-          },
-          {
-            facing: 'W',
-            turn: 'Right',
-            expectedDirection: 'N',
-          },
-          {
-            facing: 'N',
-            turn: 'Left',
-            expectedDirection: 'W',
-          },
-          {
-            facing: 'E',
-            turn: 'Left',
-            expectedDirection: 'N',
-          },
-          {
-            facing: 'S',
-            turn: 'Left',
-            expectedDirection: 'E',
-          },
-          {
-            facing: 'W',
-            turn: 'Left',
-            expectedDirection: 'S',
-          },
-        ].forEach(({ facing, turn, expectedDirection }) => {
-          it(`when facing ${facing} and turning ${turn}`, () => {
-            // Arrange
-            const car: Car = {
-              name: 'car1',
-              facing: facing as Direction,
-              x: 5,
-              y: 5,
-            };
-            useStore.setState({
-              fieldWidth: 10,
-              fieldHeight: 10,
-              cars: [car],
-              carCommands: {
-                [car.name]: turn === 'Right' ? ['R'] : ['L'],
-              },
-            });
-            const state = useStore.getState();
-
-            // Act
-            state.nextStep();
-
-            // Assert
-            const newState = useStore.getState();
-            expect(newState.cars).toHaveLength(1);
-            const actualCar = newState.cars[0];
-            // Car should be facing the expected direction
-            expect(actualCar.facing).toEqual(expectedDirection);
-            // Make sure car stayed in same position
-            expect(actualCar.x).toBe(5);
-            expect(actualCar.y).toBe(5);
+      describe.each([
+        {
+          facing: 'N',
+          turn: 'Right',
+          expectedDirection: 'E',
+        },
+        {
+          facing: 'E',
+          turn: 'Right',
+          expectedDirection: 'S',
+        },
+        {
+          facing: 'S',
+          turn: 'Right',
+          expectedDirection: 'W',
+        },
+        {
+          facing: 'W',
+          turn: 'Right',
+          expectedDirection: 'N',
+        },
+        {
+          facing: 'N',
+          turn: 'Left',
+          expectedDirection: 'W',
+        },
+        {
+          facing: 'E',
+          turn: 'Left',
+          expectedDirection: 'N',
+        },
+        {
+          facing: 'S',
+          turn: 'Left',
+          expectedDirection: 'E',
+        },
+        {
+          facing: 'W',
+          turn: 'Left',
+          expectedDirection: 'S',
+        },
+      ])('should turn', ({ facing, turn, expectedDirection }) => {
+        it(`when facing ${facing} and turning ${turn}`, () => {
+          // Arrange
+          const car: Car = {
+            name: 'car1',
+            facing: facing as Direction,
+            x: 5,
+            y: 5,
+          };
+          useStore.setState({
+            fieldWidth: 10,
+            fieldHeight: 10,
+            cars: [car],
+            carCommands: {
+              [car.name]: turn === 'Right' ? ['R'] : ['L'],
+            },
           });
+          const state = useStore.getState();
+
+          // Act
+          state.nextStep();
+
+          // Assert
+          const newState = useStore.getState();
+          expect(newState.cars).toHaveLength(1);
+          const actualCar = newState.cars[0];
+          // Car should be facing the expected direction
+          expect(actualCar.facing).toEqual(expectedDirection);
+          // Make sure car stayed in same position
+          expect(actualCar.x).toBe(5);
+          expect(actualCar.y).toBe(5);
         });
       });
     });
@@ -483,8 +479,9 @@ describe('store', () => {
       ]);
     });
 
-    describe('should not process command for setting field if inputs are incorrect', () => {
-      ['5 50x', '55555', 'sdfsfsdf', 'a5 5', '5 10 5'].forEach((input) => {
+    describe.each(['5 50x', '55555', 'sdfsfsdf', 'a5 5', '5 10 5'])(
+      'should not process command for setting field if inputs are incorrect',
+      (input) => {
         it(`when input is ${input}`, () => {
           // Arrange
           const state = useStore.getState();
@@ -504,8 +501,8 @@ describe('store', () => {
             'Please enter the enter the width and height of the simulation field in x and y format:',
           ]);
         });
-      });
-    });
+      },
+    );
 
     it('should process command for selection option 1', () => {
       // Arrange
@@ -551,8 +548,9 @@ describe('store', () => {
       ]);
     });
 
-    describe('should process command for selection option, negative cases', () => {
-      ['1a', 'a2', 'asdfsdfs', '1 2', '3'].forEach((input) => {
+    describe.each(['1a', 'a2', 'asdfsdfs', '1 2', '3'])(
+      'should process command for selection option, negative cases',
+      (input) => {
         it(`when input is ${input}`, () => {});
         // Arrange
         useStore.setState({
@@ -576,8 +574,8 @@ describe('store', () => {
           '[1] Add a car to field',
           '[2] Run simulation',
         ]);
-      });
-    });
+      },
+    );
 
     describe('Adding a car', () => {
       it('should set the name of the car to be added', () => {
@@ -632,40 +630,38 @@ describe('store', () => {
           ]);
         });
 
-        describe('when input is invalid', () => {
-          [
-            '1 2',
-            '1 2 3',
-            '1  2  N',
-            '1 2 N N',
-            '1 2 N 3',
-            '1 2 N N N',
-          ].forEach((input) => {
-            it(`when input is ${input}`, () => {
-              // Arrange
-              useStore.setState({
-                stage: 'addCars-position',
-                carToBeAdded: {
-                  name: 'car1',
-                },
-              });
-              const state = useStore.getState();
-
-              // Act
-              state.dispatchCommand(input);
-
-              // Assert
-              const newState = useStore.getState();
-              expect(newState.stage).toBe('addCars-position' satisfies Stage);
-              expect(newState.carToBeAdded.initialPosition).toBeFalsy();
-              expect(newState.cars.length).toBe(0);
-              expect(newState.consoleMessages).toEqual([
-                ...state.consoleMessages,
-                input,
-                'Invalid format. Valid format is x y Direction.',
-                'Please enter initial position of car car1 in x y Direction format:',
-              ]);
+        describe.each([
+          '1 2',
+          '1 2 3',
+          '1  2  N',
+          '1 2 N N',
+          '1 2 N 3',
+          '1 2 N N N',
+        ])('when input is invalid', (input) => {
+          it(`when input is ${input}`, () => {
+            // Arrange
+            useStore.setState({
+              stage: 'addCars-position',
+              carToBeAdded: {
+                name: 'car1',
+              },
             });
+            const state = useStore.getState();
+
+            // Act
+            state.dispatchCommand(input);
+
+            // Assert
+            const newState = useStore.getState();
+            expect(newState.stage).toBe('addCars-position' satisfies Stage);
+            expect(newState.carToBeAdded.initialPosition).toBeFalsy();
+            expect(newState.cars.length).toBe(0);
+            expect(newState.consoleMessages).toEqual([
+              ...state.consoleMessages,
+              input,
+              'Invalid format. Valid format is x y Direction.',
+              'Please enter initial position of car car1 in x y Direction format:',
+            ]);
           });
         });
       });
