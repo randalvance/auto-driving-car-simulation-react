@@ -639,5 +639,28 @@ describe('store', () => {
         ]);
       });
     });
+
+    describe('Adding a car', () => {
+      it('should set the name of the car to be added', () => {
+        // Arrange
+        useStore.setState({
+          stage: 'addCars-name',
+        });
+        const state = useStore.getState();
+
+        // Act
+        state.dispatchCommand('car1');
+
+        // Assert
+        const newState = useStore.getState();
+        expect(newState.stage).toBe('addCars-position' satisfies Stage);
+        expect(newState.carToBeAdded.name).toBe('car1');
+        expect(newState.cars.length).toBe(0);
+        expect(newState.consoleMessages).toEqual([
+          ...state.consoleMessages,
+          'Please enter initial position of car car1 in x y Direction format:',
+        ]);
+      });
+    });
   });
 });

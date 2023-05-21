@@ -19,6 +19,11 @@ export interface State {
   isGameOver: boolean;
   consoleMessages: string[];
   stage: Stage;
+  carToBeAdded: {
+    name?: Car['name'];
+    initialPosition?: { x: number; y: number };
+    position?: Command[];
+  };
 }
 
 export interface Actions {
@@ -43,6 +48,7 @@ export const initialState: State = {
     'Please enter the enter the width and height of the simulation field in x and y format:',
   ],
   stage: 'setFieldSize',
+  carToBeAdded: {},
 };
 
 export const useStore = create<State & Actions>((set) => ({
