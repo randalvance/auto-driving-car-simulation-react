@@ -7,6 +7,8 @@ import {
 } from '@/types';
 import { create } from 'zustand';
 import {
+  MESSAGE_FIELD_SIZE_PROMPT,
+  MESSAGE_INTRO,
   MESSAGE_LIST_OF_CAR,
   MESSAGES_END_OPTIONS,
   MESSAGES_SELECT_OPTION,
@@ -49,10 +51,7 @@ export const initialState: State = {
   step: 0,
   collisions: [],
   completedCars: new Set<string>(),
-  consoleMessages: [
-    'Welcome to Auto Driving Car Simulation!',
-    'Please enter the enter the width and height of the simulation field in x and y format:',
-  ],
+  consoleMessages: [MESSAGE_INTRO, MESSAGE_FIELD_SIZE_PROMPT],
   stage: 'setFieldSize',
   carToBeAdded: {},
   error: undefined,
@@ -200,7 +199,7 @@ export const useStore = create<State & Actions>((set) => ({
         'addCars-position': processCommandAddCarPosition,
         'addCars-command': processCommandAddCarCommand,
         runSimulation: (_, state) => state,
-        done: (_, state) => state,
+        done: processCommandReset,
       };
       const commandProcessor = commandProcessors[state.stage];
       if (commandProcessor !== undefined) {
@@ -450,6 +449,12 @@ const processCommandAddCarCommand = (
       },
       command,
     ),
+  };
+};
+
+const processCommandReset = (command: string, state: State): Partial<State> => {
+  return {
+    ...initialState,
   };
 };
 
