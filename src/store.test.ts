@@ -961,6 +961,31 @@ describe('store', () => {
           MESSAGE_GOODBYE,
         ]);
       });
+
+      describe.each(['3', '-1', 'a', '1 2'])('when invalid input', (input) => {
+        it(`when input is ${input}`, () => {
+          // Arrange
+          useStore.setState({
+            stage: 'done',
+            isDone: false,
+            consoleMessages: [],
+          });
+          const state = useStore.getState();
+
+          // Act
+          state.dispatchCommand(input);
+
+          // Assert
+          const newState = useStore.getState();
+          expect(newState.isDone).toBe(false);
+          expect(newState.consoleMessages).toEqual([
+            ...state.consoleMessages,
+            input,
+            'Invalid input',
+            ...MESSAGES_END_OPTIONS,
+          ]);
+        });
+      });
     });
   });
 });
