@@ -788,6 +788,43 @@ describe('store', () => {
             '[2] Run simulation',
           ]);
         });
+
+        describe('when input is invalid', () => {
+          ['sdfsdfsdf', 'FFRAFF', 'F F R F F F'].forEach((input) => {
+            it(`when input is ${input}`, () => {
+              // Arrange
+              useStore.setState({
+                stage: 'addCars-command',
+                fieldWidth: 10,
+                fieldHeight: 10,
+                carToBeAdded: {
+                  name: 'car1',
+                  initialPosition: {
+                    x: 1,
+                    y: 2,
+                    facing: 'N',
+                  },
+                },
+              });
+              const state = useStore.getState();
+
+              // Act
+              state.dispatchCommand(input);
+
+              // Assert
+              const newState = useStore.getState();
+              expect(newState.stage).toBe('addCars-command' satisfies Stage);
+              expect(newState.carToBeAdded.commands).toBeFalsy();
+              expect(newState.cars.length).toBe(0);
+              expect(newState.consoleMessages).toEqual([
+                ...state.consoleMessages,
+                input,
+                'Invalid format. Valid format is a string of commands (F, L, R).',
+                'Please enter the commands for car car1:',
+              ]);
+            });
+          });
+        });
       });
     });
   });
