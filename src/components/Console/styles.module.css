@@ -1,0 +1,9 @@
+.container {
+    background: black;
+    color: white;
+    width: 600px;
+    height: 100vh;
+    overflow-y: auto;
+    font-family: Consolas, monospace;
+    padding: 0 10px;
+}

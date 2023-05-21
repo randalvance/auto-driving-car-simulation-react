@@ -16,6 +16,7 @@ export interface State {
   collisions: CollisionInfo[];
   completedCars: Set<string>;
   isGameOver: boolean;
+  consoleMessages: string[];
 }
 
 export interface Actions {
@@ -33,6 +34,7 @@ export const initialState: State = {
   collisions: [],
   completedCars: new Set<string>(),
   isGameOver: false,
+  consoleMessages: [],
 };
 
 export const useStore = create<State & Actions>((set) => ({

@@ -4,7 +4,7 @@ import { Simulation } from '@/components/Simulation';
 import { useStore } from '@/store';
 
 const App: React.FC = () => {
-  const { step, setFieldBounds, addCar } = useStore((s) => s);
+  const { setFieldBounds, addCar } = useStore((s) => s);
   useEffect(() => {
     setFieldBounds(20, 20);
     addCar({ name: 'car1', x: 0, y: 0, facing: 'N' }, [
@@ -16,6 +16,9 @@ const App: React.FC = () => {
       'F',
       'L',
       'L',
+      'F',
+      'F',
+      'F',
       'F',
       'F',
     ]);
@@ -56,7 +59,6 @@ const App: React.FC = () => {
   }, []);
   return (
     <>
-      <h1>Step {step}</h1>
       <Simulation />
     </>
   );
