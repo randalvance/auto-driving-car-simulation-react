@@ -26,7 +26,6 @@ export interface State {
 }
 
 export interface Actions {
-  addCar: (car: Car, commands: Command[]) => void;
   setFieldBounds: (width: number, height: number) => void;
   nextStep: () => void;
   reset: () => void;
@@ -50,42 +49,9 @@ export const initialState: State = {
   error: undefined,
 };
 
-export const useStore = create<State & Actions>((set, get) => ({
+export const useStore = create<State & Actions>((set) => ({
   ...initialState,
 
-  // Actions
-  addCar: (car: Car, commands: Command[]) => {
-    set((state) => {
-      // Check whether the car being added has a duplicate name and if so, set error message
-      const duplicateCar = state.cars.find((c) => c.name === car.name);
-
-      if (duplicateCar != null) {
-        return {
-          error: `A car with the name ${car.name} already exists`,
-        };
-      }
-
-      // Check if the car being added is outside the bounds of the field
-      if (
-        car.x < 0 ||
-        car.x > state.fieldWidth - 1 ||
-        car.y < 0 ||
-        car.y > state.fieldHeight - 1
-      ) {
-        return {
-          error: `Car is out of bounds`,
-        };
-      }
-
-      return {
-        cars: [...state.cars, car],
-        carCommands: {
-          ...state.carCommands,
-          [car.name]: commands,
-        },
-      };
-    });
-  },
   setFieldBounds: (width: number, height: number) => {
     set(() => ({
       fieldWidth: width,
@@ -218,12 +184,12 @@ export const useStore = create<State & Actions>((set, get) => ({
         'addCars-name': processCommandAddCarName,
         'addCars-position': processCommandAddCarPosition,
         'addCars-command': processCommandAddCarCommand,
-        runSimulation: (_, state, __: () => State & Actions) => state,
-        done: (_, state, __: () => State & Actions) => state,
+        runSimulation: (_, state) => state,
+        done: (_, state) => state,
       };
       const commandProcessor = commandProcessors[state.stage];
       if (commandProcessor !== undefined) {
-        return commandProcessor(command, state, get);
+        return commandProcessor(command, state);
       }
 
       return state;
@@ -290,7 +256,6 @@ const turnLeft = (car: Car): Car => {
 const processCommandSetFieldSize = (
   command: string,
   state: State,
-  _: () => State & Actions,
 ): Partial<State> => {
   const tokens = command.split(' ');
   if (
@@ -326,7 +291,6 @@ const processCommandSetFieldSize = (
 const processCommandSelectOption = (
   command: string,
   state: State,
-  _: () => State & Actions,
 ): Partial<State> => {
   if (command.match(/^([1-2])$/) == null) {
     return {
@@ -370,7 +334,6 @@ const processCommandSelectOption = (
 const processCommandAddCarName = (
   command: string,
   state: State,
-  _: () => State & Actions,
 ): Partial<State> => {
   return {
     stage: 'addCars-position',
@@ -389,7 +352,6 @@ const processCommandAddCarName = (
 const processCommandAddCarPosition = (
   command: string,
   state: State,
-  _: () => State & Actions,
 ): Partial<State> => {
   if (command.trim().match(/^(\d+) (\d+) ([NSEW])$/) == null) {
     return {
@@ -426,7 +388,6 @@ const processCommandAddCarPosition = (
 const processCommandAddCarCommand = (
   command: string,
   state: State,
-  get: () => State & Actions,
 ): Partial<State> => {
   const commands = command.split('') as Command[];
 
@@ -441,24 +402,21 @@ const processCommandAddCarCommand = (
     };
   }
 
-  get().addCar(
-    {
-      name: state.carToBeAdded.name ?? '',
-      x: state.carToBeAdded.initialPosition?.x ?? 0,
-      y: state.carToBeAdded.initialPosition?.y ?? 0,
-      facing: state.carToBeAdded.initialPosition?.facing ?? 'N',
-    },
-    commands,
-  );
-  const newState = get();
+  const newCar: Car = {
+    name: state.carToBeAdded.name ?? '',
+    x: state.carToBeAdded.initialPosition?.x ?? 0,
+    y: state.carToBeAdded.initialPosition?.y ?? 0,
+    facing: state.carToBeAdded.initialPosition?.facing ?? 'N',
+  };
+  const validationError = validateAddingOfCar(state, newCar);
 
-  if (newState.error != null) {
+  if (validationError != null) {
     return {
       stage: 'selectOption',
       consoleMessages: [
         ...state.consoleMessages,
         command,
-        newState.error,
+        validationError,
         'Please choose from the following options:',
         '[1] Add a car to field',
         '[2] Run simulation',
@@ -466,9 +424,15 @@ const processCommandAddCarCommand = (
     };
   }
 
+  const newCarList = [...state.cars, newCar];
+  const newCarCommands = {
+    ...state.carCommands,
+    [newCar.name]: commands,
+  };
+
   return {
     stage: 'selectOption',
-    cars: [...newState.cars],
+    cars: newCarList,
     carToBeAdded: {
       commands,
     },
@@ -476,8 +440,8 @@ const processCommandAddCarCommand = (
       ...state.consoleMessages,
       command,
       'Your current list of cars are:',
-      ...newState.cars.map((car) => {
-        const commandForCar = newState.carCommands[car.name];
+      ...newCarList.map((car) => {
+        const commandForCar = newCarCommands[car.name];
         return `- ${car.name}, (${car.x}, ${car.y}) ${
           car.facing
         }, ${commandForCar.join('')}`;
@@ -487,4 +451,24 @@ const processCommandAddCarCommand = (
       '[2] Run simulation',
     ],
   };
+};
+
+const validateAddingOfCar = (state: State, car: Car): string | null => {
+  // Check whether the car being added has a duplicate name and if so, set error message
+  const duplicateCar = state.cars.find((c) => c.name === car.name);
+
+  if (duplicateCar != null) {
+    return 'Car with the same name already exists';
+  }
+
+  // Check if the car being added is outside the bounds of the field
+  if (
+    car.x < 0 ||
+    car.x > state.fieldWidth - 1 ||
+    car.y < 0 ||
+    car.y > state.fieldHeight - 1
+  ) {
+    return 'Car is out of bounds';
+  }
+  return null;
 };
