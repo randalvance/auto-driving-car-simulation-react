@@ -4,9 +4,10 @@ import { useStore } from '@/store';
 
 interface Props {
   messages: string[];
+  disabled?: boolean;
 }
 
-export const Console: React.FC<Props> = ({ messages }) => {
+export const Console: React.FC<Props> = ({ messages, disabled }) => {
   const [dispatchCommand] = useStore((s) => [s.dispatchCommand]);
   const [command, setCommand] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -32,23 +33,25 @@ export const Console: React.FC<Props> = ({ messages }) => {
           {message}
         </div>
       ))}
-      <div className={styles.message}>
-        <input
-          role="input"
-          ref={inputRef}
-          type="text"
-          className={styles.input}
-          value={command}
-          onChange={(event) => {
-            setCommand(event.currentTarget.value);
-          }}
-          onKeyDown={(event) => {
-            if (event.key !== 'Enter') return;
-            dispatchCommand(event.currentTarget.value);
-            setCommand('');
-          }}
-        />
-      </div>
+      {disabled !== true && (
+        <div className={styles.message}>
+          <input
+            role="input"
+            ref={inputRef}
+            type="text"
+            className={styles.input}
+            value={command}
+            onChange={(event) => {
+              setCommand(event.currentTarget.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== 'Enter') return;
+              dispatchCommand(event.currentTarget.value);
+              setCommand('');
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
