@@ -35,7 +35,10 @@ export const initialState: State = {
   collisions: [],
   completedCars: new Set<string>(),
   isGameOver: false,
-  consoleMessages: [],
+  consoleMessages: [
+    'Welcome to Auto Driving Car Simulation!',
+    'Please enter the enter the width and height of the simulation field in x and y format:',
+  ],
 };
 
 export const useStore = create<State & Actions>((set) => ({
@@ -190,7 +193,11 @@ export const useStore = create<State & Actions>((set) => ({
       };
     });
   },
-  reset: () => {},
+  reset: () => {
+    set({
+      ...initialState,
+    });
+  },
 }));
 
 const getCarAtNewPosition = (
