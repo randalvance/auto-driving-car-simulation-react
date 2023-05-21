@@ -501,23 +501,23 @@ const getOptionsMessage = (
   ];
 };
 
-const getCollisionMessages = (state: State): string[] => {
-  return [
-    'After simulation, the result is:',
-    ...(state.collisions.map(
-      (c) =>
-        `- ${c.carName}, collides with ${c.collidedWith.join()} at (${c.x}, ${
-          c.y
-        }) at step ${c.step}`,
-    ) ?? []),
-  ];
-};
-
 const getReportMessages = (state: State): string[] => {
   return [
     ...state.consoleMessages,
     ...getCurrentListOfCarMessages(state),
-    ...getCollisionMessages(state),
+    'After simulation, the result is:',
+    ...state.cars.map((car) => {
+      // Check whether car collided
+      const collision = state.collisions.find((c) => c.carName === car.name);
+      if (collision != null) {
+        return `- ${
+          collision.carName
+        }, collides with ${collision.collidedWith.join()} at (${collision.x}, ${
+          collision.y
+        }) at step ${collision.step}`;
+      }
+      return `- ${car.name}, (${car.x}, ${car.y}) ${car.facing}`;
+    }),
     ...MESSAGES_END_OPTIONS,
   ];
 };
