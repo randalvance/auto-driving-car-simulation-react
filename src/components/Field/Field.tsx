@@ -35,8 +35,8 @@ export const Field: React.FC<Props> = ({
         <React.Fragment key={`${car.name}-container`}>
           <div
             className={`${styles.car} ${
-              hasCarCollided(car) ? styles.explosion : ''
-            }}`}
+              hasCarCollided(car) ? styles.exploded : ''
+            }`}
             role="car"
             style={{
               bottom: car.y * 50,
