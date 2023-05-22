@@ -1,13 +1,13 @@
 .field {
     position: relative;
-    background: url("/public/images/road.jpg") repeat;
+    background: url("/images/road.jpg") repeat;
 }
 
 .car {
     position: absolute;
     width: 50px;
     height: 50px;
-    background: url("public/images/car.png") no-repeat;
+    background: url("/images/car.png") no-repeat;
     background-size: contain;
     background-position-x: 10px;
     transition: left 1s ease, bottom 1s ease;
@@ -15,7 +15,7 @@
 }
 
 .car.exploded {
-    background: url("public/images/explosion.png") no-repeat;
+    background: url("/images/explosion.png") no-repeat;
     background-size: contain;
 }
 
