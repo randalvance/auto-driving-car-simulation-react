@@ -24,3 +24,27 @@ export type Stage =
   | 'addCars-command'
   | 'runSimulation'
   | 'done';
+
+export type InputStep =
+  | 'initialize'
+  | 'setFieldSize'
+  | 'selectOption'
+  | 'addCarName'
+  | 'addCarPosition'
+  | 'addCarCommands'
+  | 'runningSimulation';
+
+export interface SimulationSetup {
+  inputStep: InputStep;
+  carToAdd?: Partial<{
+    name: string;
+    x: number;
+    y: number;
+    direction: Direction;
+    commands: string;
+  }>;
+  fieldSize?: {
+    width: number;
+    height: number;
+  };
+}

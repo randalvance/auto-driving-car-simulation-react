@@ -1,4 +1,5 @@
 import {
+  type SimulationSetup,
   type Car,
   type CollisionInfo,
   type Command,
@@ -6,14 +7,16 @@ import {
   type Stage,
 } from '@/types';
 import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
 import {
-  MESSAGE_FIELD_SIZE_PROMPT,
+  MESSAGE_PROMPT_FIELD_SIZE,
   MESSAGE_GOODBYE,
   MESSAGE_INTRO,
   MESSAGE_LIST_OF_CAR,
   MESSAGES_END_OPTIONS,
   MESSAGES_SELECT_OPTION,
 } from '@/constants';
+import * as simulationSetup from './services/simulationSetup';
 
 export interface State {
   cars: Car[];
@@ -36,6 +39,8 @@ export interface State {
     commands?: Command[];
   };
   isDone: boolean;
+
+  setup: SimulationSetup;
 }
 
 export interface Actions {
@@ -53,166 +58,167 @@ export const initialState: State = {
   step: 0,
   collisions: [],
   completedCars: new Set<string>(),
-  consoleMessages: [MESSAGE_INTRO, MESSAGE_FIELD_SIZE_PROMPT],
+  consoleMessages: [MESSAGE_INTRO, MESSAGE_PROMPT_FIELD_SIZE],
   stage: 'setFieldSize',
   carToBeAdded: {},
   error: undefined,
   originalCarPositions: {},
   isDone: false,
+
+  setup: {
+    inputStep: 'setFieldSize',
+  },
 };
 
-export const useStore = create<State & Actions>((set) => ({
-  ...initialState,
+export const useStore = create(
+  immer<State & Actions>((set) => ({
+    ...initialState,
 
-  setFieldBounds: (width: number, height: number) => {
-    set(() => ({
-      fieldWidth: width,
-      fieldHeight: height,
-    }));
-  },
-  nextStep: () => {
-    set((state) => {
-      const {
-        cars,
-        step,
-        fieldWidth,
-        fieldHeight,
-        carCommands,
-        completedCars: currentCompletedCars,
-        collisions,
-      } = state;
-      let movementPerformed = false;
+    setFieldBounds: (width: number, height: number) => {
+      set((state) => {
+        state.fieldWidth = width;
+        state.fieldHeight = height;
+      });
+    },
+    nextStep: () => {
+      set((state) => {
+        const {
+          cars,
+          step,
+          fieldWidth,
+          fieldHeight,
+          carCommands,
+          completedCars: currentCompletedCars,
+          collisions,
+        } = state;
+        let movementPerformed = false;
 
-      // All cars are completed, so don't do anything
-      if (cars.length === currentCompletedCars.size) {
-        return state;
-      }
-
-      const newStep = state.step + 1;
-      const completedCars: Set<string> = new Set<string>(currentCompletedCars);
-      const carPositions: Record<Car['name'], Car> = cars.reduce<
-        Record<Car['name'], Car>
-      >((acc, car) => {
-        acc[car.name] = car;
-        return acc;
-      }, {});
-      const newCollisions: CollisionInfo[] = [...collisions];
-
-      for (let i = 0; i < cars.length; i++) {
-        const car = cars[i];
-        const commandsForCar = carCommands[car.name];
-        const commandAtStep = commandsForCar[step];
-
-        if (completedCars.has(car.name) || commandAtStep === undefined) {
-          completedCars.add(car.name);
-          continue;
+        // All cars are completed, so don't do anything
+        if (cars.length === currentCompletedCars.size) {
+          return state;
         }
-        let carAtNewPosition = car;
 
-        // If a car is not yet complete, check for collisions on it's next move
-        if (!currentCompletedCars.has(car.name)) {
-          carAtNewPosition = getCarAtNewPosition(car, commandAtStep, {
-            width: fieldWidth,
-            height: fieldHeight,
-          });
+        const newStep = state.step + 1;
+        const completedCars: Set<string> = new Set<string>(
+          currentCompletedCars,
+        );
+        const carPositions: Record<Car['name'], Car> = cars.reduce<
+          Record<Car['name'], Car>
+        >((acc, car) => {
+          acc[car.name] = car;
+          return acc;
+        }, {});
+        const newCollisions: CollisionInfo[] = [...collisions];
 
-          carPositions[car.name] = carAtNewPosition;
+        for (let i = 0; i < cars.length; i++) {
+          const car = cars[i];
+          const commandsForCar = carCommands[car.name];
+          const commandAtStep = commandsForCar[step];
 
-          // Check for all cars that collided with carAtNewPosition
-          const collidedCars = Object.values(carPositions).filter(
-            (anotherCar) => {
-              return (
-                anotherCar.name !== carAtNewPosition.name &&
-                carAtNewPosition.x === anotherCar.x &&
-                carAtNewPosition.y === anotherCar.y
+          if (completedCars.has(car.name) || commandAtStep === undefined) {
+            completedCars.add(car.name);
+            continue;
+          }
+          let carAtNewPosition = car;
+
+          // If a car is not yet complete, check for collisions on it's next move
+          if (!currentCompletedCars.has(car.name)) {
+            carAtNewPosition = getCarAtNewPosition(car, commandAtStep, {
+              width: fieldWidth,
+              height: fieldHeight,
+            });
+
+            carPositions[car.name] = carAtNewPosition;
+
+            // Check for all cars that collided with carAtNewPosition
+            const collidedCars = Object.values(carPositions).filter(
+              (anotherCar) => {
+                return (
+                  anotherCar.name !== carAtNewPosition.name &&
+                  carAtNewPosition.x === anotherCar.x &&
+                  carAtNewPosition.y === anotherCar.y
+                );
+              },
+            );
+
+            const addCollision = (
+              carWhichCollided: Car,
+              collidedCars: string[],
+            ): void => {
+              const currentCollision = newCollisions.find(
+                (c) => c.carName === carWhichCollided.name,
               );
-            },
-          );
+              if (currentCollision == null) {
+                newCollisions.push({
+                  carName: carWhichCollided.name,
+                  collidedWith: collidedCars,
+                  step: newStep,
+                  x: carWhichCollided.x,
+                  y: carWhichCollided.y,
+                });
+              } else {
+                currentCollision.collidedWith = [
+                  ...currentCollision.collidedWith,
+                  ...collidedCars,
+                ];
+              }
+              completedCars.add(carWhichCollided.name);
+            };
 
-          const addCollision = (
-            carWhichCollided: Car,
-            collidedCars: string[],
-          ): void => {
-            const currentCollision = newCollisions.find(
-              (c) => c.carName === carWhichCollided.name,
-            );
-            if (currentCollision == null) {
-              newCollisions.push({
-                carName: carWhichCollided.name,
-                collidedWith: collidedCars,
-                step: newStep,
-                x: carWhichCollided.x,
-                y: carWhichCollided.y,
-              });
-            } else {
-              currentCollision.collidedWith = [
-                ...currentCollision.collidedWith,
-                ...collidedCars,
-              ];
-            }
-            completedCars.add(carWhichCollided.name);
-          };
+            // If there are collisions, add them to the newCollisions object
+            if (collidedCars.length > 0) {
+              // Register collisions for the current car
+              addCollision(
+                carAtNewPosition,
+                collidedCars.map((c) => c.name),
+              );
 
-          // If there are collisions, add them to the newCollisions object
-          if (collidedCars.length > 0) {
-            // Register collisions for the current car
-            addCollision(
-              carAtNewPosition,
-              collidedCars.map((c) => c.name),
-            );
-
-            // Also register for other cars that this current car have collided with
-            for (const anotherCar of collidedCars) {
-              addCollision(anotherCar, [carAtNewPosition.name]);
+              // Also register for other cars that this current car have collided with
+              for (const anotherCar of collidedCars) {
+                addCollision(anotherCar, [carAtNewPosition.name]);
+              }
             }
           }
+
+          movementPerformed = true;
         }
 
-        movementPerformed = true;
-      }
+        const isDone = completedCars.size === cars.length;
 
-      const isDone = completedCars.size === cars.length;
+        return {
+          cars: Object.values(carPositions),
+          step: movementPerformed ? newStep : step,
+          collisions: [...newCollisions],
+          completedCars,
+          stage: isDone ? 'done' : state.stage,
+          consoleMessages: isDone
+            ? getReportMessages({ ...state, collisions: [...newCollisions] })
+            : state.consoleMessages,
+        };
+      });
+    },
+    reset: () => {
+      set({
+        ...initialState,
+      });
+    },
+    dispatchCommand: (command: string) => {
+      set((state) => {
+        const { setup, messages } = simulationSetup.processCommand(
+          state.setup,
+          command,
+        );
 
-      return {
-        cars: Object.values(carPositions),
-        step: movementPerformed ? newStep : step,
-        collisions: [...newCollisions],
-        completedCars,
-        stage: isDone ? 'done' : state.stage,
-        consoleMessages: isDone
-          ? getReportMessages({ ...state, collisions: [...newCollisions] })
-          : state.consoleMessages,
-      };
-    });
-  },
-  reset: () => {
-    set({
-      ...initialState,
-    });
-  },
-  dispatchCommand: (command: string) => {
-    set((state) => {
-      const commandProcessors: Record<
-        Stage,
-        typeof processCommandAddCarCommand
-      > = {
-        setFieldSize: processCommandSetFieldSize,
-        selectOption: processCommandSelectOption,
-        'addCars-name': processCommandAddCarName,
-        'addCars-position': processCommandAddCarPosition,
-        'addCars-command': processCommandAddCarCommand,
-        runSimulation: (_, state) => state,
-        done: processCommandReset,
-      };
-      const commandProcessor = commandProcessors[state.stage];
-      if (commandProcessor !== undefined) {
-        return commandProcessor(command, state);
-      }
-
-      return state;
-    });
-  },
-}));
+        state.setup = setup;
+        state.consoleMessages = [
+          ...state.consoleMessages,
+          command,
+          ...messages,
+        ];
+      });
+    },
+  })),
+);
 
 const getCarAtNewPosition = (
   car: Car,

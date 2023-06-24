@@ -35,7 +35,7 @@ describe('Console', () => {
 
   it('should hide input when disabled', async () => {
     render(<Console messages={[]} disabled />);
-    const input = await screen.queryByRole<HTMLInputElement>('input');
+    const input = screen.queryByRole<HTMLInputElement>('input');
     expect(input).toBeFalsy();
   });
 });
