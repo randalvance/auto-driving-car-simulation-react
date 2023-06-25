@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import { type Field, type Car, type Command } from '@/types';
-import { moveForward, turnLeft, turnRight } from './actions';
+import { moveForward, turnLeft, turnRight, undo } from './actions';
 import { type CarAction } from './types';
 
 /** Manages the movement of car based on the car's command and where commandCursor is pointing */
@@ -17,6 +17,8 @@ export const moveCar = (car: Car, field: Field): Car => {
     carAction = turnRight;
   } else if (command === 'L') {
     carAction = turnLeft;
+  } else if (command === 'U') {
+    carAction = undo;
   }
 
   const carAfterMove = carAction(car, field);

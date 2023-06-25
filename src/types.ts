@@ -6,7 +6,7 @@ export interface CarLegacy {
 }
 export type Direction = 'N' | 'E' | 'W' | 'S';
 
-export type Command = 'F' | 'L' | 'R';
+export type Command = 'F' | 'L' | 'R' | 'U';
 
 export interface CollisionInfoLegacy {
   carName: CarLegacy['name'];
