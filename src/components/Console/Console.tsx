@@ -1,5 +1,5 @@
 import styles from './styles.module.css';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '@/store';
 
 interface Props {
@@ -12,6 +12,7 @@ export const Console: React.FC<Props> = ({ messages, disabled }) => {
   const [command, setCommand] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -22,13 +23,19 @@ export const Console: React.FC<Props> = ({ messages, disabled }) => {
     if (typeof containerRef.current?.scrollTo !== 'function') return;
     containerRef.current?.scrollTo(0, containerRef.current.scrollHeight);
   }, [messages]);
+
+  // Split any multiline messages
+  const formattedMessages = useMemo(() => {
+    return messages.flatMap((message) => message.split('\n'));
+  }, [messages]);
+
   return (
     <div
       ref={containerRef}
       className={styles.container}
       onClick={() => inputRef.current?.focus()}
     >
-      {messages.map((message, index) => (
+      {formattedMessages.map((message, index) => (
         <div role="message" key={index} className={styles.message}>
           {message}
         </div>
