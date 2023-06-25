@@ -48,7 +48,6 @@ export interface State {
 
 export interface Actions {
   setFieldBounds: (width: number, height: number) => void;
-  nextStep: () => void;
   simulateNextStep: () => void;
   reset: () => void;
   dispatchCommand: (command: string) => void;
@@ -62,7 +61,7 @@ export const initialState: State = {
   step: 0,
   collisions: [],
   completedCars: new Set<string>(),
-  consoleMessages: [MESSAGE_INTRO, MESSAGE_PROMPT_FIELD_SIZE],
+  consoleMessages: [],
   stage: 'runSimulation',
   carToBeAdded: {},
   error: undefined,
@@ -76,16 +75,16 @@ export const initialState: State = {
     cars: [
       {
         name: 'car1',
-        x: 0,
-        y: 0,
+        x: 9,
+        y: 8,
         direction: 'N',
         commands: 'FFF',
         commandCursor: 0,
       },
       {
         name: 'car2',
-        x: 0,
-        y: 5,
+        x: 9,
+        y: 1,
         direction: 'S',
         commands: 'FFF',
         commandCursor: 0,
@@ -100,7 +99,7 @@ export const initialState: State = {
 };
 
 export const useStore = create(
-  immer<State & Actions>((set, get) => ({
+  immer<State & Actions>((set) => ({
     ...initialState,
 
     setFieldBounds: (width: number, height: number) => {
@@ -109,128 +108,10 @@ export const useStore = create(
         state.fieldHeight = height;
       });
     },
-    nextStep: () => {
-      set((state) => {
-        const {
-          cars,
-          step,
-          fieldWidth,
-          fieldHeight,
-          carCommands,
-          completedCars: currentCompletedCars,
-          collisions,
-        } = state;
-        let movementPerformed = false;
-
-        // All cars are completed, so don't do anything
-        if (cars.length === currentCompletedCars.size) {
-          return state;
-        }
-
-        const newStep = state.step + 1;
-        const completedCars: Set<string> = new Set<string>(
-          currentCompletedCars,
-        );
-        const carPositions: Record<CarLegacy['name'], CarLegacy> = cars.reduce<
-          Record<CarLegacy['name'], CarLegacy>
-        >((acc, car) => {
-          acc[car.name] = car;
-          return acc;
-        }, {});
-        const newCollisions: CollisionInfoLegacy[] = [...collisions];
-
-        for (let i = 0; i < cars.length; i++) {
-          const car = cars[i];
-          const commandsForCar = carCommands[car.name];
-          const commandAtStep = commandsForCar[step];
-
-          if (completedCars.has(car.name) || commandAtStep === undefined) {
-            completedCars.add(car.name);
-            continue;
-          }
-          let carAtNewPosition = car;
-
-          // If a car is not yet complete, check for collisions on it's next move
-          if (!currentCompletedCars.has(car.name)) {
-            carAtNewPosition = getCarAtNewPosition(car, commandAtStep, {
-              width: fieldWidth,
-              height: fieldHeight,
-            });
-
-            carPositions[car.name] = carAtNewPosition;
-
-            // Check for all cars that collided with carAtNewPosition
-            const collidedCars = Object.values(carPositions).filter(
-              (anotherCar) => {
-                return (
-                  anotherCar.name !== carAtNewPosition.name &&
-                  carAtNewPosition.x === anotherCar.x &&
-                  carAtNewPosition.y === anotherCar.y
-                );
-              },
-            );
-
-            const addCollision = (
-              carWhichCollided: CarLegacy,
-              collidedCars: string[],
-            ): void => {
-              const currentCollision = newCollisions.find(
-                (c) => c.carName === carWhichCollided.name,
-              );
-              if (currentCollision == null) {
-                newCollisions.push({
-                  carName: carWhichCollided.name,
-                  collidedWith: collidedCars,
-                  step: newStep,
-                  x: carWhichCollided.x,
-                  y: carWhichCollided.y,
-                });
-              } else {
-                currentCollision.collidedWith = [
-                  ...currentCollision.collidedWith,
-                  ...collidedCars,
-                ];
-              }
-              completedCars.add(carWhichCollided.name);
-            };
-
-            // If there are collisions, add them to the newCollisions object
-            if (collidedCars.length > 0) {
-              // Register collisions for the current car
-              addCollision(
-                carAtNewPosition,
-                collidedCars.map((c) => c.name),
-              );
-
-              // Also register for other cars that this current car have collided with
-              for (const anotherCar of collidedCars) {
-                addCollision(anotherCar, [carAtNewPosition.name]);
-              }
-            }
-          }
-
-          movementPerformed = true;
-        }
-
-        const isDone = completedCars.size === cars.length;
-
-        return {
-          cars: Object.values(carPositions),
-          step: movementPerformed ? newStep : step,
-          collisions: [...newCollisions],
-          completedCars,
-          stage: isDone ? 'done' : state.stage,
-          consoleMessages: isDone
-            ? getReportMessages({ ...state, collisions: [...newCollisions] })
-            : state.consoleMessages,
-        };
-      });
-    },
     simulateNextStep: () => {
       set((state) => {
         const newSimulationState = simulate(state.simulation);
         state.simulation = newSimulationState;
-        console.log('newSimulationState', newSimulationState);
       });
     },
     reset: () => {
@@ -255,62 +136,6 @@ export const useStore = create(
     },
   })),
 );
-
-const getCarAtNewPosition = (
-  car: CarLegacy,
-  command: Command,
-  bounds: { width: number; height: number },
-): CarLegacy => {
-  if (command === 'F') {
-    return moveForward(car, bounds);
-  }
-  if (command === 'R') {
-    return turnRight(car);
-  }
-  if (command === 'L') {
-    return turnLeft(car);
-  }
-  return car;
-};
-
-const moveForward = (
-  car: CarLegacy,
-  bounds: { width: number; height: number },
-): CarLegacy => {
-  if (car.facing === 'N') {
-    return { ...car, y: Math.min(car.y + 1, bounds.height - 1) };
-  }
-  if (car.facing === 'S') {
-    return { ...car, y: Math.max(car.y - 1, 0) };
-  }
-  if (car.facing === 'E') {
-    return { ...car, x: Math.min(car.x + 1, bounds.width - 1) };
-  }
-  if (car.facing === 'W') {
-    return { ...car, x: Math.max(car.x - 1, 0) };
-  }
-  return car;
-};
-
-const turnRight = (car: CarLegacy): CarLegacy => {
-  const directionMap: Record<Direction, Direction> = {
-    N: 'E',
-    E: 'S',
-    S: 'W',
-    W: 'N',
-  };
-  return { ...car, facing: directionMap[car.facing] };
-};
-
-const turnLeft = (car: CarLegacy): CarLegacy => {
-  const directionMap: Record<Direction, Direction> = {
-    N: 'W',
-    W: 'S',
-    S: 'E',
-    E: 'N',
-  };
-  return { ...car, facing: directionMap[car.facing] };
-};
 
 const processCommandSetFieldSize = (
   command: string,
