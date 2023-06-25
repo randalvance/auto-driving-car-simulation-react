@@ -1,18 +1,10 @@
 export const MESSAGE_INTRO = 'Welcome to Auto Driving Car Simulation!';
 
-export const MESSAGES_SELECT_OPTION = [
-  'Please choose from the following options:',
-  '[1] Add a car to field',
-  '[2] Run simulation',
-] as readonly string[];
-
 export const MESSAGES_END_OPTIONS = [
   'Please choose from the following options:',
   '[1] Start over',
   '[2] Exit',
 ];
-
-export const MESSAGE_LIST_OF_CAR = 'Your current list of cars are:';
 
 export const MESSAGE_GOODBYE = 'Thank you for running the simulation. Goodbye!';
 
