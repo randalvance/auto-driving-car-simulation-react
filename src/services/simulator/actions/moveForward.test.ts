@@ -17,7 +17,6 @@ it('should move the car forward North', () => {
   expect(carAfterMove).toEqual({
     ...car,
     y: 1,
-    commandCursor: 1,
   });
 });
 
@@ -37,7 +36,6 @@ it('should move the car forward East', () => {
   expect(carAfterMove).toEqual({
     ...car,
     x: 1,
-    commandCursor: 1,
   });
 });
 
@@ -57,7 +55,6 @@ it('should move the car forward South', () => {
   expect(carAfterMove).toEqual({
     ...car,
     y: 8,
-    commandCursor: 1,
   });
 });
 
@@ -77,7 +74,6 @@ it('should move the car forward West', () => {
   expect(carAfterMove).toEqual({
     ...car,
     x: 8,
-    commandCursor: 1,
   });
 });
 

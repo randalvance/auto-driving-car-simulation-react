@@ -1,7 +1,7 @@
-import { type CarAction } from './types';
+import { type CarAction } from '../types';
 
 // HOC to check if the car is within the field after an action
-export const withinFieldCheck = (carAction: CarAction): CarAction => {
+export const _withinFieldCheck = (carAction: CarAction): CarAction => {
   return (car, field) => {
     const carAfterMove = carAction(car, field);
 
