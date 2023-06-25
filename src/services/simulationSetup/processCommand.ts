@@ -24,6 +24,7 @@ const commandProcessors: Record<InputStep, CommandProcessor> = {
   exit: (state) => state,
 };
 
+/** Parses and performs the commandString. Behavior is based on the inputStep of the state. */
 export const processCommand = (
   state: State,
   commandString: string,
@@ -55,6 +56,10 @@ export const processCommand = (
       width: 0,
       height: 0,
     };
-    draft.simulation.cars = setup.cars ?? [];
+
+    // Transfer the cars from the setup into the simulation.
+    if (state.setup.inputStep === 'addCarCommands') {
+      draft.simulation.cars = setup.cars ?? [];
+    }
   });
 };
