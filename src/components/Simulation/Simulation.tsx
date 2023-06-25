@@ -23,7 +23,7 @@ export const Simulation: React.FC = () => {
     }
     const interval = setInterval(() => {
       simulateNextStep();
-    }, 3000);
+    }, 1000);
 
     return () => {
       console.log('Done');
@@ -63,5 +63,6 @@ const getCarsToRender = (cars: Car[]): CarRenderInfo[] => {
     x: car.x,
     y: car.y,
     direction: car.direction,
+    collided: (car.collisionInfo?.length ?? 0) > 0,
   }));
 };

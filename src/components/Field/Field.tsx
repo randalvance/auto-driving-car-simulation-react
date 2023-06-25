@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import styles from './styles.module.css';
 import { getRotationBasedOnDirection } from './helpers';
@@ -17,20 +17,10 @@ export interface CarRenderInfo {
   x: Car['x'];
   y: Car['y'];
   direction: Car['direction'];
+  collided: boolean;
 }
 
-export const Field: React.FC<Props> = ({
-  width,
-  height,
-  cars,
-  collidedCars,
-}) => {
-  const hasCarCollided = useCallback(
-    (car: Car) => {
-      return collidedCars.includes(car.name);
-    },
-    [collidedCars],
-  );
+export const Field: React.FC<Props> = ({ width, height, cars }) => {
   return (
     <div
       className={styles.field}
@@ -41,9 +31,7 @@ export const Field: React.FC<Props> = ({
       {cars.map((car) => (
         <React.Fragment key={`${car.name}-container`}>
           <div
-            className={`${styles.car} ${
-              hasCarCollided(car) ? styles.exploded : ''
-            }`}
+            className={`${styles.car} ${car.collided ? styles.exploded : ''}`}
             role="car"
             style={{
               bottom: car.y * 50,
