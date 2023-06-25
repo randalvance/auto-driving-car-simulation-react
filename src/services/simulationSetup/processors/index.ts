@@ -1,3 +1,4 @@
+export * from './processInitialize';
 export * from './processSelectOption';
 export * from './processSetFieldSize';
 export * from './processAddCarName';

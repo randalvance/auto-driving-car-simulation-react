@@ -6,6 +6,7 @@ import { withValidation } from './withValidation';
 export const processSetFieldSize: CommandProcessor = withValidation(
   (state, commandString) => {
     const tokens = commandString.split(' ');
+    console.log('tokens', tokens);
 
     const [width, height] = tokens.map((x) => parseInt(x, 10));
 

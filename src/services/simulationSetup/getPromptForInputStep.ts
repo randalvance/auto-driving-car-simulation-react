@@ -6,7 +6,7 @@ import {
   MESSAGE_PROMPT_FIELD_SIZE,
   MESSAGE_PROMPT_SELECT_OPTION,
 } from '@/constants';
-import { type InputStep } from '@/types';
+import { type SimulationSetup, type InputStep } from '@/types';
 
 const promptMesssages: Record<InputStep, string[]> = {
   initialize: [MESSAGE_INTRO],
@@ -18,6 +18,9 @@ const promptMesssages: Record<InputStep, string[]> = {
   runningSimulation: [],
 };
 
-export const getPromptForInputStep = (step: InputStep): string[] => {
-  return promptMesssages[step];
+export const getPromptForInputStep = (setup: SimulationSetup): string[] => {
+  const prompts = promptMesssages[setup.inputStep];
+  return prompts.map((prompt) =>
+    prompt.replace('$carName', setup.carToAdd?.name ?? ''),
+  );
 };

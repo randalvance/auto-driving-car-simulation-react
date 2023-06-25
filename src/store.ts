@@ -47,7 +47,7 @@ export interface Actions {
   setFieldBounds: (width: number, height: number) => void;
   simulateNextStep: () => void;
   reset: () => void;
-  dispatchCommand: (command: string) => void;
+  dispatchCommand: (command: string, echo?: boolean) => void;
 }
 
 export const initialState: State = {
@@ -112,22 +112,18 @@ export const useStore = create(
       });
     },
     reset: () => {
-      set((state) => {
-        return { ...initialState };
-      });
-      get().dispatchCommand('');
+      set({ ...initialState });
+      get().dispatchCommand('', false);
     },
-    dispatchCommand: (command: string) => {
+    dispatchCommand: (command: string, echo?: boolean) => {
       set((state) => {
-        const { setup } = simulationSetup.processCommand(state.setup, command);
+        const setup = simulationSetup.processCommand(
+          state.setup,
+          command,
+          echo ?? true,
+        );
 
         state.setup = setup;
-        state.consoleMessages = [
-          ...state.consoleMessages,
-          command,
-          ...messages,
-        ];
-        console.log('state.consoleMessages', state.consoleMessages);
       });
     },
   })),
