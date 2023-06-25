@@ -16,9 +16,7 @@ describe('Field', () => {
       },
     ].forEach(({ width, height, expectedHtmlWidth, expectedHtmlHeight }) => {
       it(`when width=${width} and height=${height}`, async () => {
-        render(
-          <Field width={width} height={height} cars={[]} collidedCars={[]} />,
-        );
+        render(<Field width={width} height={height} cars={[]} />);
 
         const field = screen.getByRole('field');
         expect(field.style.height).toBe(`${expectedHtmlHeight}px`);
@@ -38,7 +36,6 @@ describe('Field', () => {
           { name: 'Car3', x: 5, y: 1, direction: 'W', collided: false },
           { name: 'Car4', x: 0, y: 0, direction: 'E', collided: false },
         ]}
-        collidedCars={[]}
       />,
     );
     const cars = screen.getAllByRole('car');
@@ -76,7 +73,6 @@ describe('Field', () => {
           { name: 'Car3', x: 5, y: 1, direction: 'W', collided: false },
           { name: 'Car4', x: 0, y: 0, direction: 'E', collided: false },
         ]}
-        collidedCars={[]}
       />,
     );
     const labels = screen.getAllByRole('label');
@@ -109,7 +105,6 @@ describe('Field', () => {
           { name: 'Car2', x: 0, y: 1, direction: 'S', collided: true },
           { name: 'Car3', x: 1, y: 2, direction: 'S', collided: false },
         ]}
-        collidedCars={['Car1', 'Car2']}
       />,
     );
 

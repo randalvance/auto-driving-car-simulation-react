@@ -2,14 +2,13 @@ import React from 'react';
 
 import styles from './styles.module.css';
 import { getRotationBasedOnDirection } from './helpers';
-import { type Car, type CarLegacy } from '@/types';
+import { type Car } from '@/types';
 import { Grid } from './Grid';
 
 interface Props {
   width: number;
   height: number;
   cars: CarRenderInfo[];
-  collidedCars: Array<CarLegacy['name']>;
 }
 
 export interface CarRenderInfo {

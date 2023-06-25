@@ -64,7 +64,7 @@ describe('simulate', () => {
     );
   });
 
-  it.only('should not move and not check collision completed cars', () => {
+  it('should not move and not check collision completed cars', () => {
     const uncompletedCar1: Car = {
       ...baseCar,
       name: 'car1',

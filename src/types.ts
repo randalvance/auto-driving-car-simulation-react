@@ -1,29 +1,6 @@
-export interface CarLegacy {
-  name: string;
-  x: number;
-  y: number;
-  facing: Direction;
-}
 export type Direction = 'N' | 'E' | 'W' | 'S';
 
 export type Command = 'F' | 'L' | 'R' | 'U';
-
-export interface CollisionInfoLegacy {
-  carName: CarLegacy['name'];
-  collidedWith: Array<CarLegacy['name']>;
-  x: number;
-  y: number;
-  step: number;
-}
-
-export type Stage =
-  | 'setFieldSize'
-  | 'selectOption'
-  | 'addCars-name'
-  | 'addCars-position'
-  | 'addCars-command'
-  | 'runSimulation'
-  | 'done';
 
 export interface Field {
   width: number;

@@ -7,18 +7,29 @@ import { type Car } from '@/types';
 import { isSimulationComplete } from '@/services/simulator';
 
 export const Simulation: React.FC = () => {
-  const [simulateNextStep, reset, isDone] = useStore((s) => [
+  const [
+    simulation,
+    simulateNextStep,
+    reset,
+    cars,
+    field,
+    consoleMessages,
+    inputStep,
+  ] = useStore((s) => [
+    s.simulation,
     s.simulateNextStep,
     s.reset,
-    s.isDone,
+    s.simulation.cars,
+    s.simulation.field,
+    s.setup.consoleMessages,
+    s.setup.inputStep,
   ]);
-  const simulation = useStore((s) => s.simulation);
   const isComplete = useMemo(
     () => isSimulationComplete(simulation),
     [simulation],
   );
   useEffect(() => {
-    if (isComplete) {
+    if (isComplete || inputStep !== 'runningSimulation') {
       return;
     }
     const interval = setInterval(() => {
@@ -28,29 +39,21 @@ export const Simulation: React.FC = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [isComplete]);
+  }, [isComplete, inputStep]);
   useEffect(() => {
     reset();
   }, []);
-  const [cars, field, collisions, consoleMessages] = useStore((state) => [
-    state.simulation.cars,
-    state.simulation.field,
-    state.collisions,
-    state.setup.consoleMessages,
-  ]);
   const carsToRender = useMemo(() => {
     return getCarsToRender(cars);
   }, [cars]);
   return (
     <div className={styles.container}>
-      <Console messages={consoleMessages} disabled={isDone} />
+      <Console
+        messages={consoleMessages}
+        disabled={inputStep === 'runningSimulation'}
+      />
       <div className={styles.fieldContainer}>
-        <Field
-          height={field.height}
-          width={field.width}
-          cars={carsToRender}
-          collidedCars={collisions.map((c) => c.carName)}
-        />
+        <Field height={field.height} width={field.width} cars={carsToRender} />
       </div>
     </div>
   );

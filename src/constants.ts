@@ -27,7 +27,5 @@ export const MESSAGE_PROMPT_CAR_POSITION =
   'Please enter initial position of car $carName in x y Direction format:';
 export const MESSAGE_PROMPT_CAR_COMMANDS =
   'Please enter the commands for car $carName:';
-export const MESSAGE_ERROR_INVALID_FIELD_SIZE =
-  'Invalid format. Valid format is x y.\nPlease enter the enter the width and height of the simulation field in x and y format:';
 
 export const MESSAGE_ERROR_INVALID_FORMAT = 'Invalid input format!';
