@@ -8,7 +8,6 @@ import {
   processSelectOption,
   processSetFieldSize,
 } from './processors';
-import { getPromptForInputStep } from './getPromptForInputStep';
 
 const commandProcessors: Record<InputStep, CommandProcessor> = {
   initialize: defaultCommandProcessor,
@@ -23,16 +22,8 @@ const commandProcessors: Record<InputStep, CommandProcessor> = {
 export const processCommand = (
   state: SimulationSetup,
   commandString: string,
-): { setup: SimulationSetup; messages: string[] } => {
-  const { setupState, errors } = commandProcessors[state.inputStep](
-    state,
-    commandString,
-  );
+): SimulationSetup => {
+  const setupState = commandProcessors[state.inputStep](state, commandString);
 
-  const promptMessages = getPromptForInputStep(setupState.inputStep);
-
-  return {
-    setup: setupState,
-    messages: [...errors, ...promptMessages],
-  };
+  return setupState;
 };

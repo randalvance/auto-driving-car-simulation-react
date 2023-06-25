@@ -80,6 +80,9 @@ describe('moveCar', () => {
     };
     const carAfterMove = moveCar(car, field);
 
-    expect(carAfterMove).toEqual(car);
+    expect(carAfterMove).toEqual({
+      ...car,
+      commandCursor: 3,
+    });
   });
 });

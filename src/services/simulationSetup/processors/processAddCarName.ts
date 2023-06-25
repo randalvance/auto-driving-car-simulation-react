@@ -8,6 +8,6 @@ export const processAddCarName: CommandProcessor = withValidation(
       draft.inputStep = 'addCarPosition';
       draft.carToAdd = { name: commandString };
     });
-    return { setupState, errors: [] };
+    return setupState;
   },
 );

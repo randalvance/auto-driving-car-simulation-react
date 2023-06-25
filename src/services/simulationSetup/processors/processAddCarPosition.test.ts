@@ -2,12 +2,13 @@ import { MESSAGE_ERROR_INVALID_FORMAT } from '@/constants';
 import { processAddCarPosition } from './processAddCarPosition';
 
 it('should set x y and direction', () => {
-  const { setupState } = processAddCarPosition(
+  const setupState = processAddCarPosition(
     {
       inputStep: 'addCarPosition',
       carToAdd: {
         name: 'car1',
       },
+      consoleMessages: [],
     },
     '1 2 N',
   );
@@ -22,12 +23,13 @@ it('should set x y and direction', () => {
 it.each(['', ' ', '1', '1 2', '1 2 3', 'ABC', '1 2 N 4', '1 2 X'])(
   'should validate wrong input format (%s)',
   (input) => {
-    const { setupState, errors } = processAddCarPosition(
+    const setupState = processAddCarPosition(
       {
         inputStep: 'addCarPosition',
         carToAdd: {
           name: 'car1',
         },
+        consoleMessages: [],
       },
       input,
     );
@@ -36,6 +38,6 @@ it.each(['', ' ', '1', '1 2', '1 2 3', 'ABC', '1 2 N 4', '1 2 X'])(
     expect(setupState.carToAdd?.name).toBe('car1');
     expect(setupState.carToAdd?.x).toBeUndefined();
     expect(setupState.carToAdd?.y).toBeUndefined();
-    expect(errors).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
+    expect(setupState.consoleMessages).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
   },
 );

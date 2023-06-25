@@ -2,9 +2,10 @@ import { MESSAGE_ERROR_INVALID_FORMAT } from '@/constants';
 import { processSetFieldSize } from './processSetFieldSize';
 
 it('should parse field size', () => {
-  const { setupState } = processSetFieldSize(
+  const setupState = processSetFieldSize(
     {
       inputStep: 'setFieldSize',
+      consoleMessages: [],
     },
     '10 5',
   );
@@ -16,15 +17,16 @@ it('should parse field size', () => {
 it.each(['', ' ', '1', '1 2 3', 'ABC', '1 2 X', '10 10a'])(
   'should validate wrong input format (%s)',
   (input) => {
-    const { setupState, errors } = processSetFieldSize(
+    const setupState = processSetFieldSize(
       {
         inputStep: 'setFieldSize',
+        consoleMessages: [],
       },
       input,
     );
 
     expect(setupState.inputStep).toBe('setFieldSize');
     expect(setupState.fieldSize).toBeUndefined();
-    expect(errors).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
+    expect(setupState.consoleMessages).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
   },
 );

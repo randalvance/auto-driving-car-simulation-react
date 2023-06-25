@@ -73,4 +73,5 @@ export interface SimulationSetup {
     width: number;
     height: number;
   };
+  consoleMessages: string[];
 }

@@ -33,10 +33,10 @@ describe('Field', () => {
         width={10}
         height={10}
         cars={[
-          { name: 'Car1', x: 1, y: 2, direction: 'N' },
-          { name: 'Car2', x: 4, y: 3, direction: 'S' },
-          { name: 'Car3', x: 5, y: 1, direction: 'W' },
-          { name: 'Car4', x: 0, y: 0, direction: 'E' },
+          { name: 'Car1', x: 1, y: 2, direction: 'N', collided: false },
+          { name: 'Car2', x: 4, y: 3, direction: 'S', collided: false },
+          { name: 'Car3', x: 5, y: 1, direction: 'W', collided: false },
+          { name: 'Car4', x: 0, y: 0, direction: 'E', collided: false },
         ]}
         collidedCars={[]}
       />,
@@ -71,10 +71,10 @@ describe('Field', () => {
         width={10}
         height={10}
         cars={[
-          { name: 'Car1', x: 1, y: 2, direction: 'N' },
-          { name: 'Car2', x: 4, y: 3, direction: 'S' },
-          { name: 'Car3', x: 5, y: 1, direction: 'W' },
-          { name: 'Car4', x: 0, y: 0, direction: 'E' },
+          { name: 'Car1', x: 1, y: 2, direction: 'N', collided: false },
+          { name: 'Car2', x: 4, y: 3, direction: 'S', collided: false },
+          { name: 'Car3', x: 5, y: 1, direction: 'W', collided: false },
+          { name: 'Car4', x: 0, y: 0, direction: 'E', collided: false },
         ]}
         collidedCars={[]}
       />,
@@ -105,9 +105,9 @@ describe('Field', () => {
         width={10}
         height={10}
         cars={[
-          { name: 'Car1', x: 0, y: 1, direction: 'N' },
-          { name: 'Car2', x: 0, y: 1, direction: 'S' },
-          { name: 'Car3', x: 1, y: 2, direction: 'S' },
+          { name: 'Car1', x: 0, y: 1, direction: 'N', collided: true },
+          { name: 'Car2', x: 0, y: 1, direction: 'S', collided: true },
+          { name: 'Car3', x: 1, y: 2, direction: 'S', collided: false },
         ]}
         collidedCars={['Car1', 'Car2']}
       />,

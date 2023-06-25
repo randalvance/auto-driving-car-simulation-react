@@ -1,7 +1,7 @@
 import { processAddCarCommand } from './processAddCarCommand';
 
 it('should parse command', () => {
-  const { setupState } = processAddCarCommand(
+  const setupState = processAddCarCommand(
     {
       inputStep: 'addCarCommands',
       carToAdd: {
@@ -10,6 +10,7 @@ it('should parse command', () => {
         y: 1,
         direction: 'N',
       },
+      consoleMessages: [],
     },
     'FLRF',
   );

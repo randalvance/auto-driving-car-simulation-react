@@ -17,7 +17,7 @@ export const processAddCarPosition: CommandProcessor = withValidation(
       };
     });
 
-    return { setupState, errors: [] };
+    return setupState;
   },
   { inputPattern: /^(\d+) (\d+) ([NSEW])$/ },
 );

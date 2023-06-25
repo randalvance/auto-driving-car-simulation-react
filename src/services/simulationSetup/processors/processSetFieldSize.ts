@@ -21,7 +21,7 @@ export const processSetFieldSize: CommandProcessor = withValidation(
       };
     });
 
-    return { setupState, errors: [] };
+    return setupState;
   },
   { inputPattern: /^(\d+) (\d+)$/ },
 );

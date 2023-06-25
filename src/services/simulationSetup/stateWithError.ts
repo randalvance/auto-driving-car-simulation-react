@@ -1,12 +1,11 @@
 import { type SimulationSetup } from '@/types';
-import { type CommandResult } from './types';
 
 export const stateWithError = (
   state: SimulationSetup,
   ...errors: string[]
-): CommandResult => {
+): SimulationSetup => {
   return {
-    setupState: state,
-    errors,
+    ...state,
+    consoleMessages: [...errors],
   };
 };

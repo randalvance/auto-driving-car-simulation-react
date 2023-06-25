@@ -4,9 +4,10 @@ import { processAddCarName } from './processAddCarName';
 it('should set car name', () => {
   const carName = 'car1';
 
-  const { setupState } = processAddCarName(
+  const setupState = processAddCarName(
     {
       inputStep: 'addCarName',
+      consoleMessages: [],
     },
     carName,
   );
@@ -18,9 +19,10 @@ it('should set car name', () => {
 it('should trim car name', () => {
   const carName = '  car1  ';
 
-  const { setupState } = processAddCarName(
+  const setupState = processAddCarName(
     {
       inputStep: 'addCarName',
+      consoleMessages: [],
     },
     carName,
   );
@@ -30,14 +32,15 @@ it('should trim car name', () => {
 });
 
 it.each(['', ' '])('should validate empty car name (%s)', (carName) => {
-  const { setupState, errors } = processAddCarName(
+  const setupState = processAddCarName(
     {
       inputStep: 'addCarName',
+      consoleMessages: [],
     },
     carName,
   );
 
   expect(setupState.inputStep).toBe('addCarName');
   expect(setupState.carToAdd?.name).toBeUndefined();
-  expect(errors).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
+  expect(setupState.consoleMessages).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
 });

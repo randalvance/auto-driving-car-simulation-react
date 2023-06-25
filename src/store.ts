@@ -10,9 +10,7 @@ import {
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import {
-  MESSAGE_PROMPT_FIELD_SIZE,
   MESSAGE_GOODBYE,
-  MESSAGE_INTRO,
   MESSAGE_LIST_OF_CAR,
   MESSAGES_END_OPTIONS,
   MESSAGES_SELECT_OPTION,
@@ -29,7 +27,6 @@ export interface State {
   step: number;
   collisions: CollisionInfoLegacy[];
   completedCars: Set<string>;
-  consoleMessages: string[];
   stage: Stage;
   originalCarPositions: Record<
     CarLegacy['name'],
@@ -61,7 +58,6 @@ export const initialState: State = {
   step: 0,
   collisions: [],
   completedCars: new Set<string>(),
-  consoleMessages: [],
   stage: 'runSimulation',
   carToBeAdded: {},
   error: undefined,
@@ -69,7 +65,8 @@ export const initialState: State = {
   isDone: false,
 
   setup: {
-    inputStep: 'setFieldSize',
+    inputStep: 'initialize',
+    consoleMessages: [],
   },
   simulation: {
     cars: [
@@ -99,7 +96,7 @@ export const initialState: State = {
 };
 
 export const useStore = create(
-  immer<State & Actions>((set) => ({
+  immer<State & Actions>((set, get) => ({
     ...initialState,
 
     setFieldBounds: (width: number, height: number) => {
@@ -115,16 +112,14 @@ export const useStore = create(
       });
     },
     reset: () => {
-      set({
-        ...initialState,
+      set((state) => {
+        return { ...initialState };
       });
+      get().dispatchCommand('');
     },
     dispatchCommand: (command: string) => {
       set((state) => {
-        const { setup, messages } = simulationSetup.processCommand(
-          state.setup,
-          command,
-        );
+        const { setup } = simulationSetup.processCommand(state.setup, command);
 
         state.setup = setup;
         state.consoleMessages = [
@@ -132,6 +127,7 @@ export const useStore = create(
           command,
           ...messages,
         ];
+        console.log('state.consoleMessages', state.consoleMessages);
       });
     },
   })),

@@ -7,9 +7,9 @@ import { type Car } from '@/types';
 import { isSimulationComplete } from '@/services/simulator';
 
 export const Simulation: React.FC = () => {
-  const [stage, simulateNextStep, isDone] = useStore((s) => [
-    s.stage,
+  const [simulateNextStep, reset, isDone] = useStore((s) => [
     s.simulateNextStep,
+    s.reset,
     s.isDone,
   ]);
   const simulation = useStore((s) => s.simulation);
@@ -30,21 +30,21 @@ export const Simulation: React.FC = () => {
       clearInterval(interval);
     };
   }, [isComplete]);
+  useEffect(() => {
+    reset();
+  }, []);
   const [cars, field, collisions, consoleMessages] = useStore((state) => [
     state.simulation.cars,
     state.simulation.field,
     state.collisions,
-    state.consoleMessages,
+    state.setup.consoleMessages,
   ]);
   const carsToRender = useMemo(() => {
     return getCarsToRender(cars);
   }, [cars]);
   return (
     <div className={styles.container}>
-      <Console
-        messages={consoleMessages}
-        disabled={stage === 'runSimulation' || isDone}
-      />
+      <Console messages={consoleMessages} disabled={isDone} />
       <div className={styles.fieldContainer}>
         <Field
           height={field.height}

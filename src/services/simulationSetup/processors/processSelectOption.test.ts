@@ -2,9 +2,10 @@ import { MESSAGE_ERROR_INVALID_FORMAT } from '@/constants';
 import { processSelectOption } from './processSelectOption';
 
 it('should parse option 1 as adding car', () => {
-  const { setupState } = processSelectOption(
+  const setupState = processSelectOption(
     {
       inputStep: 'selectOption',
+      consoleMessages: [],
     },
     '1',
   );
@@ -13,9 +14,10 @@ it('should parse option 1 as adding car', () => {
 });
 
 it('should parse option 2 as running simulation', () => {
-  const { setupState } = processSelectOption(
+  const setupState = processSelectOption(
     {
       inputStep: 'selectOption',
+      consoleMessages: [],
     },
     '2',
   );
@@ -26,14 +28,15 @@ it('should parse option 2 as running simulation', () => {
 it.each(['', ' ', '0', '3', 'ABC'])(
   'should validate wrong input (%s)',
   (input) => {
-    const { setupState, errors } = processSelectOption(
+    const setupState = processSelectOption(
       {
         inputStep: 'selectOption',
+        consoleMessages: [],
       },
       input,
     );
 
     expect(setupState.inputStep).toBe('selectOption');
-    expect(errors).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
+    expect(setupState.consoleMessages).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
   },
 );

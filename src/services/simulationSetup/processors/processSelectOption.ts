@@ -8,7 +8,7 @@ export const processSelectOption: CommandProcessor = withValidation(
     const setupState = produce(state, (draft) => {
       draft.inputStep = option === 1 ? 'addCarName' : 'runningSimulation';
     });
-    return { setupState, errors: [] };
+    return setupState;
   },
   { inputPattern: /^([12])$/ },
 );

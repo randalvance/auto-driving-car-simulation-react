@@ -11,7 +11,7 @@ export const processAddCarCommand = withValidation(
       };
       draft.carToAdd.commands = commandString;
     });
-    return { setupState, errors: [] };
+    return setupState;
   },
   { inputPattern: /^[LRF]+$/ },
 );
