@@ -6,6 +6,7 @@ it('should parse option 1 as adding car', () => {
     {
       inputStep: 'selectOption',
       consoleMessages: [],
+      cars: [],
     },
     '1',
   );
@@ -18,6 +19,7 @@ it('should parse option 2 as running simulation', () => {
     {
       inputStep: 'selectOption',
       consoleMessages: [],
+      cars: [],
     },
     '2',
   );
@@ -32,6 +34,7 @@ it.each(['', ' ', '0', '3', 'ABC'])(
       {
         inputStep: 'selectOption',
         consoleMessages: [],
+        cars: [],
       },
       input,
     );

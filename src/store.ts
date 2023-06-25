@@ -113,7 +113,6 @@ export const useStore = create(
       set((state) => {
         const newSimulationState = simulate(state.simulation);
         state.simulation = newSimulationState;
-        console.log('cars', newSimulationState.cars);
       });
     },
     reset: () => {
@@ -134,6 +133,7 @@ export const useStore = create(
           width: 0,
           height: 0,
         };
+        state.simulation.cars = state.setup.cars ?? [];
       });
     },
   })),

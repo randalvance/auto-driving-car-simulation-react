@@ -8,6 +8,7 @@ it('should set car name', () => {
     {
       inputStep: 'addCarName',
       consoleMessages: [],
+      cars: [],
     },
     carName,
   );
@@ -23,6 +24,7 @@ it('should trim car name', () => {
     {
       inputStep: 'addCarName',
       consoleMessages: [],
+      cars: [],
     },
     carName,
   );
@@ -36,6 +38,7 @@ it.each(['', ' '])('should validate empty car name (%s)', (carName) => {
     {
       inputStep: 'addCarName',
       consoleMessages: [],
+      cars: [],
     },
     carName,
   );

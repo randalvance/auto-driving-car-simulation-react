@@ -38,10 +38,14 @@ export const processCommand = (
       },
       commandString,
     );
-    draft.consoleMessages.push(...setupState.consoleMessages);
-    const prompt = getPromptForInputStep(setupState);
+
     draft.inputStep = setupState.inputStep;
     draft.fieldSize = setupState.fieldSize;
+    draft.cars = setupState.cars;
+    draft.carToAdd = setupState.carToAdd;
+    draft.consoleMessages.push(...setupState.consoleMessages);
+
+    const prompt = getPromptForInputStep(setupState);
     draft.consoleMessages.push(...prompt);
   });
 };

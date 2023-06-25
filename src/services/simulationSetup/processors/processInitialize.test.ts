@@ -6,6 +6,7 @@ it('should return correct state', () => {
     {
       inputStep: 'initialize',
       consoleMessages: [],
+      cars: [],
     },
     '',
   );

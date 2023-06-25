@@ -76,4 +76,5 @@ export interface SimulationSetup {
     height: number;
   };
   consoleMessages: string[];
+  cars: Car[];
 }

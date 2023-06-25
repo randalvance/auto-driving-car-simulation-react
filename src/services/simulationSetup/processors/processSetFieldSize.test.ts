@@ -6,6 +6,7 @@ it('should parse field size', () => {
     {
       inputStep: 'setFieldSize',
       consoleMessages: [],
+      cars: [],
     },
     '10 5',
   );
@@ -21,6 +22,7 @@ it.each(['', ' ', '1', '1 2 3', 'ABC', '1 2 X', '10 10a'])(
       {
         inputStep: 'setFieldSize',
         consoleMessages: [],
+        cars: [],
       },
       input,
     );

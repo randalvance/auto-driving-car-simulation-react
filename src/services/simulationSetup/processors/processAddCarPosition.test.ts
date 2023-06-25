@@ -9,6 +9,7 @@ it('should set x y and direction', () => {
         name: 'car1',
       },
       consoleMessages: [],
+      cars: [],
     },
     '1 2 N',
   );
@@ -30,6 +31,7 @@ it.each(['', ' ', '1', '1 2', '1 2 3', 'ABC', '1 2 N 4', '1 2 X'])(
           name: 'car1',
         },
         consoleMessages: [],
+        cars: [],
       },
       input,
     );

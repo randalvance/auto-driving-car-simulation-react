@@ -26,7 +26,6 @@ export const Simulation: React.FC = () => {
     }, 1000);
 
     return () => {
-      console.log('Done');
       clearInterval(interval);
     };
   }, [isComplete]);
