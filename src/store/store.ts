@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 import * as simulationSetup from '@/services/simulationSetup';
-import { simulate } from '@/services/simulator';
+import { isSimulationComplete, simulate } from '@/services/simulator';
 import { type Actions, type State } from '@/types';
 import { initialState } from './initialState';
 
@@ -13,6 +13,10 @@ export const useStore = create(
       set((state) => {
         return simulate(state);
       });
+      const newState = get();
+      if (isSimulationComplete(newState.simulation)) {
+        get().dispatchCommand('', false);
+      }
     },
     reset: () => {
       set({ ...initialState });
@@ -22,6 +26,11 @@ export const useStore = create(
       set((state) =>
         simulationSetup.processCommand(state, command, echo ?? true),
       );
+
+      const newState = get();
+      if (newState.setup.inputStep === 'initialize') {
+        newState.reset();
+      }
     },
   })),
 );

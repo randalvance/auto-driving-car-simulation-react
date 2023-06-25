@@ -3,8 +3,6 @@ import { type State } from '@/types';
 import { moveCar } from './moveCar';
 import { detectCollisions } from './detectCollisions';
 import { _hasCommandsLeft } from './_hasCommandsLeft';
-import { isSimulationComplete } from './isSimulationComplete';
-import { processCommand } from '../simulationSetup';
 
 /** Orchestrates moving and car-collision check. */
 export const simulate = (state: State): State => {
@@ -25,14 +23,8 @@ export const simulate = (state: State): State => {
     carsAfterChange = detectCollisions(car.name, carsAfterChange, step);
   }
 
-  let newState = produce(state, (draft) => {
+  return produce(state, (draft) => {
     draft.simulation.step = step;
     draft.simulation.cars = carsAfterChange;
   });
-
-  if (isSimulationComplete(newState.simulation)) {
-    newState = processCommand(newState, 'complete', false);
-  }
-
-  return newState;
 };
