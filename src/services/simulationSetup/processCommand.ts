@@ -2,13 +2,13 @@ import { produce } from 'immer';
 import { type InputStep, type SimulationSetup } from '@/types';
 import { type CommandProcessor } from './types';
 import {
-  defaultCommandProcessor,
   processAddCarCommand,
   processAddCarName,
   processAddCarPosition,
   processInitialize,
   processSelectOption,
   processSetFieldSize,
+  processSimulationComplete,
 } from './processors';
 import { getPromptForInputStep } from './getPromptForInputStep';
 
@@ -19,7 +19,9 @@ const commandProcessors: Record<InputStep, CommandProcessor> = {
   addCarName: processAddCarName,
   addCarPosition: processAddCarPosition,
   addCarCommands: processAddCarCommand,
-  runningSimulation: defaultCommandProcessor,
+  runningSimulation: (state) => ({ ...state, inputStep: 'simulationComplete' }),
+  simulationComplete: processSimulationComplete,
+  exit: (state) => state,
 };
 
 export const processCommand = (

@@ -1,25 +1,10 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import * as simulationSetup from './services/simulationSetup';
-import { isSimulationComplete, simulate } from './services/simulator';
-import { type Actions, type State } from './types';
-
-export const initialState: State = {
-  setup: {
-    inputStep: 'initialize',
-    consoleMessages: [],
-    cars: [],
-  },
-  simulation: {
-    cars: [],
-    field: {
-      width: 0,
-      height: 0,
-    },
-    step: 0,
-  },
-};
+import * as simulationSetup from '@/services/simulationSetup';
+import { isSimulationComplete, simulate } from '@/services/simulator';
+import { type Actions, type State } from '@/types';
+import { initialState } from './initialState';
 
 export const useStore = create(
   immer<State & Actions>((set, get) => ({

@@ -9,25 +9,27 @@ import { isSimulationComplete } from '@/services/simulator';
 export const Simulation: React.FC = () => {
   const [
     simulation,
-    simulateNextStep,
-    reset,
     cars,
     field,
     consoleMessages,
     inputStep,
+    simulateNextStep,
+    reset,
   ] = useStore((s) => [
     s.simulation,
-    s.simulateNextStep,
-    s.reset,
     s.simulation.cars,
     s.simulation.field,
     s.setup.consoleMessages,
     s.setup.inputStep,
+    s.simulateNextStep,
+    s.reset,
   ]);
+
   const isComplete = useMemo(
     () => isSimulationComplete(simulation),
     [simulation],
   );
+
   useEffect(() => {
     if (isComplete || inputStep !== 'runningSimulation') {
       return;
@@ -40,9 +42,12 @@ export const Simulation: React.FC = () => {
       clearInterval(interval);
     };
   }, [isComplete, inputStep]);
+
+  // Upon entering, initialize setup
   useEffect(() => {
     reset();
   }, []);
+
   const carsToRender = useMemo(() => {
     return getCarsToRender(cars);
   }, [cars]);

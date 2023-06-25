@@ -1,10 +1,8 @@
 export const MESSAGE_INTRO = 'Welcome to Auto Driving Car Simulation!';
 
-export const MESSAGES_END_OPTIONS = [
-  'Please choose from the following options:',
-  '[1] Start over',
-  '[2] Exit',
-];
+export const MESSAGE_PROMPT_SIMULATION_COMPLETE = `Please choose from the following options:
+[1] Start over
+[2] Exit`;
 
 export const MESSAGE_GOODBYE = 'Thank you for running the simulation. Goodbye!';
 

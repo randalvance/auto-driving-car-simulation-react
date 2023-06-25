@@ -1,3 +1,14 @@
+export interface State {
+  setup: SimulationSetup;
+  simulation: Simulation;
+}
+
+export interface Actions {
+  simulateNextStep: () => void;
+  reset: () => void;
+  dispatchCommand: (command: string, echo?: boolean) => void;
+}
+
 export type Direction = 'N' | 'E' | 'W' | 'S';
 
 export type Command = 'F' | 'L' | 'R' | 'U';
@@ -37,7 +48,9 @@ export type InputStep =
   | 'addCarName'
   | 'addCarPosition'
   | 'addCarCommands'
-  | 'runningSimulation';
+  | 'runningSimulation'
+  | 'simulationComplete'
+  | 'exit';
 
 export interface SimulationSetup {
   inputStep: InputStep;

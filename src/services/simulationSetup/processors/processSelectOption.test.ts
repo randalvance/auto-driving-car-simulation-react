@@ -1,7 +1,4 @@
-import {
-  MESSAGE_ERROR_INVALID_FORMAT,
-  MESSAGE_RUNNING_SIMULATION,
-} from '@/constants';
+import { MESSAGE_ERROR_INVALID_FORMAT } from '@/constants';
 import { processSelectOption } from './processSelectOption';
 
 it('should parse option 1 as adding car', () => {
@@ -28,7 +25,7 @@ it('should parse option 2 as running simulation', () => {
   );
 
   expect(setupState.inputStep).toBe('runningSimulation');
-  expect(setupState.consoleMessages).toEqual([MESSAGE_RUNNING_SIMULATION]);
+  expect(setupState.consoleMessages).toEqual([]);
 });
 
 it.each(['', ' ', '0', '3', 'ABC'])(
