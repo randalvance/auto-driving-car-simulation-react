@@ -9,5 +9,16 @@ export const detectCollisions = (
   carName: Car['name'],
   cars: Car[],
 ): Array<Car['name']> => {
-  return [];
+  const carIndex = cars.findIndex((car) => car.name === carName);
+  const car = cars[carIndex];
+  const collidedCars: string[] = [];
+
+  for (const otherCar of cars) {
+    // Don't check for collisions with itself
+    if (otherCar.name === carName) continue;
+    if (car.x === otherCar.x && car.y === otherCar.y) {
+      collidedCars.push(otherCar.name);
+    }
+  }
+  return collidedCars;
 };
