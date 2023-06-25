@@ -22,6 +22,8 @@ export const moveCar = (car: Car, field: Field): Car => {
   const carAfterMove = carAction(car, field);
   return produce(carAfterMove, (draft) => {
     draft.commandCursor += 1;
+    draft.moveHistory += command;
+    draft.historyCursor = draft.moveHistory.length - 1;
   });
 };
 

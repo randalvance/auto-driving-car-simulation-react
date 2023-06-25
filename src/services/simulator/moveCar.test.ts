@@ -21,6 +21,8 @@ describe('moveCar', () => {
     direction: 'N',
     commands: 'F',
     commandCursor: 0,
+    moveHistory: '',
+    historyCursor: 0,
   };
   const field: Field = { width: 10, height: 10 };
   beforeEach(() => {
@@ -33,6 +35,8 @@ describe('moveCar', () => {
     expect(carAfterMove).toEqual({
       ...baseCar,
       commandCursor: 1,
+      moveHistory: 'F',
+      historyCursor: 0,
     });
   });
   it('should move forward if command at cursor is F', () => {

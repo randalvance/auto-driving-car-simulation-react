@@ -37,6 +37,8 @@ export interface Car {
   direction: Direction;
   commands: string;
   commandCursor: number;
+  moveHistory: string;
+  historyCursor: number;
   collisionInfo?: CollisionInfo[];
 }
 

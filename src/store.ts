@@ -77,6 +77,8 @@ export const initialState: State = {
         direction: 'N',
         commands: 'FFF',
         commandCursor: 0,
+        moveHistory: '',
+        historyCursor: 0,
       },
       {
         name: 'car2',
@@ -85,6 +87,8 @@ export const initialState: State = {
         direction: 'S',
         commands: 'FFF',
         commandCursor: 0,
+        moveHistory: '',
+        historyCursor: 0,
       },
     ],
     field: {

@@ -1,14 +1,20 @@
 import { type Field, type Car, type Direction } from '@/types';
 import { moveForward } from './moveFoward';
 
+const baseCar = {
+  direction: 'N',
+  commandCursor: 0,
+  moveHistory: '',
+  historyCursor: 0,
+} satisfies Partial<Car>;
+
 it('should move the car forward North', () => {
   const car: Car = {
+    ...baseCar,
     name: 'car1',
     x: 0,
     y: 0,
-    direction: 'N',
     commands: 'F',
-    commandCursor: 0,
   };
   const field: Field = { width: 10, height: 10 };
 
@@ -22,12 +28,12 @@ it('should move the car forward North', () => {
 
 it('should move the car forward East', () => {
   const car: Car = {
+    ...baseCar,
     name: 'car1',
     x: 0,
     y: 0,
     direction: 'E',
     commands: 'F',
-    commandCursor: 0,
   };
   const field: Field = { width: 10, height: 10 };
 
@@ -41,12 +47,12 @@ it('should move the car forward East', () => {
 
 it('should move the car forward South', () => {
   const car: Car = {
+    ...baseCar,
     name: 'car1',
     x: 0,
     y: 9,
     direction: 'S',
     commands: 'F',
-    commandCursor: 0,
   };
   const field: Field = { width: 10, height: 10 };
 
@@ -60,12 +66,12 @@ it('should move the car forward South', () => {
 
 it('should move the car forward West', () => {
   const car: Car = {
+    ...baseCar,
     name: 'car1',
     x: 9,
     y: 0,
     direction: 'W',
     commands: 'F',
-    commandCursor: 0,
   };
   const field: Field = { width: 10, height: 10 };
 
@@ -86,12 +92,12 @@ it.each([
   'shoult not move the car forward if out of bounds ($carX, $carY, $carDirection)',
   ({ carX, carY, carDirection }) => {
     const car: Car = {
+      ...baseCar,
       name: 'car1',
       x: carX,
       y: carY,
       direction: carDirection as Direction,
       commands: 'F',
-      commandCursor: 0,
     };
     const field: Field = { width: 10, height: 10 };
 

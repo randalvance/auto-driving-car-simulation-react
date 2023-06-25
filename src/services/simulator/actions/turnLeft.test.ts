@@ -16,6 +16,8 @@ it.each([
       direction: sourceDirection as Direction,
       commandCursor: 0,
       commands: 'L',
+      moveHistory: '',
+      historyCursor: 0,
     };
     const field: Field = { width: 10, height: 10 };
     const carAfterMove = turnLeft(car, field);

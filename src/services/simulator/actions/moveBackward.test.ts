@@ -7,6 +7,8 @@ const baseCar = {
   direction: 'N',
   commands: 'F',
   commandCursor: 0,
+  moveHistory: '',
+  historyCursor: 0,
 } satisfies Partial<Car>;
 
 it('should move the car forward North', () => {

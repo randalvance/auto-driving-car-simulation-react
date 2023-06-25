@@ -1,4 +1,10 @@
+import { type Car } from '@/types';
 import { isSimulationComplete } from './isSimulationComplete';
+
+const baseCar = {
+  moveHistory: '',
+  historyCursor: 0,
+} satisfies Partial<Car>;
 
 it('should return true if all cars are complete', () => {
   const result = isSimulationComplete({
@@ -9,6 +15,7 @@ it('should return true if all cars are complete', () => {
     },
     cars: [
       {
+        ...baseCar,
         name: 'car1',
         x: 0,
         y: 0,
@@ -17,6 +24,7 @@ it('should return true if all cars are complete', () => {
         commands: 'F',
       },
       {
+        ...baseCar,
         name: 'car2',
         x: 0,
         y: 0,
@@ -39,6 +47,7 @@ it('should return false if not all cars are complete', () => {
     },
     cars: [
       {
+        ...baseCar,
         name: 'car1',
         x: 0,
         y: 0,
@@ -47,6 +56,7 @@ it('should return false if not all cars are complete', () => {
         commands: 'F',
       },
       {
+        ...baseCar,
         name: 'car2',
         x: 0,
         y: 0,

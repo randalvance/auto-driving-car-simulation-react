@@ -14,21 +14,24 @@ vitest.mock('./detectCollisions', () => ({
 const mockedDetectCollisions = vi.mocked(detectCollisions);
 
 describe('simulate', () => {
+  const baseCar = {
+    direction: 'N',
+    commands: 'F',
+    commandCursor: 0,
+    moveHistory: '',
+    historyCursor: 0,
+  } satisfies Partial<Car>;
   const car1: Car = {
+    ...baseCar,
     name: 'car1',
     x: 0,
     y: 0,
-    direction: 'N',
-    commands: 'F',
-    commandCursor: 0,
   };
   const car2: Car = {
+    ...baseCar,
     name: 'car2',
     x: 1,
     y: 0,
-    direction: 'N',
-    commands: 'F',
-    commandCursor: 0,
   };
   const baseSimulation: Simulation = {
     step: 0,
@@ -63,18 +66,18 @@ describe('simulate', () => {
 
   it.only('should not move and not check collision completed cars', () => {
     const uncompletedCar1: Car = {
+      ...baseCar,
       name: 'car1',
       x: 0,
       y: 0,
-      direction: 'N',
       commandCursor: 1,
       commands: 'FF',
     };
     const completedCar1: Car = {
+      ...baseCar,
       name: 'car2',
       x: 0,
       y: 1,
-      direction: 'N',
       commandCursor: 1,
       commands: 'F',
     };
