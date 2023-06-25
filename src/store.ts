@@ -70,30 +70,30 @@ export const initialState: State = {
   },
   simulation: {
     cars: [
-      {
-        name: 'car1',
-        x: 9,
-        y: 0,
-        direction: 'N',
-        commands: 'FRUU',
-        commandCursor: 0,
-        moveHistory: '',
-        historyCursor: 0,
-      },
-      {
-        name: 'car2',
-        x: 0,
-        y: 9,
-        direction: 'S',
-        commands: 'FFF',
-        commandCursor: 0,
-        moveHistory: '',
-        historyCursor: 0,
-      },
+      // {
+      //   name: 'car1',
+      //   x: 9,
+      //   y: 0,
+      //   direction: 'N',
+      //   commands: 'FRUU',
+      //   commandCursor: 0,
+      //   moveHistory: '',
+      //   historyCursor: 0,
+      // },
+      // {
+      //   name: 'car2',
+      //   x: 0,
+      //   y: 9,
+      //   direction: 'S',
+      //   commands: 'FFF',
+      //   commandCursor: 0,
+      //   moveHistory: '',
+      //   historyCursor: 0,
+      // },
     ],
     field: {
-      width: 10,
-      height: 10,
+      width: 0,
+      height: 0,
     },
     step: 0,
   },
@@ -129,6 +129,11 @@ export const useStore = create(
         );
 
         state.setup = setup;
+
+        state.simulation.field = state.setup.fieldSize ?? {
+          width: 0,
+          height: 0,
+        };
       });
     },
   })),

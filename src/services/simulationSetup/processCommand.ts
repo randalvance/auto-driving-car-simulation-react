@@ -31,9 +31,9 @@ export const processCommand = (
     if (echo) {
       draft.consoleMessages.push(commandString);
     }
-    const setupState = commandProcessors[state.inputStep](
+    const setupState = commandProcessors[draft.inputStep](
       {
-        ...state,
+        ...draft,
         consoleMessages: [],
       },
       commandString,
@@ -41,6 +41,7 @@ export const processCommand = (
     draft.consoleMessages.push(...setupState.consoleMessages);
     const prompt = getPromptForInputStep(setupState);
     draft.inputStep = setupState.inputStep;
+    draft.fieldSize = setupState.fieldSize;
     draft.consoleMessages.push(...prompt);
   });
 };
