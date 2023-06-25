@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { withValidation } from './withValidation';
 import { type Field } from '@/types';
+import { reportCarList } from './reportCarList';
 
 export const processAddCarCommand = withValidation(
   (state, commandString) => {
@@ -45,6 +46,7 @@ export const processAddCarCommand = withValidation(
         });
       }
       draft.carToAdd = undefined;
+      draft.consoleMessages.push(reportCarList(draft.cars));
     });
     return setupState;
   },

@@ -27,6 +27,7 @@ it('should report car list', () => {
 
   const report = reportCarList(cars);
 
-  expect(report).toBe(`- car1, (1, 2) N, FLFFRUF
+  expect(report).toBe(`Your current list of cars are:
+- car1, (1, 2) N, FLFFRUF
 - car2, (4, 3) N, FFRRFFUFF`);
 });
