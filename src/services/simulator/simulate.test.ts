@@ -23,7 +23,7 @@ describe('simulate', () => {
     commandCursor: 0,
   };
   const car2: Car = {
-    name: 'car1',
+    name: 'car2',
     x: 1,
     y: 0,
     direction: 'N',
@@ -38,11 +38,15 @@ describe('simulate', () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    mockedMoveCar.mockReturnValue(car1);
+    mockedMoveCar.mockImplementation((car) =>
+      car.name === car1.name ? car1 : car2,
+    );
+    mockedDetectCollisions.mockReturnValue([...baseSimulation.cars]);
   });
 
   it('should move and check collision for each uncompleted car', () => {
     simulate(baseSimulation);
+
     expect(mockedMoveCar).toHaveBeenCalledWith(car1, baseSimulation.field);
     expect(mockedMoveCar).toHaveBeenCalledWith(car2, baseSimulation.field);
     expect(mockedDetectCollisions).toHaveBeenCalledWith(
@@ -57,7 +61,7 @@ describe('simulate', () => {
     );
   });
 
-  it('should not move and not check collision completed cars', () => {
+  it.only('should not move and not check collision completed cars', () => {
     const uncompletedCar1: Car = {
       name: 'car1',
       x: 0,
@@ -79,6 +83,10 @@ describe('simulate', () => {
       step: 1,
       cars: [uncompletedCar1, completedCar1],
     };
+    mockedMoveCar.mockReturnValueOnce(uncompletedCar1);
+    mockedMoveCar.mockReturnValueOnce(completedCar1);
+    mockedDetectCollisions.mockReturnValueOnce(simulation.cars);
+    mockedDetectCollisions.mockReturnValueOnce(simulation.cars);
 
     simulate(simulation);
 

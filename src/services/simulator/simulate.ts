@@ -5,24 +5,24 @@ import { detectCollisions } from './detectCollisions';
 
 /** Orchestrates moving and car-collision check. */
 export const simulate = (simulation: Simulation): Simulation => {
-  const nextStep = simulation.step + 1;
-  let carsAfterMove = simulation.cars;
+  const step = simulation.step + 1;
 
-  for (const car of simulation.cars) {
+  let carsAfterChange = simulation.cars;
+
+  for (let i = 0; i < simulation.cars.length; i++) {
+    const car = simulation.cars[i];
+
     if (!hasCommandsLeft(car)) {
       continue;
     }
-    const carAfterMove = moveCar(car, simulation.field);
-    carsAfterMove = detectCollisions(
-      carAfterMove.name,
-      carsAfterMove,
-      nextStep,
-    );
-  }
 
-  return produce(simulation, (draft) => {
-    draft.step = nextStep;
-    draft.cars = carsAfterMove;
+    carsAfterChange[i] = moveCar(car, simulation.field);
+
+    carsAfterChange = detectCollisions(car.name, carsAfterChange, step);
+  }
+  return produce(simulation, (newSimulation) => {
+    newSimulation.step = step;
+    newSimulation.cars = carsAfterChange;
   });
 };
 

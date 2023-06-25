@@ -2,14 +2,21 @@ import React, { useCallback } from 'react';
 
 import styles from './styles.module.css';
 import { getRotationBasedOnDirection } from './helpers';
-import { type CarLegacy } from '@/types';
+import { type Car, type CarLegacy } from '@/types';
 import { Grid } from './Grid';
 
 interface Props {
   width: number;
   height: number;
-  cars: CarLegacy[];
+  cars: CarRenderInfo[];
   collidedCars: Array<CarLegacy['name']>;
+}
+
+export interface CarRenderInfo {
+  name: Car['name'];
+  x: Car['x'];
+  y: Car['y'];
+  direction: Car['direction'];
 }
 
 export const Field: React.FC<Props> = ({
@@ -19,7 +26,7 @@ export const Field: React.FC<Props> = ({
   collidedCars,
 }) => {
   const hasCarCollided = useCallback(
-    (car: CarLegacy) => {
+    (car: Car) => {
       return collidedCars.includes(car.name);
     },
     [collidedCars],
@@ -42,7 +49,7 @@ export const Field: React.FC<Props> = ({
               bottom: car.y * 50,
               left: car.x * 50,
               transform: `rotate(${getRotationBasedOnDirection(
-                car.facing,
+                car.direction,
               )}deg)`,
             }}
           />

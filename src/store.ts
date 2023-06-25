@@ -5,6 +5,7 @@ import {
   type Command,
   type Direction,
   type Stage,
+  type Simulation,
 } from '@/types';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
@@ -17,6 +18,7 @@ import {
   MESSAGES_SELECT_OPTION,
 } from '@/constants';
 import * as simulationSetup from './services/simulationSetup';
+import { simulate } from './services/simulator';
 
 export interface State {
   cars: CarLegacy[];
@@ -41,11 +43,13 @@ export interface State {
   isDone: boolean;
 
   setup: SimulationSetup;
+  simulation: Simulation;
 }
 
 export interface Actions {
   setFieldBounds: (width: number, height: number) => void;
   nextStep: () => void;
+  simulateNextStep: () => void;
   reset: () => void;
   dispatchCommand: (command: string) => void;
 }
@@ -68,10 +72,27 @@ export const initialState: State = {
   setup: {
     inputStep: 'setFieldSize',
   },
+  simulation: {
+    cars: [
+      {
+        name: 'car1',
+        x: 0,
+        y: 0,
+        direction: 'N',
+        commands: 'FFF',
+        commandCursor: 0,
+      },
+    ],
+    field: {
+      width: 10,
+      height: 10,
+    },
+    step: 0,
+  },
 };
 
 export const useStore = create(
-  immer<State & Actions>((set) => ({
+  immer<State & Actions>((set, get) => ({
     ...initialState,
 
     setFieldBounds: (width: number, height: number) => {
@@ -195,6 +216,13 @@ export const useStore = create(
             ? getReportMessages({ ...state, collisions: [...newCollisions] })
             : state.consoleMessages,
         };
+      });
+    },
+    simulateNextStep: () => {
+      set((state) => {
+        const newSimulationState = simulate(state.simulation);
+        state.simulation = newSimulationState;
+        console.log('newSimulationState', newSimulationState);
       });
     },
     reset: () => {
