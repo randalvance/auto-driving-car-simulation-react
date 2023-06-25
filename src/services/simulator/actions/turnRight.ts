@@ -9,4 +9,5 @@ const directionMap: Record<Direction, Direction> = {
   W: 'N',
 };
 
-export const turnRight: CarAction = (car) => _turn(car, directionMap);
+export const turnRight: CarAction = (car, _, trackHistory) =>
+  _turn(car, directionMap, 'R', trackHistory);

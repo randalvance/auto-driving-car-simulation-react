@@ -36,9 +36,9 @@ describe('undo', () => {
 
     const carAfterUndo = undo(car, field);
 
-    expect(carAfterUndo.commandCursor).toBe(3);
+    expect(carAfterUndo.commandCursor).toBe(2);
     expect(carAfterUndo.historyCursor).toBe(0);
-    expect(mockedMoveBackward).toHaveBeenCalledWith(car, field);
+    expect(mockedMoveBackward).toHaveBeenCalledWith(car, field, false);
   });
 
   it('should turn right if last move was left', () => {
@@ -56,9 +56,9 @@ describe('undo', () => {
 
     const carAfterUndo = undo(car, field);
 
-    expect(carAfterUndo.commandCursor).toBe(3);
+    expect(carAfterUndo.commandCursor).toBe(2);
     expect(carAfterUndo.historyCursor).toBe(0);
-    expect(mockedTurnRight).toHaveBeenCalledWith(car, field);
+    expect(mockedTurnRight).toHaveBeenCalledWith(car, field, false);
   });
 
   it('should turn left if last move was right', () => {
@@ -76,8 +76,8 @@ describe('undo', () => {
 
     const carAfterUndo = undo(car, field);
 
-    expect(carAfterUndo.commandCursor).toBe(3);
+    expect(carAfterUndo.commandCursor).toBe(2);
     expect(carAfterUndo.historyCursor).toBe(0);
-    expect(mockedTurnLeft).toHaveBeenCalledWith(car, field);
+    expect(mockedTurnLeft).toHaveBeenCalledWith(car, field, false);
   });
 });

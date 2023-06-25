@@ -37,8 +37,6 @@ describe('moveCar', () => {
     expect(carAfterMove).toEqual({
       ...baseCar,
       commandCursor: 1,
-      moveHistory: 'F',
-      historyCursor: 0,
     });
   });
   it('should move forward if command at cursor is F', () => {

@@ -5,7 +5,7 @@ const baseCar = {
   direction: 'N',
   commandCursor: 0,
   moveHistory: '',
-  historyCursor: 0,
+  historyCursor: -1,
 } satisfies Partial<Car>;
 
 it('should move the car forward North', () => {
@@ -23,6 +23,8 @@ it('should move the car forward North', () => {
   expect(carAfterMove).toEqual({
     ...car,
     y: 1,
+    moveHistory: 'F',
+    historyCursor: 0,
   });
 });
 
@@ -42,6 +44,8 @@ it('should move the car forward East', () => {
   expect(carAfterMove).toEqual({
     ...car,
     x: 1,
+    moveHistory: 'F',
+    historyCursor: 0,
   });
 });
 
@@ -61,6 +65,8 @@ it('should move the car forward South', () => {
   expect(carAfterMove).toEqual({
     ...car,
     y: 8,
+    moveHistory: 'F',
+    historyCursor: 0,
   });
 });
 
@@ -80,6 +86,8 @@ it('should move the car forward West', () => {
   expect(carAfterMove).toEqual({
     ...car,
     x: 8,
+    moveHistory: 'F',
+    historyCursor: 0,
   });
 });
 
@@ -109,3 +117,21 @@ it.each([
     });
   },
 );
+
+it('should not track history if told not to', () => {
+  const car: Car = {
+    ...baseCar,
+    name: 'car1',
+    x: 0,
+    y: 0,
+    commands: 'F',
+  };
+  const field: Field = { width: 10, height: 10 };
+
+  const carAfterMove = moveForward(car, field, false);
+
+  expect(carAfterMove).toEqual({
+    ...car,
+    y: 1,
+  });
+});

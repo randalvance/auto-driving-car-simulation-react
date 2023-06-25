@@ -75,7 +75,7 @@ export const initialState: State = {
         x: 9,
         y: 0,
         direction: 'N',
-        commands: 'FFU',
+        commands: 'FRUU',
         commandCursor: 0,
         moveHistory: '',
         historyCursor: 0,
@@ -113,6 +113,7 @@ export const useStore = create(
       set((state) => {
         const newSimulationState = simulate(state.simulation);
         state.simulation = newSimulationState;
+        console.log('cars', newSimulationState.cars);
       });
     },
     reset: () => {
