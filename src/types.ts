@@ -1,4 +1,4 @@
-export interface Car {
+export interface CarLegacy {
   name: string;
   x: number;
   y: number;
@@ -9,8 +9,8 @@ export type Direction = 'N' | 'E' | 'W' | 'S';
 export type Command = 'F' | 'L' | 'R';
 
 export interface CollisionInfo {
-  carName: Car['name'];
-  collidedWith: Array<Car['name']>;
+  carName: CarLegacy['name'];
+  collidedWith: Array<CarLegacy['name']>;
   x: number;
   y: number;
   step: number;
@@ -24,6 +24,25 @@ export type Stage =
   | 'addCars-command'
   | 'runSimulation'
   | 'done';
+
+export interface Field {
+  width: number;
+  height: number;
+}
+
+export interface Car {
+  name: string;
+  x: number;
+  y: number;
+  direction: Direction;
+  commands: string;
+  commandCursor: number;
+}
+
+export interface Simulation {
+  cars: Car[];
+  field: Field;
+}
 
 export type InputStep =
   | 'initialize'

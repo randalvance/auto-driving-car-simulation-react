@@ -1,6 +1,6 @@
 import {
   type SimulationSetup,
-  type Car,
+  type CarLegacy,
   type CollisionInfo,
   type Command,
   type Direction,
@@ -19,22 +19,22 @@ import {
 import * as simulationSetup from './services/simulationSetup';
 
 export interface State {
-  cars: Car[];
+  cars: CarLegacy[];
   fieldWidth: number;
   fieldHeight: number;
   error?: string;
-  carCommands: Record<Car['name'], Command[]>;
+  carCommands: Record<CarLegacy['name'], Command[]>;
   step: number;
   collisions: CollisionInfo[];
   completedCars: Set<string>;
   consoleMessages: string[];
   stage: Stage;
   originalCarPositions: Record<
-    Car['name'],
+    CarLegacy['name'],
     { x: number; y: number; facing: Direction }
   >;
   carToBeAdded: {
-    name?: Car['name'];
+    name?: CarLegacy['name'];
     initialPosition?: { x: number; y: number; facing: Direction };
     commands?: Command[];
   };
@@ -102,8 +102,8 @@ export const useStore = create(
         const completedCars: Set<string> = new Set<string>(
           currentCompletedCars,
         );
-        const carPositions: Record<Car['name'], Car> = cars.reduce<
-          Record<Car['name'], Car>
+        const carPositions: Record<CarLegacy['name'], CarLegacy> = cars.reduce<
+          Record<CarLegacy['name'], CarLegacy>
         >((acc, car) => {
           acc[car.name] = car;
           return acc;
@@ -142,7 +142,7 @@ export const useStore = create(
             );
 
             const addCollision = (
-              carWhichCollided: Car,
+              carWhichCollided: CarLegacy,
               collidedCars: string[],
             ): void => {
               const currentCollision = newCollisions.find(
@@ -221,10 +221,10 @@ export const useStore = create(
 );
 
 const getCarAtNewPosition = (
-  car: Car,
+  car: CarLegacy,
   command: Command,
   bounds: { width: number; height: number },
-): Car => {
+): CarLegacy => {
   if (command === 'F') {
     return moveForward(car, bounds);
   }
@@ -238,9 +238,9 @@ const getCarAtNewPosition = (
 };
 
 const moveForward = (
-  car: Car,
+  car: CarLegacy,
   bounds: { width: number; height: number },
-): Car => {
+): CarLegacy => {
   if (car.facing === 'N') {
     return { ...car, y: Math.min(car.y + 1, bounds.height - 1) };
   }
@@ -256,7 +256,7 @@ const moveForward = (
   return car;
 };
 
-const turnRight = (car: Car): Car => {
+const turnRight = (car: CarLegacy): CarLegacy => {
   const directionMap: Record<Direction, Direction> = {
     N: 'E',
     E: 'S',
@@ -266,7 +266,7 @@ const turnRight = (car: Car): Car => {
   return { ...car, facing: directionMap[car.facing] };
 };
 
-const turnLeft = (car: Car): Car => {
+const turnLeft = (car: CarLegacy): CarLegacy => {
   const directionMap: Record<Direction, Direction> = {
     N: 'W',
     W: 'S',
@@ -331,7 +331,7 @@ const processCommandSelectOption = (
     return {
       stage: 'runSimulation',
       originalCarPositions: state.cars.reduce<
-        Record<Car['name'], { x: number; y: number; facing: Direction }>
+        Record<CarLegacy['name'], { x: number; y: number; facing: Direction }>
       >((acc, car) => {
         acc[car.name] = {
           x: car.x,
@@ -422,7 +422,7 @@ const processCommandAddCarCommand = (
     };
   }
 
-  const newCar: Car = {
+  const newCar: CarLegacy = {
     name: state.carToBeAdded.name ?? '',
     x: state.carToBeAdded.initialPosition?.x ?? 0,
     y: state.carToBeAdded.initialPosition?.y ?? 0,
@@ -487,7 +487,7 @@ const processCommandReset = (command: string, state: State): Partial<State> => {
   return state;
 };
 
-const validateAddingOfCar = (state: State, car: Car): string | null => {
+const validateAddingOfCar = (state: State, car: CarLegacy): string | null => {
   for (const c of state.cars) {
     if (c.name === car.name) {
       return 'Car with the same name already exists';

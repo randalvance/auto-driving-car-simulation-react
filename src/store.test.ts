@@ -1,6 +1,6 @@
 import { initialState, useStore } from './store';
 import {
-  type Car,
+  type CarLegacy,
   type CollisionInfo,
   type Direction,
   type Stage,
@@ -85,7 +85,7 @@ describe.skip('store', () => {
       },
     ])('should move car forward', ({ facing, carPosition, targetPosition }) => {
       it(`when facing ${facing}`, () => {
-        const car: Car = {
+        const car: CarLegacy = {
           name: 'car1',
           ...carPosition,
           facing: carPosition.facing as Direction,
@@ -153,7 +153,7 @@ describe.skip('store', () => {
       ])('should turn', ({ facing, turn, expectedDirection }) => {
         it(`when facing ${facing} and turning ${turn}`, () => {
           // Arrange
-          const car: Car = {
+          const car: CarLegacy = {
             name: 'car1',
             facing: facing as Direction,
             x: 5,
@@ -187,13 +187,13 @@ describe.skip('store', () => {
 
     it('should move two cars at the same time', () => {
       // Arrange
-      const car1: Car = {
+      const car1: CarLegacy = {
         name: 'car1',
         facing: 'N',
         x: 0,
         y: 0,
       };
-      const car2: Car = {
+      const car2: CarLegacy = {
         name: 'car2',
         facing: 'S',
         x: 10,
@@ -745,7 +745,7 @@ describe.skip('store', () => {
             facing: 'N',
             x: 1,
             y: 2,
-          } satisfies Car);
+          } satisfies CarLegacy);
           expect(newState.consoleMessages).toEqual([
             ...state.consoleMessages,
             'FRFLFFFRLF',
@@ -829,7 +829,7 @@ describe.skip('store', () => {
 
         it(`when car being added has name that already exists`, () => {
           // Arrange
-          const existingCar: Car = {
+          const existingCar: CarLegacy = {
             name: 'car1',
             facing: 'N',
             x: 0,
@@ -874,7 +874,7 @@ describe.skip('store', () => {
 
         it('when car being added has initial position that already exists', () => {
           // Arrange
-          const existingCar: Car = {
+          const existingCar: CarLegacy = {
             name: 'car1',
             facing: 'N',
             x: 1,
