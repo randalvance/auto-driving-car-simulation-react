@@ -5,6 +5,11 @@ import { type CarAction } from './types';
 
 /** Manages the movement of car based on the car's command and where commandCursor is pointing */
 export const moveCar = (car: Car, field: Field): Car => {
+  if ((car.collisionInfo?.length ?? 0) > 0) {
+    return produce(car, (draft) => {
+      draft.commandCursor += 1;
+    });
+  }
   const command = getCommandAtCursor(car);
   let carAction: CarAction = moveForward;
 

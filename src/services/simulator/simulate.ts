@@ -8,10 +8,10 @@ import { _hasCommandsLeft } from './_hasCommandsLeft';
 export const simulate = (simulation: Simulation): Simulation => {
   const step = simulation.step + 1;
 
-  let carsAfterChange = simulation.cars;
+  let carsAfterChange = [...simulation.cars];
 
   for (let i = 0; i < simulation.cars.length; i++) {
-    const car = simulation.cars[i];
+    const car = carsAfterChange[i];
 
     if (!_hasCommandsLeft(car)) {
       continue;

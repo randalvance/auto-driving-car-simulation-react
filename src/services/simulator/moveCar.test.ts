@@ -71,4 +71,15 @@ describe('moveCar', () => {
 
     expect(mockedTurnRight).toHaveBeenCalledWith(car, field);
   });
+  it('should not do anything if a car has collided', () => {
+    const car: Car = {
+      ...baseCar,
+      commands: 'FRF',
+      commandCursor: 2,
+      collisionInfo: [{ carName: 'car2', step: 1 }],
+    };
+    const carAfterMove = moveCar(car, field);
+
+    expect(carAfterMove).toEqual(car);
+  });
 });
