@@ -1,7 +1,8 @@
 import { produce } from 'immer';
-import { type Car, type Simulation } from '@/types';
+import { type Simulation } from '@/types';
 import { moveCar } from './moveCar';
 import { detectCollisions } from './detectCollisions';
+import { _hasCommandsLeft } from './_hasCommandsLeft';
 
 /** Orchestrates moving and car-collision check. */
 export const simulate = (simulation: Simulation): Simulation => {
@@ -12,7 +13,7 @@ export const simulate = (simulation: Simulation): Simulation => {
   for (let i = 0; i < simulation.cars.length; i++) {
     const car = simulation.cars[i];
 
-    if (!hasCommandsLeft(car)) {
+    if (!_hasCommandsLeft(car)) {
       continue;
     }
 
@@ -20,12 +21,9 @@ export const simulate = (simulation: Simulation): Simulation => {
 
     carsAfterChange = detectCollisions(car.name, carsAfterChange, step);
   }
+
   return produce(simulation, (newSimulation) => {
     newSimulation.step = step;
     newSimulation.cars = carsAfterChange;
   });
-};
-
-const hasCommandsLeft = (car: Car): boolean => {
-  return car.commandCursor < car.commands.length;
 };

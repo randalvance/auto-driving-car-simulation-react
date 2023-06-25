@@ -4,6 +4,7 @@ import { useStore } from '@/store';
 import styles from './style.module.css';
 import { Console } from '@/components/Console';
 import { type Car } from '@/types';
+import { isSimulationComplete } from '@/services/simulator';
 
 export const Simulation: React.FC = () => {
   const [stage, simulateNextStep, isDone] = useStore((s) => [
@@ -11,9 +12,24 @@ export const Simulation: React.FC = () => {
     s.simulateNextStep,
     s.isDone,
   ]);
+  const simulation = useStore((s) => s.simulation);
+  const isComplete = useMemo(
+    () => isSimulationComplete(simulation),
+    [simulation],
+  );
   useEffect(() => {
-    simulateNextStep();
-  }, [stage]);
+    if (isComplete) {
+      return;
+    }
+    const interval = setInterval(() => {
+      simulateNextStep();
+    }, 3000);
+
+    return () => {
+      console.log('Done');
+      clearInterval(interval);
+    };
+  }, [isComplete]);
   const [cars, field, collisions, consoleMessages] = useStore((state) => [
     state.simulation.cars,
     state.simulation.field,
