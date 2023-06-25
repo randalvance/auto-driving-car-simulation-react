@@ -1,7 +1,7 @@
 import { initialState, useStore } from './store';
 import {
   type CarLegacy,
-  type CollisionInfo,
+  type CollisionInfoLegacy,
   type Direction,
   type Stage,
 } from '@/types';
@@ -291,7 +291,7 @@ describe.skip('store', () => {
         x: 1,
         y: 3,
         step: 5,
-      } satisfies CollisionInfo);
+      } satisfies CollisionInfoLegacy);
       const collisionForCar2 = newState.collisions.find(
         (c) => c.carName === actualCar2.name,
       );
@@ -301,7 +301,7 @@ describe.skip('store', () => {
         x: 1,
         y: 3,
         step: 5,
-      } satisfies CollisionInfo);
+      } satisfies CollisionInfoLegacy);
       const collisionForCar3 = newState.collisions.find(
         (c) => c.carName === actualCar3.name,
       );
@@ -311,7 +311,7 @@ describe.skip('store', () => {
         x: 1,
         y: 3,
         step: 8,
-      } satisfies CollisionInfo);
+      } satisfies CollisionInfoLegacy);
     });
 
     it('should set stage to done and completedCars when all cars are crashed', () => {
@@ -463,14 +463,14 @@ describe.skip('store', () => {
           step: 1,
           x: 1,
           y: 0,
-        } satisfies CollisionInfo,
+        } satisfies CollisionInfoLegacy,
         {
           carName: 'car2',
           collidedWith: ['car1'],
           step: 1,
           x: 1,
           y: 0,
-        } satisfies CollisionInfo,
+        } satisfies CollisionInfoLegacy,
       ]);
     });
   });

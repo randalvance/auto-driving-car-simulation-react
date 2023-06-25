@@ -1,4 +1,4 @@
-import { type Car } from '@/types';
+import { type CollisionInfo, type Car } from '@/types';
 import { detectCollisions } from './detectCollisions';
 
 const baseCar = {
@@ -37,8 +37,12 @@ it('should detect all cars that a car have collided with', () => {
     direction: 'S',
   };
   const cars: Car[] = [car1, car2, car3, car4];
+  const currentStep = 1;
 
-  const collidedCars = detectCollisions(car1.name, cars);
+  const carWithCollisionInfo = detectCollisions(car1.name, cars, currentStep);
 
-  expect(collidedCars).toEqual([car2.name, car4.name]);
+  expect(carWithCollisionInfo.collisionInfo).toEqual([
+    { carName: car2.name, step: currentStep } satisfies CollisionInfo,
+    { carName: car4.name, step: currentStep } satisfies CollisionInfo,
+  ]);
 });

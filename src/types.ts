@@ -8,7 +8,7 @@ export type Direction = 'N' | 'E' | 'W' | 'S';
 
 export type Command = 'F' | 'L' | 'R';
 
-export interface CollisionInfo {
+export interface CollisionInfoLegacy {
   carName: CarLegacy['name'];
   collidedWith: Array<CarLegacy['name']>;
   x: number;
@@ -37,6 +37,12 @@ export interface Car {
   direction: Direction;
   commands: string;
   commandCursor: number;
+  collisionInfo?: CollisionInfo[];
+}
+
+export interface CollisionInfo {
+  carName: Car['name'];
+  step: number;
 }
 
 export interface Simulation {

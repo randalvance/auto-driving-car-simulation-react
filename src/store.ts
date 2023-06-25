@@ -1,7 +1,7 @@
 import {
   type SimulationSetup,
   type CarLegacy,
-  type CollisionInfo,
+  type CollisionInfoLegacy,
   type Command,
   type Direction,
   type Stage,
@@ -25,7 +25,7 @@ export interface State {
   error?: string;
   carCommands: Record<CarLegacy['name'], Command[]>;
   step: number;
-  collisions: CollisionInfo[];
+  collisions: CollisionInfoLegacy[];
   completedCars: Set<string>;
   consoleMessages: string[];
   stage: Stage;
@@ -108,7 +108,7 @@ export const useStore = create(
           acc[car.name] = car;
           return acc;
         }, {});
-        const newCollisions: CollisionInfo[] = [...collisions];
+        const newCollisions: CollisionInfoLegacy[] = [...collisions];
 
         for (let i = 0; i < cars.length; i++) {
           const car = cars[i];
