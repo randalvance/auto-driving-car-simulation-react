@@ -26,19 +26,9 @@ export const useStore = create(
       get().dispatchCommand('reset', false);
     },
     dispatchCommand: (command: string, echo?: boolean) => {
-      set((state) => {
-        state.setup = simulationSetup.processCommand(
-          state.setup,
-          command,
-          echo ?? true,
-        );
-
-        state.simulation.field = state.setup.fieldSize ?? {
-          width: 0,
-          height: 0,
-        };
-        state.simulation.cars = state.setup.cars ?? [];
-      });
+      set((state) =>
+        simulationSetup.processCommand(state, command, echo ?? true),
+      );
     },
   })),
 );

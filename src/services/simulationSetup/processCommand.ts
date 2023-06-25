@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { type InputStep, type SimulationSetup } from '@/types';
+import { type State, type InputStep } from '@/types';
 import { type CommandProcessor } from './types';
 import {
   processAddCarCommand,
@@ -25,29 +25,36 @@ const commandProcessors: Record<InputStep, CommandProcessor> = {
 };
 
 export const processCommand = (
-  state: SimulationSetup,
+  state: State,
   commandString: string,
   echo: boolean = true,
-): SimulationSetup => {
+): State => {
   return produce(state, (draft) => {
+    const { setup } = draft;
     if (echo) {
-      draft.consoleMessages.push(commandString);
+      setup.consoleMessages.push(commandString);
     }
-    const setupState = commandProcessors[draft.inputStep](
+    const setupState = commandProcessors[setup.inputStep](
       {
-        ...draft,
+        ...setup,
         consoleMessages: [],
       },
       commandString,
     );
 
-    draft.inputStep = setupState.inputStep;
-    draft.fieldSize = setupState.fieldSize;
-    draft.cars = setupState.cars;
-    draft.carToAdd = setupState.carToAdd;
-    draft.consoleMessages.push(...setupState.consoleMessages);
+    setup.inputStep = setupState.inputStep;
+    setup.fieldSize = setupState.fieldSize;
+    setup.cars = setupState.cars;
+    setup.carToAdd = setupState.carToAdd;
+    setup.consoleMessages.push(...setupState.consoleMessages);
 
     const prompt = getPromptForInputStep(setupState);
-    draft.consoleMessages.push(...prompt);
+    setup.consoleMessages.push(...prompt);
+
+    draft.simulation.field = setup.fieldSize ?? {
+      width: 0,
+      height: 0,
+    };
+    draft.simulation.cars = setup.cars ?? [];
   });
 };
