@@ -2,11 +2,16 @@ import { vitest, vi } from 'vitest';
 import { type Simulation, type Car } from '@/types';
 import { simulate } from './simulate';
 import { moveCar } from './moveCar';
+import { detectCollisions } from './detectCollisions';
 
 vitest.mock('./moveCar', () => ({
   moveCar: vitest.fn(),
 }));
 const mockedMoveCar = vi.mocked(moveCar);
+vitest.mock('./detectCollisions', () => ({
+  detectCollisions: vitest.fn(),
+}));
+const mockedDetectCollisions = vi.mocked(detectCollisions);
 
 describe('simulate', () => {
   const car1: Car = {
@@ -36,13 +41,23 @@ describe('simulate', () => {
     mockedMoveCar.mockReturnValue(car1);
   });
 
-  it('should move each uncompleted car', () => {
+  it('should move and check collision for each uncompleted car', () => {
     simulate(baseSimulation);
     expect(mockedMoveCar).toHaveBeenCalledWith(car1, baseSimulation.field);
     expect(mockedMoveCar).toHaveBeenCalledWith(car2, baseSimulation.field);
+    expect(mockedDetectCollisions).toHaveBeenCalledWith(
+      car1.name,
+      baseSimulation.cars,
+      baseSimulation.step + 1,
+    );
+    expect(mockedDetectCollisions).toHaveBeenCalledWith(
+      car2.name,
+      baseSimulation.cars,
+      baseSimulation.step + 1,
+    );
   });
 
-  it('should not move completed cars', () => {
+  it('should not move and not check collision completed cars', () => {
     const uncompletedCar1: Car = {
       name: 'car1',
       x: 0,
@@ -69,11 +84,21 @@ describe('simulate', () => {
 
     expect(mockedMoveCar).toHaveBeenCalledWith(
       uncompletedCar1,
-      baseSimulation.field,
+      simulation.field,
+    );
+    expect(mockedDetectCollisions).toHaveBeenCalledWith(
+      uncompletedCar1.name,
+      simulation.cars,
+      simulation.step + 1,
     );
     expect(mockedMoveCar).not.toHaveBeenCalledWith(
       completedCar1,
-      baseSimulation.field,
+      simulation.field,
+    );
+    expect(mockedDetectCollisions).not.toHaveBeenCalledWith(
+      completedCar1.name,
+      simulation.cars,
+      simulation.step + 1,
     );
   });
 

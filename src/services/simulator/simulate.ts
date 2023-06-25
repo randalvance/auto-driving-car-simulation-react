@@ -1,17 +1,27 @@
 import { produce } from 'immer';
 import { type Car, type Simulation } from '@/types';
 import { moveCar } from './moveCar';
+import { detectCollisions } from './detectCollisions';
 
 /** Orchestrates moving and car-collision check. */
 export const simulate = (simulation: Simulation): Simulation => {
-  const carsAfterMove = simulation.cars.map((car) => {
-    if (hasCommandsLeft(car)) {
-      return moveCar(car, simulation.field);
+  const nextStep = simulation.step + 1;
+  let carsAfterMove = simulation.cars;
+
+  for (const car of simulation.cars) {
+    if (!hasCommandsLeft(car)) {
+      continue;
     }
-    return car;
-  });
+    const carAfterMove = moveCar(car, simulation.field);
+    carsAfterMove = detectCollisions(
+      carAfterMove.name,
+      carsAfterMove,
+      nextStep,
+    );
+  }
+
   return produce(simulation, (draft) => {
-    draft.step += 1;
+    draft.step = nextStep;
     draft.cars = carsAfterMove;
   });
 };
