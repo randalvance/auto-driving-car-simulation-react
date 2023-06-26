@@ -1,10 +1,10 @@
 import { vitest } from 'vitest';
 import { processRunningSimulation } from './processRunningSimulation';
 
-import { reportCarList } from './reportCarList';
+import { reportCarList } from '../reporters';
 import { type InputStep } from '@/types';
 
-vitest.mock('./reportCarList', () => ({
+vitest.mock('../reporters', () => ({
   reportCarList: vitest.fn(),
 }));
 const mockedReportCarList = vitest.mocked(reportCarList);

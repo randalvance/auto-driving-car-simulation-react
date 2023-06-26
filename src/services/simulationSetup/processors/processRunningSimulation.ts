@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import { type CommandProcessor } from '../types';
-import { reportCarList } from './reportCarList';
+import { reportCarList } from '../reporters';
 
 export const processRunningSimulation: CommandProcessor = (state) =>
   produce(state, (draft) => {

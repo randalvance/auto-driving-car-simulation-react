@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { withValidation } from './withValidation';
 import { type Field } from '@/types';
-import { reportCarList } from './reportCarList';
+import { reportCarList } from '../reporters';
 
 export const processAddCarCommand = withValidation(
   (state, commandString) => {

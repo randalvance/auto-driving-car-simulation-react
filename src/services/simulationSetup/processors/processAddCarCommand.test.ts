@@ -3,9 +3,9 @@ import {
   MESSAGE_ERROR_OUT_OF_BOUNDS,
   processAddCarCommand,
 } from './processAddCarCommand';
-import { reportCarList } from './reportCarList';
+import { reportCarList } from '../reporters';
 
-vitest.mock('./reportCarList', () => ({ reportCarList: vitest.fn() }));
+vitest.mock('../reporters', () => ({ reportCarList: vitest.fn() }));
 const mockedReportCarList = vi.mocked(reportCarList);
 
 describe('processAddCarCommand', () => {
