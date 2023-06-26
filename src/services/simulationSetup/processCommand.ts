@@ -6,6 +6,7 @@ import {
   processAddCarName,
   processAddCarPosition,
   processInitialize,
+  processRunningSimulation,
   processSelectOption,
   processSetFieldSize,
   processSimulationComplete,
@@ -19,7 +20,7 @@ const commandProcessors: Record<InputStep, CommandProcessor> = {
   addCarName: processAddCarName,
   addCarPosition: processAddCarPosition,
   addCarCommands: processAddCarCommand,
-  runningSimulation: (state) => ({ ...state, inputStep: 'simulationComplete' }),
+  runningSimulation: processRunningSimulation,
   simulationComplete: processSimulationComplete,
   exit: (state) => state,
 };
