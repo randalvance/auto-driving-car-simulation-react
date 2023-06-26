@@ -1,46 +1,58 @@
 import { MESSAGE_ERROR_INVALID_FORMAT } from '@/constants';
+import { initialState } from '@/store/initialState';
 import { processSelectOption } from './processSelectOption';
 
 it('should parse option 1 as adding car', () => {
-  const setupState = processSelectOption(
+  const newState = processSelectOption(
     {
-      inputStep: 'selectOption',
-      consoleMessages: [],
-      cars: [],
+      ...initialState,
+      setup: {
+        inputStep: 'selectOption',
+        consoleMessages: [],
+        cars: [],
+      },
     },
     '1',
   );
 
-  expect(setupState.inputStep).toBe('addCarName');
+  expect(newState.setup.inputStep).toBe('addCarName');
 });
 
 it('should parse option 2 as running simulation', () => {
-  const setupState = processSelectOption(
+  const newState = processSelectOption(
     {
-      inputStep: 'selectOption',
-      consoleMessages: [],
-      cars: [],
+      ...initialState,
+      setup: {
+        inputStep: 'selectOption',
+        consoleMessages: [],
+        cars: [],
+      },
     },
     '2',
   );
 
-  expect(setupState.inputStep).toBe('runningSimulation');
-  expect(setupState.consoleMessages).toEqual([]);
+  expect(newState.setup.inputStep).toBe('runningSimulation');
+  expect(newState.setup.consoleMessages).toEqual([]);
 });
 
 it.each(['', ' ', '0', '3', 'ABC'])(
   'should validate wrong input (%s)',
   (input) => {
-    const setupState = processSelectOption(
+    const newState = processSelectOption(
       {
-        inputStep: 'selectOption',
-        consoleMessages: [],
-        cars: [],
+        ...initialState,
+        setup: {
+          inputStep: 'selectOption',
+          consoleMessages: [],
+          cars: [],
+        },
       },
       input,
     );
 
-    expect(setupState.inputStep).toBe('selectOption');
-    expect(setupState.consoleMessages).toEqual([MESSAGE_ERROR_INVALID_FORMAT]);
+    expect(newState.setup.inputStep).toBe('selectOption');
+    expect(newState.setup.consoleMessages).toEqual([
+      MESSAGE_ERROR_INVALID_FORMAT,
+    ]);
   },
 );

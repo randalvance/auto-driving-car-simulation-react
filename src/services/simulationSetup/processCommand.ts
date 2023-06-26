@@ -36,21 +36,20 @@ export const processCommand = (
     if (echo) {
       setup.consoleMessages.push(commandString);
     }
-    const setupState = commandProcessors[setup.inputStep](
-      {
-        ...setup,
-        consoleMessages: [],
-      },
+    const newState = commandProcessors[setup.inputStep](
+      produce(state, (draft) => {
+        draft.setup.consoleMessages = [];
+      }),
       commandString,
     );
 
-    setup.inputStep = setupState.inputStep;
-    setup.fieldSize = setupState.fieldSize;
-    setup.cars = setupState.cars;
-    setup.carToAdd = setupState.carToAdd;
-    setup.consoleMessages.push(...setupState.consoleMessages);
+    setup.inputStep = newState.setup.inputStep;
+    setup.fieldSize = newState.setup.fieldSize;
+    setup.cars = newState.setup.cars;
+    setup.carToAdd = newState.setup.carToAdd;
+    setup.consoleMessages.push(...newState.setup.consoleMessages);
 
-    const prompt = getPromptForInputStep(setupState);
+    const prompt = getPromptForInputStep(newState.setup);
     setup.consoleMessages.push(...prompt);
 
     draft.simulation.field = setup.fieldSize ?? {

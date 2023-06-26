@@ -1,6 +1,3 @@
-import { type SimulationSetup } from '@/types';
+import { type State } from '@/types';
 
-export type CommandProcessor = (
-  state: SimulationSetup,
-  commandString: string,
-) => SimulationSetup;
+export type CommandProcessor = (state: State, commandString: string) => State;

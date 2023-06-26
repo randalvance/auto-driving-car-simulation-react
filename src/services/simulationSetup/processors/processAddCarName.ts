@@ -4,10 +4,10 @@ import { withValidation } from './withValidation';
 
 export const processAddCarName: CommandProcessor = withValidation(
   (state, commandString) => {
-    const setupState = produce(state, (draft) => {
-      draft.inputStep = 'addCarPosition';
-      draft.carToAdd = { name: commandString };
+    const newState = produce(state, (draft) => {
+      draft.setup.inputStep = 'addCarPosition';
+      draft.setup.carToAdd = { name: commandString };
     });
-    return setupState;
+    return newState;
   },
 );

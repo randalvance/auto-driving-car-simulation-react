@@ -1,16 +1,20 @@
 import { MESSAGE_INTRO } from '@/constants';
 import { processInitialize } from '.';
+import { initialState } from '@/store/initialState';
 
 it('should return correct state', () => {
-  const state = processInitialize(
+  const newState = processInitialize(
     {
-      inputStep: 'initialize',
-      consoleMessages: [],
-      cars: [],
+      ...initialState,
+      setup: {
+        inputStep: 'initialize',
+        consoleMessages: [],
+        cars: [],
+      },
     },
     '',
   );
 
-  expect(state.inputStep).toBe('setFieldSize');
-  expect(state.consoleMessages).toEqual([MESSAGE_INTRO]);
+  expect(newState.setup.inputStep).toBe('setFieldSize');
+  expect(newState.setup.consoleMessages).toEqual([MESSAGE_INTRO]);
 });

@@ -6,25 +6,26 @@ import { reportCarList } from '../reporters';
 export const processAddCarCommand = withValidation(
   (state, commandString) => {
     const setupState = produce(state, (draft) => {
-      draft.inputStep = 'selectOption';
-      draft.carToAdd = {
-        ...state.carToAdd,
+      const { setup } = draft;
+      setup.inputStep = 'selectOption';
+      setup.carToAdd = {
+        ...state.setup.carToAdd,
         commands: commandString,
       };
-      draft.carToAdd.commands = commandString;
+      setup.carToAdd.commands = commandString;
       const fieldSize: Field = {
-        width: draft.fieldSize?.width ?? 0,
-        height: draft.fieldSize?.height ?? 0,
+        width: setup.fieldSize?.width ?? 0,
+        height: setup.fieldSize?.height ?? 0,
       };
       const carToAdd = {
-        name: draft.carToAdd?.name ?? '',
-        x: draft.carToAdd?.x ?? 0,
-        y: draft.carToAdd?.y ?? 0,
-        direction: draft.carToAdd?.direction ?? 'N',
-        commands: draft.carToAdd?.commands ?? '',
+        name: setup.carToAdd?.name ?? '',
+        x: setup.carToAdd?.x ?? 0,
+        y: setup.carToAdd?.y ?? 0,
+        direction: setup.carToAdd?.direction ?? 'N',
+        commands: setup.carToAdd?.commands ?? '',
       };
 
-      draft.cars = draft.cars ?? [];
+      setup.cars = setup.cars ?? [];
       // Check for out of bounds before adding
       if (
         carToAdd.x < 0 ||
@@ -32,21 +33,21 @@ export const processAddCarCommand = withValidation(
         carToAdd.y < 0 ||
         carToAdd.y >= fieldSize.height
       ) {
-        draft.consoleMessages.push(MESSAGE_ERROR_OUT_OF_BOUNDS);
+        setup.consoleMessages.push(MESSAGE_ERROR_OUT_OF_BOUNDS);
       } else {
-        draft.cars.push({
-          name: draft.carToAdd.name ?? '',
-          x: draft.carToAdd.x ?? 0,
-          y: draft.carToAdd.y ?? 0,
-          direction: draft.carToAdd.direction ?? 'N',
-          commands: draft.carToAdd.commands ?? '',
+        setup.cars.push({
+          name: setup.carToAdd.name ?? '',
+          x: setup.carToAdd.x ?? 0,
+          y: setup.carToAdd.y ?? 0,
+          direction: setup.carToAdd.direction ?? 'N',
+          commands: setup.carToAdd.commands ?? '',
           commandCursor: 0,
           moveHistory: '',
           historyCursor: 0,
         });
       }
-      draft.carToAdd = undefined;
-      draft.consoleMessages.push(reportCarList(draft.cars));
+      setup.carToAdd = undefined;
+      setup.consoleMessages.push(reportCarList(setup.cars));
     });
     return setupState;
   },

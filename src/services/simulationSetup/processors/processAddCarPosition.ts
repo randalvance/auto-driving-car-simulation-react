@@ -8,13 +8,10 @@ export const processAddCarPosition: CommandProcessor = withValidation(
     const [x, y, direction] = commandString.split(' ');
 
     const setupState = produce(state, (draft) => {
-      draft.inputStep = 'addCarCommands';
-      draft.carToAdd = {
-        ...state.carToAdd,
-        x: parseInt(x, 10),
-        y: parseInt(y, 10),
-        direction: direction as Direction,
-      };
+      draft.setup.inputStep = 'addCarCommands';
+      draft.setup.carToAdd!.x = parseInt(x, 10);
+      draft.setup.carToAdd!.y = parseInt(y, 10);
+      draft.setup.carToAdd!.direction = direction as Direction;
     });
 
     return setupState;

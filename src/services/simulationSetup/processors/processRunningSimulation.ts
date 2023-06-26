@@ -4,9 +4,9 @@ import { reportCarCollisions, reportCarList } from '../reporters';
 
 export const processRunningSimulation: CommandProcessor = (state) =>
   produce(state, (draft) => {
-    draft.inputStep = 'simulationComplete';
-    draft.consoleMessages = [
-      reportCarList(draft.cars),
-      reportCarCollisions(draft.cars),
+    draft.setup.inputStep = 'simulationComplete';
+    draft.setup.consoleMessages = [
+      reportCarList(draft.setup.cars),
+      reportCarCollisions(draft.setup.cars),
     ];
   });

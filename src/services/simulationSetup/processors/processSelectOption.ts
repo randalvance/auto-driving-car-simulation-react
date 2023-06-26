@@ -7,9 +7,9 @@ export const processSelectOption: CommandProcessor = withValidation(
     const option = +commandString;
     const setupState = produce(state, (draft) => {
       if (option === 1) {
-        draft.inputStep = 'addCarName';
+        draft.setup.inputStep = 'addCarName';
       } else {
-        draft.inputStep = 'runningSimulation';
+        draft.setup.inputStep = 'runningSimulation';
       }
     });
     return setupState;

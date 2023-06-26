@@ -7,9 +7,9 @@ export const processSimulationComplete: CommandProcessor = withValidation(
     const option = +commandString;
     const setupState = produce(state, (draft) => {
       if (option === 1) {
-        draft.inputStep = 'initialize';
+        draft.setup.inputStep = 'initialize';
       } else {
-        draft.inputStep = 'exit';
+        draft.setup.inputStep = 'exit';
       }
     });
     return setupState;

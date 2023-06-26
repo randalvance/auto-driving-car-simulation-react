@@ -4,7 +4,7 @@ import { MESSAGE_INTRO } from '@/constants';
 
 export const processInitialize: CommandProcessor = (state) => {
   return produce(state, (draft) => {
-    draft.inputStep = 'setFieldSize';
-    draft.consoleMessages = [MESSAGE_INTRO];
+    draft.setup.inputStep = 'setFieldSize';
+    draft.setup.consoleMessages = [MESSAGE_INTRO];
   });
 };
