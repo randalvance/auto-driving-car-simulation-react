@@ -2,7 +2,7 @@ import { produce } from 'immer';
 import { type State } from '@/types';
 import { moveCar } from './moveCar';
 import { detectCollisions } from './detectCollisions';
-import { _hasCommandsLeft } from './_hasCommandsLeft';
+import { _isCarComplete } from './_hasCommandsLeft';
 
 /** Orchestrates moving and car-collision check. */
 export const simulate = (state: State): State => {
@@ -13,7 +13,7 @@ export const simulate = (state: State): State => {
   for (let i = 0; i < simulation.cars.length; i++) {
     const car = carsAfterChange[i];
 
-    if (!_hasCommandsLeft(car)) {
+    if (_isCarComplete(car)) {
       continue;
     }
 

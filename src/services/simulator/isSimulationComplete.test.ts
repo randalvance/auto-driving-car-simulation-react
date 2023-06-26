@@ -31,6 +31,16 @@ it('should return true if all cars are complete', () => {
         commandCursor: 2,
         commands: 'FR',
       },
+      {
+        ...baseCar,
+        name: 'car3',
+        x: 0,
+        y: 0,
+        direction: 'N',
+        commandCursor: 2,
+        commands: 'FRFFF',
+        collisionInfo: [{ carName: 'carX', step: 1 }],
+      },
     ],
   });
 
