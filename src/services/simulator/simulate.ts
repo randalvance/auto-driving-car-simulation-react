@@ -7,7 +7,6 @@ import { _hasCommandsLeft } from './_hasCommandsLeft';
 /** Orchestrates moving and car-collision check. */
 export const simulate = (state: State): State => {
   const { simulation } = state;
-  const step = simulation.step + 1;
 
   let carsAfterChange = [...simulation.cars];
 
@@ -20,11 +19,10 @@ export const simulate = (state: State): State => {
 
     carsAfterChange[i] = moveCar(car, simulation.field);
 
-    carsAfterChange = detectCollisions(car.name, carsAfterChange, step);
+    carsAfterChange = detectCollisions(car.name, carsAfterChange);
   }
 
   return produce(state, (draft) => {
-    draft.simulation.step = step;
     draft.simulation.cars = carsAfterChange;
   });
 };

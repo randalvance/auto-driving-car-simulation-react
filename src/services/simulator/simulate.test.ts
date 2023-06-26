@@ -1,5 +1,5 @@
 import { vitest, vi } from 'vitest';
-import { type Simulation, type Car } from '@/types';
+import { type Simulation, type Car, type State } from '@/types';
 import { simulate } from './simulate';
 import { moveCar } from './moveCar';
 import { detectCollisions } from './detectCollisions';
@@ -21,46 +21,50 @@ describe('simulate', () => {
     moveHistory: '',
     historyCursor: 0,
   } satisfies Partial<Car>;
+
   const car1: Car = {
     ...baseCar,
     name: 'car1',
     x: 0,
     y: 0,
   };
+
   const car2: Car = {
     ...baseCar,
     name: 'car2',
     x: 1,
     y: 0,
   };
-  const baseSimulation: Simulation = {
-    step: 0,
-    field: { width: 0, height: 0 },
-    cars: [car1, car2],
+
+  const state: State = {
+    setup: { inputStep: 'runningSimulation', cars: [], consoleMessages: [] },
+    simulation: {
+      field: { width: 0, height: 0 },
+      cars: [car1, car2],
+    },
   };
 
   beforeEach(() => {
     vi.resetAllMocks();
-    mockedMoveCar.mockImplementation((car) =>
-      car.name === car1.name ? car1 : car2,
-    );
-    mockedDetectCollisions.mockReturnValue([...baseSimulation.cars]);
   });
 
   it('should move and check collision for each uncompleted car', () => {
-    simulate(baseSimulation);
+    mockedMoveCar.mockReturnValueOnce(car1);
+    mockedMoveCar.mockReturnValueOnce(car2);
+    mockedDetectCollisions.mockReturnValueOnce(state.simulation.cars);
+    mockedDetectCollisions.mockReturnValueOnce(state.simulation.cars);
 
-    expect(mockedMoveCar).toHaveBeenCalledWith(car1, baseSimulation.field);
-    expect(mockedMoveCar).toHaveBeenCalledWith(car2, baseSimulation.field);
+    simulate(state);
+
+    expect(mockedMoveCar).toHaveBeenCalledWith(car1, state.simulation.field);
+    expect(mockedMoveCar).toHaveBeenCalledWith(car2, state.simulation.field);
     expect(mockedDetectCollisions).toHaveBeenCalledWith(
       car1.name,
-      baseSimulation.cars,
-      baseSimulation.step + 1,
+      state.simulation.cars,
     );
     expect(mockedDetectCollisions).toHaveBeenCalledWith(
       car2.name,
-      baseSimulation.cars,
-      baseSimulation.step + 1,
+      state.simulation.cars,
     );
   });
 
@@ -82,8 +86,7 @@ describe('simulate', () => {
       commands: 'F',
     };
     const simulation: Simulation = {
-      ...baseSimulation,
-      step: 1,
+      ...state.simulation,
       cars: [uncompletedCar1, completedCar1],
     };
     mockedMoveCar.mockReturnValueOnce(uncompletedCar1);
@@ -91,7 +94,10 @@ describe('simulate', () => {
     mockedDetectCollisions.mockReturnValueOnce(simulation.cars);
     mockedDetectCollisions.mockReturnValueOnce(simulation.cars);
 
-    simulate(simulation);
+    simulate({
+      ...state,
+      simulation,
+    });
 
     expect(mockedMoveCar).toHaveBeenCalledWith(
       uncompletedCar1,
@@ -100,7 +106,6 @@ describe('simulate', () => {
     expect(mockedDetectCollisions).toHaveBeenCalledWith(
       uncompletedCar1.name,
       simulation.cars,
-      simulation.step + 1,
     );
     expect(mockedMoveCar).not.toHaveBeenCalledWith(
       completedCar1,
@@ -109,13 +114,6 @@ describe('simulate', () => {
     expect(mockedDetectCollisions).not.toHaveBeenCalledWith(
       completedCar1.name,
       simulation.cars,
-      simulation.step + 1,
     );
-  });
-
-  it('should increment step by 1', () => {
-    const result = simulate(baseSimulation);
-    expect(result).toBeTruthy();
-    expect(result.step).toBe(1);
   });
 });

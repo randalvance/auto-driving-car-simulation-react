@@ -7,11 +7,7 @@ import { produce } from 'immer';
  * @param step The current step of the simulation
  * @returns The list of cars with updated collision info
  */
-export const detectCollisions = (
-  carName: Car['name'],
-  cars: Car[],
-  step: number,
-): Car[] => {
+export const detectCollisions = (carName: Car['name'], cars: Car[]): Car[] => {
   const carIndex = cars.findIndex((car) => car.name === carName);
 
   if (carIndex === -1) throw new Error(`Car ${carName} not found`);
@@ -35,7 +31,7 @@ export const detectCollisions = (
     // Add to the car's collision info
     collisionInfo.push({
       carName: otherCar.name,
-      step: step,
+      step: car.commandCursor,
     });
 
     // Update other car to register collision
@@ -44,7 +40,7 @@ export const detectCollisions = (
         draft.collisionInfo = draft.collisionInfo ?? [];
         draft.collisionInfo.push({
           carName: car.name,
-          step: step,
+          step: car.commandCursor,
         });
       }),
     );

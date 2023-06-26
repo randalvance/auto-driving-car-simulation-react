@@ -5,10 +5,10 @@ const baseCar = {
   x: 1,
   y: 1,
   direction: 'N',
-  commands: 'F',
-  commandCursor: 0,
-  moveHistory: '',
-  historyCursor: 0,
+  commands: 'FFF',
+  commandCursor: 2,
+  moveHistory: 'FF',
+  historyCursor: 1,
 } satisfies Partial<Car>;
 
 it('should detect all cars that a car have collided with', () => {
@@ -41,23 +41,22 @@ it('should detect all cars that a car have collided with', () => {
     collisionInfo: [{ carName: 'car2', step: 0 }],
   };
   const cars: Car[] = [car1, car2, car3, car4];
-  const currentStep = 1;
 
-  const carsWithCollisionInfo = detectCollisions(car1.name, cars, currentStep);
+  const carsWithCollisionInfo = detectCollisions(car1.name, cars);
 
   expect(carsWithCollisionInfo).toEqual([
     {
       ...car1,
       collisionInfo: [
-        { carName: car2.name, step: currentStep },
-        { carName: car4.name, step: currentStep },
+        { carName: car2.name, step: car1.commandCursor },
+        { carName: car4.name, step: car1.commandCursor },
       ],
     },
     {
       ...car2,
       collisionInfo: [
         { carName: car4.name, step: 0 },
-        { carName: car1.name, step: currentStep },
+        { carName: car1.name, step: car1.commandCursor },
       ],
     },
     car3,
@@ -65,7 +64,7 @@ it('should detect all cars that a car have collided with', () => {
       ...car4,
       collisionInfo: [
         { carName: car2.name, step: 0 },
-        { carName: car1.name, step: currentStep },
+        { carName: car1.name, step: car1.commandCursor },
       ],
     },
   ]);

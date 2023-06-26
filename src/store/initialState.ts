@@ -12,6 +12,5 @@ export const initialState: State = {
       width: 0,
       height: 0,
     },
-    step: 0,
   },
 };

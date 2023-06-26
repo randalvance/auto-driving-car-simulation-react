@@ -8,7 +8,6 @@ const baseCar = {
 
 it('should return true if all cars are complete', () => {
   const result = isSimulationComplete({
-    step: 0,
     field: {
       width: 5,
       height: 5,
@@ -40,7 +39,6 @@ it('should return true if all cars are complete', () => {
 
 it('should return false if not all cars are complete', () => {
   const result = isSimulationComplete({
-    step: 0,
     field: {
       width: 5,
       height: 5,

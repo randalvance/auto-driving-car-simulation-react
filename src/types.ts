@@ -38,7 +38,6 @@ export interface CollisionInfo {
 export interface Simulation {
   cars: Car[];
   field: Field;
-  step: number;
 }
 
 export type InputStep =
