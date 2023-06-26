@@ -1,17 +1,21 @@
 import { vitest } from 'vitest';
 import { processRunningSimulation } from './processRunningSimulation';
 
-import { reportCarList } from '../reporters';
+import { reportCarList, reportCarCollisions } from '../reporters';
 import { type InputStep } from '@/types';
 
 vitest.mock('../reporters', () => ({
   reportCarList: vitest.fn(),
+  reportCarCollisions: vitest.fn(),
 }));
 const mockedReportCarList = vitest.mocked(reportCarList);
+const mockedReportCarCollisions = vitest.mocked(reportCarCollisions);
 
 it('should return correct state', () => {
   const mockedCarListReport = 'Car List';
+  const mockedCarCollisionsReport = 'Car Collisions List';
   mockedReportCarList.mockReturnValueOnce(mockedCarListReport);
+  mockedReportCarCollisions.mockReturnValueOnce(mockedCarCollisionsReport);
 
   const state = processRunningSimulation(
     {
@@ -26,6 +30,9 @@ it('should return correct state', () => {
     '',
   );
 
-  expect(state.consoleMessages).toEqual([mockedCarListReport]);
+  expect(state.consoleMessages).toEqual([
+    mockedCarListReport,
+    mockedCarCollisionsReport,
+  ]);
   expect(state.inputStep).toEqual('simulationComplete' satisfies InputStep);
 });
