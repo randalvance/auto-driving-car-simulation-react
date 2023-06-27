@@ -42,6 +42,7 @@ it('should report car collisions', () => {
       commandCursor: 1,
       commands: 'F',
       direction: 'W',
+      collisionInfo: [],
     },
     {
       ...baseCar,

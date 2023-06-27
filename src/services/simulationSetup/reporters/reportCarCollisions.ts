@@ -19,6 +19,6 @@ const printCollisionInfo = (car: Car): string => {
 };
 
 const printCarPosition = (car: Car): string => {
-  if (car.collisionInfo != null) return '';
+  if ((car.collisionInfo?.length ?? 0) > 0) return '';
   return `- ${car.name}, (${car.x}, ${car.y}) ${car.direction}`;
 };
