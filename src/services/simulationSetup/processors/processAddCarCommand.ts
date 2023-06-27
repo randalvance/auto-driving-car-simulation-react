@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import { withValidation } from './withValidation';
-import { type Field } from '@/types';
+import { type Car, type Field } from '@/types';
 import { reportCarList } from '../reporters';
 
 export const processAddCarCommand = withValidation(
@@ -33,6 +33,8 @@ export const processAddCarCommand = withValidation(
         carToAdd.y >= fieldSize.height
       ) {
         setup.consoleMessages.push(MESSAGE_ERROR_OUT_OF_BOUNDS);
+      } else if (carExists(carToAdd.name, simulation.cars)) {
+        setup.consoleMessages.push(MESSAGE_ERROR_CAR_EXISTS);
       } else {
         simulation.cars.push({
           name: setup.carToAdd.name ?? '',
@@ -53,4 +55,9 @@ export const processAddCarCommand = withValidation(
   { inputPattern: /^[LRFU]+$/ },
 );
 
+const carExists = (name: string, cars: Car[]): boolean => {
+  return cars.some((car) => car.name === name);
+};
+
 export const MESSAGE_ERROR_OUT_OF_BOUNDS = 'Car is out of bounds';
+export const MESSAGE_ERROR_CAR_EXISTS = 'Car with this name already exists';
