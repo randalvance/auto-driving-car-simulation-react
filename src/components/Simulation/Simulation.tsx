@@ -55,7 +55,7 @@ export const Simulation: React.FC = () => {
     <div className={styles.container}>
       <Console
         messages={consoleMessages}
-        disabled={inputStep === 'runningSimulation'}
+        disabled={inputStep === 'runningSimulation' || inputStep === 'exit'}
       />
       <div className={styles.fieldContainer}>
         <Field height={field.height} width={field.width} cars={carsToRender} />
