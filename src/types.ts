@@ -60,10 +60,5 @@ export interface SimulationSetup {
     direction: Direction;
     commands: string;
   }>;
-  fieldSize?: {
-    width: number;
-    height: number;
-  };
   consoleMessages: string[];
-  cars: Car[];
 }

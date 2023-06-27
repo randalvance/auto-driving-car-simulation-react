@@ -9,7 +9,6 @@ it('should parse option 1 as starting over', () => {
       setup: {
         inputStep: 'simulationComplete',
         consoleMessages: [],
-        cars: [],
       },
     },
     '1',
@@ -25,7 +24,6 @@ it('should parse option 2 as exit', () => {
       setup: {
         inputStep: 'simulationComplete',
         consoleMessages: [],
-        cars: [],
       },
     },
     '2',
@@ -44,7 +42,6 @@ it.each(['', ' ', '0', '3', 'ABC'])(
         setup: {
           inputStep: 'simulationComplete',
           consoleMessages: [],
-          cars: [],
         },
       },
       input,

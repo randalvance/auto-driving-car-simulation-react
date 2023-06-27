@@ -1,24 +1,28 @@
+import { produce } from 'immer';
 import { vi, vitest } from 'vitest';
 import {
   MESSAGE_ERROR_OUT_OF_BOUNDS,
   processAddCarCommand,
 } from './processAddCarCommand';
 import { reportCarList } from '../reporters';
-import { type State } from '@/types';
 import { initialState } from '@/store/initialState';
 
 vitest.mock('../reporters', () => ({ reportCarList: vitest.fn() }));
 const mockedReportCarList = vi.mocked(reportCarList);
 
 describe('processAddCarCommand', () => {
-  const state = {
-    ...initialState,
-  } satisfies State;
+  const state = produce(initialState, (draft) => {
+    draft.simulation.field = {
+      width: 10,
+      height: 10,
+    };
+  });
   const mockedCarReport = 'Cars List';
 
   beforeEach(() => {
     mockedReportCarList.mockReturnValue(mockedCarReport);
   });
+
   it('should add car to list and reset cars to add', () => {
     const newState = processAddCarCommand(
       {
@@ -32,11 +36,6 @@ describe('processAddCarCommand', () => {
             direction: 'N',
           },
           consoleMessages: [],
-          cars: [],
-          fieldSize: {
-            width: 10,
-            height: 10,
-          },
         },
       },
       'FLRF',
@@ -44,7 +43,7 @@ describe('processAddCarCommand', () => {
 
     expect(newState.setup.inputStep).toBe('selectOption');
     expect(newState.setup.carToAdd).toBeUndefined();
-    expect(newState.setup.cars).toEqual([
+    expect(newState.simulation.cars).toEqual([
       {
         name: 'car1',
         x: 0,
@@ -73,11 +72,6 @@ describe('processAddCarCommand', () => {
             direction: 'N',
           },
           consoleMessages: [],
-          cars: [],
-          fieldSize: {
-            width: 10,
-            height: 10,
-          },
         },
       },
       'FLRF',
@@ -85,7 +79,7 @@ describe('processAddCarCommand', () => {
 
     expect(newState.setup.inputStep).toBe('selectOption');
     expect(newState.setup.carToAdd).toBeUndefined();
-    expect(newState.setup.cars).toEqual([]);
+    expect(newState.simulation.cars).toEqual([]);
     expect(newState.setup.consoleMessages).toEqual([
       MESSAGE_ERROR_OUT_OF_BOUNDS,
       mockedCarReport,

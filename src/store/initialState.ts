@@ -4,7 +4,6 @@ export const initialState: State = {
   setup: {
     inputStep: 'initialize',
     consoleMessages: [],
-    cars: [],
   },
   simulation: {
     cars: [],

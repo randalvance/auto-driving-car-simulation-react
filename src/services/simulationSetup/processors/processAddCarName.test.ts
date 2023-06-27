@@ -11,7 +11,6 @@ it('should set car name', () => {
       setup: {
         inputStep: 'addCarName',
         consoleMessages: [],
-        cars: [],
       },
     },
     carName,
@@ -30,7 +29,6 @@ it('should trim car name', () => {
       setup: {
         inputStep: 'addCarName',
         consoleMessages: [],
-        cars: [],
       },
     },
     carName,
@@ -47,7 +45,6 @@ it.each(['', ' '])('should validate empty car name (%s)', (carName) => {
       setup: {
         inputStep: 'addCarName',
         consoleMessages: [],
-        cars: [],
       },
     },
     carName,

@@ -37,7 +37,7 @@ describe('simulate', () => {
   };
 
   const state: State = {
-    setup: { inputStep: 'runningSimulation', cars: [], consoleMessages: [] },
+    setup: { inputStep: 'runningSimulation', consoleMessages: [] },
     simulation: {
       field: { width: 0, height: 0 },
       cars: [car1, car2],

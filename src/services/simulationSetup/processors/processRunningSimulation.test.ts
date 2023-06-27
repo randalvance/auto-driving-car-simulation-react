@@ -23,11 +23,6 @@ it('should return correct state', () => {
       ...initialState,
       setup: {
         inputStep: 'runningSimulation',
-        fieldSize: {
-          width: 10,
-          height: 10,
-        },
-        cars: [],
         consoleMessages: [],
       },
     },

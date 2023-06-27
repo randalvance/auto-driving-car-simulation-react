@@ -15,7 +15,7 @@ export const processSetFieldSize: CommandProcessor = withValidation(
 
     const setupState = produce(state, (draft) => {
       draft.setup.inputStep = 'selectOption';
-      draft.setup.fieldSize = {
+      draft.simulation.field = {
         width,
         height,
       };

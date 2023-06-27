@@ -31,35 +31,24 @@ export const processCommand = (
   commandString: string,
   echo: boolean = true,
 ): State => {
-  return produce(state, (draft) => {
-    const { setup } = draft;
-    if (echo) {
-      setup.consoleMessages.push(commandString);
-    }
-    const newState = commandProcessors[setup.inputStep](
-      produce(state, (draft) => {
-        draft.setup.consoleMessages = [];
-      }),
-      commandString,
-    );
+  let newState: State = state;
 
-    setup.inputStep = newState.setup.inputStep;
-    setup.fieldSize = newState.setup.fieldSize;
-    setup.cars = newState.setup.cars;
-    setup.carToAdd = newState.setup.carToAdd;
-    setup.consoleMessages.push(...newState.setup.consoleMessages);
+  if (echo) {
+    newState = produce(state, (draft) => {
+      draft.setup.consoleMessages.push(commandString);
+    });
+  }
 
-    const prompt = getPromptForInputStep(newState.setup);
-    setup.consoleMessages.push(...prompt);
+  // Execute command processor for current inputStep
+  newState = commandProcessors[newState.setup.inputStep](
+    newState,
+    commandString,
+  );
 
-    draft.simulation.field = setup.fieldSize ?? {
-      width: 0,
-      height: 0,
-    };
+  // Get prompt message for whatever step we're on
+  const promptMessages = getPromptForInputStep(newState.setup);
 
-    // Transfer the cars from the setup into the simulation.
-    if (state.setup.inputStep === 'addCarCommands') {
-      draft.simulation.cars = setup.cars ?? [];
-    }
+  return produce(newState, (draft) => {
+    draft.setup.consoleMessages.push(...promptMessages);
   });
 };

@@ -6,7 +6,7 @@ import { reportCarList } from '../reporters';
 export const processAddCarCommand = withValidation(
   (state, commandString) => {
     const setupState = produce(state, (draft) => {
-      const { setup } = draft;
+      const { setup, simulation } = draft;
       setup.inputStep = 'selectOption';
       setup.carToAdd = {
         ...state.setup.carToAdd,
@@ -14,8 +14,8 @@ export const processAddCarCommand = withValidation(
       };
       setup.carToAdd.commands = commandString;
       const fieldSize: Field = {
-        width: setup.fieldSize?.width ?? 0,
-        height: setup.fieldSize?.height ?? 0,
+        width: simulation.field.width,
+        height: simulation.field.height,
       };
       const carToAdd = {
         name: setup.carToAdd?.name ?? '',
@@ -25,7 +25,6 @@ export const processAddCarCommand = withValidation(
         commands: setup.carToAdd?.commands ?? '',
       };
 
-      setup.cars = setup.cars ?? [];
       // Check for out of bounds before adding
       if (
         carToAdd.x < 0 ||
@@ -35,7 +34,7 @@ export const processAddCarCommand = withValidation(
       ) {
         setup.consoleMessages.push(MESSAGE_ERROR_OUT_OF_BOUNDS);
       } else {
-        setup.cars.push({
+        simulation.cars.push({
           name: setup.carToAdd.name ?? '',
           x: setup.carToAdd.x ?? 0,
           y: setup.carToAdd.y ?? 0,
@@ -47,7 +46,7 @@ export const processAddCarCommand = withValidation(
         });
       }
       setup.carToAdd = undefined;
-      setup.consoleMessages.push(reportCarList(setup.cars));
+      setup.consoleMessages.push(reportCarList(simulation.cars));
     });
     return setupState;
   },
