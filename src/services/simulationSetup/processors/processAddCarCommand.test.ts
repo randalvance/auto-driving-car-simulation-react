@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { vi, vitest } from 'vitest';
 import {
+  MESSAGE_ERROR_CAR_AT_SAME_POS_EXISTS,
   MESSAGE_ERROR_CAR_EXISTS,
   MESSAGE_ERROR_OUT_OF_BOUNDS,
   processAddCarCommand,
@@ -115,6 +116,40 @@ describe('processAddCarCommand', () => {
     expect(newState.simulation.cars[0]).toEqual(state.simulation.cars[0]);
     expect(newState.setup.consoleMessages).toEqual([
       MESSAGE_ERROR_CAR_EXISTS,
+      mockedCarReport,
+    ]);
+    expect(newState.setup.inputStep).toBe('selectOption');
+  });
+
+  it('should NOT add car to the list if a car at the same position already exists', () => {
+    const state = produce(initialState, (draft) => {
+      draft.simulation.cars = [
+        {
+          name: 'car1',
+          x: 1,
+          y: 2,
+          direction: 'N',
+          commands: 'FLRF',
+          commandCursor: 0,
+          moveHistory: '',
+          historyCursor: 0,
+        },
+      ];
+      draft.simulation.field = { width: 10, height: 10 };
+      draft.setup.carToAdd = {
+        name: 'car2',
+        direction: 'S',
+        x: 1,
+        y: 2,
+      };
+    });
+
+    const newState = processAddCarCommand(state, 'FLRF');
+
+    expect(newState.simulation.cars.length).toBe(1);
+    expect(newState.simulation.cars[0]).toEqual(state.simulation.cars[0]);
+    expect(newState.setup.consoleMessages).toEqual([
+      MESSAGE_ERROR_CAR_AT_SAME_POS_EXISTS,
       mockedCarReport,
     ]);
     expect(newState.setup.inputStep).toBe('selectOption');

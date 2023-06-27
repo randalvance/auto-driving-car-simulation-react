@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import { withValidation } from './withValidation';
-import { type Car, type Field } from '@/types';
+import { type State, type Field } from '@/types';
 import { reportCarList } from '../reporters';
 
 export const processAddCarCommand = withValidation(
@@ -13,29 +13,10 @@ export const processAddCarCommand = withValidation(
         commands: commandString,
       };
       setup.carToAdd.commands = commandString;
-      const fieldSize: Field = {
-        width: simulation.field.width,
-        height: simulation.field.height,
-      };
-      const carToAdd = {
-        name: setup.carToAdd?.name ?? '',
-        x: setup.carToAdd?.x ?? 0,
-        y: setup.carToAdd?.y ?? 0,
-        direction: setup.carToAdd?.direction ?? 'N',
-        commands: setup.carToAdd?.commands ?? '',
-      };
 
-      // Check for out of bounds before adding
-      if (
-        carToAdd.x < 0 ||
-        carToAdd.x >= fieldSize.width ||
-        carToAdd.y < 0 ||
-        carToAdd.y >= fieldSize.height
-      ) {
-        setup.consoleMessages.push(MESSAGE_ERROR_OUT_OF_BOUNDS);
-      } else if (carExists(carToAdd.name, simulation.cars)) {
-        setup.consoleMessages.push(MESSAGE_ERROR_CAR_EXISTS);
-      } else {
+      const errors = validate(state);
+
+      if (errors.length === 0) {
         simulation.cars.push({
           name: setup.carToAdd.name ?? '',
           x: setup.carToAdd.x ?? 0,
@@ -47,7 +28,9 @@ export const processAddCarCommand = withValidation(
           historyCursor: 0,
         });
       }
+
       setup.carToAdd = undefined;
+      setup.consoleMessages.push(...errors);
       setup.consoleMessages.push(reportCarList(simulation.cars));
     });
     return setupState;
@@ -55,9 +38,45 @@ export const processAddCarCommand = withValidation(
   { inputPattern: /^[LRFU]+$/ },
 );
 
-const carExists = (name: string, cars: Car[]): boolean => {
-  return cars.some((car) => car.name === name);
+const validate = (state: State): string[] => {
+  const { setup, simulation } = state;
+  const fieldSize: Field = {
+    width: simulation.field.width,
+    height: simulation.field.height,
+  };
+  const carToAdd = {
+    name: setup.carToAdd?.name ?? '',
+    x: setup.carToAdd?.x ?? 0,
+    y: setup.carToAdd?.y ?? 0,
+    direction: setup.carToAdd?.direction ?? 'N',
+    commands: setup.carToAdd?.commands ?? '',
+  };
+
+  const errors: string[] = [];
+
+  if (
+    carToAdd.x < 0 ||
+    carToAdd.x >= fieldSize.width ||
+    carToAdd.y < 0 ||
+    carToAdd.y >= fieldSize.height
+  ) {
+    errors.push(MESSAGE_ERROR_OUT_OF_BOUNDS);
+  }
+
+  // Check against existing cars
+  for (const car of simulation.cars) {
+    if (car.name === carToAdd.name) {
+      errors.push(MESSAGE_ERROR_CAR_EXISTS);
+    }
+    if (car.x === carToAdd.x && car.y === carToAdd.y) {
+      errors.push(MESSAGE_ERROR_CAR_AT_SAME_POS_EXISTS);
+    }
+  }
+
+  return errors;
 };
 
 export const MESSAGE_ERROR_OUT_OF_BOUNDS = 'Car is out of bounds';
 export const MESSAGE_ERROR_CAR_EXISTS = 'Car with this name already exists';
+export const MESSAGE_ERROR_CAR_AT_SAME_POS_EXISTS =
+  'Car at this position already exists';
